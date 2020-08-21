@@ -23,30 +23,65 @@ sampleDF = pdacData
 
 # preparing helper functions to create the legend for graph
 
-legendIcon <- function(color, lineColor = "black", lineType = "solid", patternType){ # creates the icons for each group
-  img <- image_blank(width=200, height=200, color="white") # creates a blank canvas
-  img <- image_draw(img)
-  symbols(x=100, y=100, circles=75, inches=F, add=T, bg=color) # creates circle for icon
-  
-  # creates the line segments for each pattern
+legendIcon <- function(color, lineColor="black", lineType = "solid", patternType){ 
+  # tried to render the legend icons by creating new magick object but issue with grDevices prevented usage of ggsave
+  # instead using grid to render legend icons
   if (patternType == "horizontal"){
-    segments(x0=c(100 - sqrt(3125), 25, 100 - sqrt(3125)), y0=c(150, 100, 50), x1=c(100 + sqrt(3125), 175, 100 + sqrt(3125)), y1=c(150, 100, 50), col=lineColor, lty=lineType, lwd=8)
+    return(grobTree(
+      circleGrob(0.5, 0.5, 0.5, gp=gpar(col=color, lwd=1)),
+      linesGrob(x=c(0,1), y=c(0.5, 0.5)),
+      linesGrob(x=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), y=c(0.25, 0.25)),
+      linesGrob(x=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), y=c(0.75, 0.75)),
+      gp = gpar(
+        col = lineColor,
+        fill = color,
+        lwd = 1.5,
+        lty = lineType
+      )
+    ))
   }
-  
   if (patternType == "vertical"){
-    segments(y0=c(100 - sqrt(3125), 25, 100 - sqrt(3125)), x0=c(150, 100, 50), y1=c(100 + sqrt(3125), 175, 100 + sqrt(3125)), x1=c(150, 100, 50), col=lineColor, lty=lineType, lwd=8)
+    return(grobTree(
+      circleGrob(0.5, 0.5, 0.5, gp=gpar(col=color, lwd=1)),
+      linesGrob(y=c(0,1), x=c(0.5, 0.5)),
+      linesGrob(y=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), x=c(0.25, 0.25)),
+      linesGrob(y=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), x=c(0.75, 0.75)),
+      gp = gpar(
+        col = lineColor,
+        fill = color,
+        lwd = 1.5,
+        lty = lineType
+      )
+    ))
   }
-  
   if (patternType == "positiveDiagnol"){
-    segments(x0=c(78.229, 100+sqrt(75^2/2), 28.229), y0=c(200-28.229, 100-sqrt(75^2/2), 200-78.229), x1=c(171.771, 100-sqrt(75^2/2), 121.771), y1=c(200-121.771, 100+sqrt(75^2/2), 200-171.771), col=lineColor, lty=lineType, lwd=8)
+    return(grobTree(
+      circleGrob(0.5, 0.5, 0.5, gp=gpar(col=color, lwd=1)),
+      linesGrob(x=c(-sqrt((0.5)^2/2)+0.5,sqrt((0.5)^2/2)+0.5), y=c(-sqrt((0.5)^2/2)+0.5, sqrt((0.5)^2/2)+0.5)),
+      linesGrob(x=c(0.01779486, 0.6322051), y=c(0.3677949, 0.9822051)),
+      linesGrob(x=c(0.3677949, 0.9822051), y=c(0.01779486, 0.6322051)),
+      gp = gpar(
+        col = lineColor,
+        fill = color,
+        lwd = 1.75,
+        lty = lineType
+      )
+    ))
   }
-  
   if (patternType == "negativeDiagnol"){
-    segments(x0=c(28.229, 100+sqrt(75^2/2), 78.229), y0=c(200-121.771, 100+sqrt(75^2/2), 200-171.771), x1=c(121.771, 100-sqrt(75^2/2), 171.771), y1=c(200-28.229, 100-sqrt(75^2/2), 200-78.229), col=lineColor, lty=lineType, lwd=8)
+    return(grobTree(
+      circleGrob(0.5, 0.5, 0.5, gp=gpar(col=color, lwd=1)),
+      linesGrob(x=c(-sqrt((0.5)^2/2)+0.5,sqrt((0.5)^2/2)+0.5), y=c(sqrt((0.5)^2/2)+0.5, -sqrt((0.5)^2/2)+0.5)),
+      linesGrob(x=c(0.01779486, 0.6322051), y=c(0.6322051, 0.01779486)),
+      linesGrob(x=c(0.3677949, 0.9822051), y=c(0.9822051, 0.3677949)),
+      gp = gpar(
+        col = lineColor,
+        fill = color,
+        lwd = 1.75,
+        lty = lineType
+      )
+    ))
   }
-  
-  dev.off()
-  return(img)
 }
 
 imagePoints <- ggproto("imagePoints", Geom,
@@ -55,9 +90,8 @@ imagePoints <- ggproto("imagePoints", Geom,
                        
                        draw_key = function (data, params, size) 
                        {
-                         iconInfo = data$ids[[1]]
-                         icon = image_scale(legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], iconInfo[[4]]), "50")
-                         grid::rasterGrob(0.5, 0.5, image = icon)
+                         iconInfo = data$ids[[1]] # ids contains all the necessary info to render icon
+                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], iconInfo[[4]])
                        },
                        
                        draw_group = function(data, panel_scales, coord) {
@@ -107,7 +141,7 @@ drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xD
   yStart = c()
   xEnd = c()
   yEnd = c()
-  adjustmentFactor = 3/898 * size * diff(xDiff)
+  adjustmentFactor = 1.75/898 * size * diff(xDiff)
   rowDraw = TRUE # wheater to draw lines in current row or not
   for (row in 1:nrow(freqMat)){ # iterates by every row
     currentRow = freqMat[row, ]
@@ -172,7 +206,7 @@ drawVertical <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, yDif
   yStart = c()
   xEnd = c()
   yEnd = c()
-  adjustmentFactor = 3/560 * size * diff(yDiff)
+  adjustmentFactor = 1.75/560 * size * diff(yDiff)
 
   colDraw = TRUE # wheater to draw lines in current col or not
   for (col in 1:ncol(freqMat)){ # iterates by every row
@@ -239,6 +273,7 @@ drawPositiveDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
   yEnd = c()
   startingGrids = c(seq(1, nrow(freqMat)^2, by=nrow(freqMat)), seq((nrow(freqMat) * (nrow(freqMat)-1)) + 2, nrow(freqMat)^2)) # which grids diagnol will start
   diagnolDraw = TRUE # wheater to draw in current diagnol or not
+  adjustmentFactor = 1.75/898 * size * diff(xDiff)
   for (startingGrid in startingGrids){
 
     ## deals with determining grids in diagnol
@@ -294,7 +329,6 @@ drawPositiveDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
       if (sum(freqMat[row, surroundingCol]) + sum(freqMat[surroundingRow, col]) == 0 & currentGridVal != 0 & !lineDraw){ 
         
         gridPoints = pointsToGrid[pointsToGrid$yIntervals == row & pointsToGrid$xIntervals == col, ]
-        adjustmentFactor = 3/898 * size * diff(xDiff)
         xStart = c(xStart, min(gridPoints$x) - adjustmentFactor)
         xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactor)
         slope = diff(range(yBins))/diff(range(xBins))
@@ -321,6 +355,7 @@ drawNegativeDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
   yEnd = c()
   startingGrids = c(seq(nrow(freqMat)^2 - nrow(freqMat) + 1, 1, by=-1*nrow(freqMat)), seq(2, ncol(freqMat), by=1)) # which grids diagnol will start
   diagnolDraw = TRUE # wheater to draw in current diagnol or not
+  adjustmentFactor = 1.75/898 * size * diff(xDiff)
 
   for (startingGrid in startingGrids){
     
@@ -373,7 +408,6 @@ drawNegativeDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
       
       if (sum(freqMat[row, surroundingCol]) + sum(freqMat[surroundingRow, col]) == 0 & currentGridVal != 0 & !lineDraw){ 
         gridPoints = pointsToGrid[pointsToGrid$yIntervals == row & pointsToGrid$xIntervals == col, ]
-        adjustmentFactor = 3/898 * size * diff(xDiff)
         xStart = c(xStart, max(gridPoints$x) + adjustmentFactor)
         xEnd = c(xEnd, min(gridPoints$x) - adjustmentFactor)
         slope = diff(range(yBins))/diff(range(xBins))
@@ -413,6 +447,7 @@ hatchScatter <- function(data, x, y, factor, factorName, pointSize){
     groupData = data[factor == group, ]
     
     # plot points for each group
+    radius = 0.01 * diff(xDiff) * pointSize
     plt = plt + geom_point(data=groupData, x=xGroup, y=yGroup, color=cbbPalette[groupNum], alpha=0.4)
     
     # handles creating the legend icon
@@ -439,12 +474,13 @@ hatchScatter <- function(data, x, y, factor, factorName, pointSize){
     if (patterns[groupNum] == "negativeDiagnol"){
       lineCoords = drawNegativeDiagnol(groupGrid, density=1/3, size=pointSize, sparsity=3, xDiff)
     } 
-    
-    plt = plt + geom_segment(aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=0.4, data=lineCoords, size=0.75, linetype='solid')
+
+    plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=0.4, size=0.75, linetype='solid')
     
     groupNum = groupNum + 1
   }
   
+  # creating the legend
   legendDF$legendIcons = legendIcons
   scale_image <- function(..., guide="legend"){ # adding in the factor names and pattern info to legend
     scale_discrete_manual(aes="ids", labels=as.character(levels(factor)), values=legendDF$legendIcons)
@@ -467,6 +503,9 @@ plt = plt + theme(plot.title = element_text(family="serif", face="bold", size=25
 plt = plt + theme(legend.title = element_text(family="serif", size=20, face="bold"),
                   legend.text = element_text(family="serif", size=15))
 plot(plt)
+
+
+
 ggsave("D:/umd/summer 2020/hatchEfficientAllPatternsWithLegend.png", dpi=500)
 
 
