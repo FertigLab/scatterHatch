@@ -483,9 +483,13 @@ hatchScatter <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     # getting the necessary aesthetics for each pattern
     pattern = patternOrder[groupNum]
     currentPatternAes = list(pattern=patternOrder[groupNum])
-    for (i in patternList){
-      if (is.null(i$pattern)){stop("Specify pattern in patternList argument!")}
-      if (i$pattern == pattern){ currentPatternAes = i} # aesthetics for given pattern
+    for (i in 1:length(patternList)){
+      if (is.null(patternList[[i]]$pattern)){stop("Specify pattern in patternList argument!")}
+      if (patternList[[i]]$pattern == pattern){ 
+        currentPatternAes = patternList[[i]]  # aesthetics for given pattern
+        patternList = patternList[-i] # to allow duplicate patterns with different aesthetics
+        break
+      } 
     }
     
     if (!(is.null(currentPatternAes$density))){ density =currentPatternAes$density}
@@ -538,7 +542,7 @@ hatchScatter <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
 }
 
 
-patternList = list(list(pattern="positiveDiagnol", lineAlpha=1), list(pattern="horizontal", lineAlpha=1), list(pattern="negativeDiagnol",lineAlpha=1), list(pattern="vertical", lineAlpha=1))
+patternList = list(list(pattern="positiveDiagnol", lineAlpha=1), list(pattern="horizontal", lineAlpha=1), list(pattern="negativeDiagnol",lineAlpha=1, sparsity=5), list(pattern="vertical", lineAlpha=1))
 plt <- hatchScatter(sampleDF, sampleDF$Xt, sampleDF$Yt, as.factor(sampleDF$location), "Tissue Type", 0.2, patternList = patternList)
 plot(plt)
 xlabel = "X Coordinates"
@@ -555,10 +559,10 @@ plt = plt + theme(legend.title = element_text(family="serif", size=20, face="bol
 plot(plt)
 
 
-ggsave("D:/umd/summer 2020/hatchEfficientAllPatternsWithLegend5.svg")
-#ggsave("D:/umd/summer 2020/hatchEfficientAllPatternsWithLegend5.png", dpi=500)
+
+ggsave("D:/umd/summer 2020/hatchEfficientAllPatternsWithLegend5.png", dpi=500)
  
 
-
+#ggsave("D:/umd/summer 2020/hatchEfficientAllPatternsWithLegend5.pdf")
 
 
