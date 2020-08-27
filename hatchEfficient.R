@@ -131,7 +131,18 @@ countGridPoints <- function(x, y, xDiff, yDiff, n = 25){
   return(list(xLevels, yLevels, freqMat, pointsToGrid))
 }
 
-drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff){
+convertSizeToCartesian <- function(size, scale, axis){ # function that converts size of geom_point to radius of point in x/y units
+  fontSize = size*.pt + .stroke*0.5/2
+  if (axis == 'x'){
+    cartesianConvert = convertWidth(unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/2.440651
+  }
+  if (axis == 'y'){
+    cartesianConvert = convertHeight(unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/2.440651
+  }
+  return(cartesianConvert)
+}
+
+drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff, yDiff){
   if (density > 1){density=1}
   xBins = gridOutput[[1]]
   yBins = gridOutput[[2]]
@@ -141,7 +152,8 @@ drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xD
   yStart = c()
   xEnd = c()
   yEnd = c()
-  adjustmentFactor = 1.75/898 * size * diff(xDiff)
+  adjustmentFactorX = convertSizeToCartesian(size, xDiff, 'x')
+  adjustmentFactorY = convertSizeToCartesian(size, yDiff, 'y')
   rowDraw = TRUE # wheater to draw lines in current row or not
   for (row in 1:nrow(freqMat)){ # iterates by every row
     currentRow = freqMat[row, ]
@@ -166,14 +178,14 @@ drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xD
     for (col in 1:ncol(freqMat)){
       if (!lineDraw & prevCol == 0 & freqMat[row, col] != 0 & rowDraw){ # starting a line segment
         gridPoints = rowPoints[rowPoints$xIntervals == col, ] # points corresponding to current grid square
-        xStart = c(xStart, min(gridPoints$x) - adjustmentFactor) # where to draw horizontal lines
+        xStart = c(xStart, min(gridPoints$x) - adjustmentFactorX) # where to draw horizontal lines
         yStart = c(yStart, yLevels)
         lineDraw = TRUE
       }
       
       if (lineDraw & currentRow[col] == 0 & rowDraw){ # ending line segment
         gridPoints = rowPoints[rowPoints$xIntervals == col-1, ] # points corresponding to current grid square
-        xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactor) # where to draw horizontal lines
+        xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactorX) # where to draw horizontal lines
         yEnd = c(yEnd, yLevels)
         lineDraw = FALSE
       }
@@ -181,12 +193,12 @@ drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xD
       # dealing with sparse points
       surroundingGrid = c((col-sparsity):(col-1), (col+1):(col+sparsity))
       surroundingGrid = surroundingGrid[surroundingGrid > 0 & surroundingGrid < ncol(freqMat)] # grids sparsity horizontal distance away
-      if (sum(currentRow[surroundingGrid]) == 0 & currentRow[col] != 0 & !lineDraw){ 
+      if (sum(currentRow[surroundingGrid]) <= 0 & currentRow[col] != 0 & !lineDraw){ 
         gridPoints = rowPoints[rowPoints$xIntervals == col, ]
-        xStart = c(xStart, min(gridPoints$x) - adjustmentFactor) # where to draw horizontal lines
-        yStart = c(yStart, mean(gridPoints$y))
-        xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactor) # where to draw horizontal lines
-        yEnd = c(yEnd, mean(gridPoints$y))
+        xStart = c(xStart, min(gridPoints$x) - adjustmentFactorX) # where to draw horizontal lines
+        yStart = c(yStart, median(gridPoints$y))
+        xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactorX) # where to draw horizontal lines
+        yEnd = c(yEnd, median(gridPoints$y))
       }
       
       prevCol = currentRow[col]
@@ -196,7 +208,7 @@ drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xD
   return(data.frame(xStart=xStart, yStart=yStart, xEnd=xEnd, yEnd=yEnd))
 }
 
-drawVertical <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, yDiff){
+drawVertical <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff, yDiff){
   if (density > 1){density=1}
   xBins = gridOutput[[1]]
   yBins = gridOutput[[2]]
@@ -206,7 +218,8 @@ drawVertical <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, yDif
   yStart = c()
   xEnd = c()
   yEnd = c()
-  adjustmentFactor = 1.75/560 * size * diff(yDiff)
+  adjustmentFactorX = convertSizeToCartesian(size, xDiff, 'x')
+  adjustmentFactorY = convertSizeToCartesian(size, yDiff, 'y')
 
   colDraw = TRUE # wheater to draw lines in current col or not
   for (col in 1:ncol(freqMat)){ # iterates by every row
@@ -214,7 +227,6 @@ drawVertical <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, yDif
     colPoints = pointsToGrid[pointsToGrid$xIntervals == col, ]
     
     if (col+1 <= ncol(freqMat)){  # where to draw x levels
-      #xLevels = seq(xBins[col], xBins[col+1], length.out = 3)[2]
       xLevels = median(colPoints$x)
     }
     
@@ -232,26 +244,26 @@ drawVertical <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, yDif
       if (!lineDraw & prevRow == 0 & currentCol[row] != 0 & colDraw){ # starting a line segment
         gridPoints = colPoints[colPoints$yIntervals == row, ] # points corresponding to current grid square
         xStart = c(xStart, xLevels) # where to draw vertical lines
-        yStart = c(yStart, min(gridPoints$y) - adjustmentFactor)
+        yStart = c(yStart, max(gridPoints$y) + adjustmentFactorY)
         lineDraw = TRUE
       }
       
       if (lineDraw & currentCol[row] == 0 & colDraw){ # ending line segment
         gridPoints = colPoints[colPoints$yIntervals == row-1, ] # points corresponding to previous grid
         xEnd = c(xEnd, xLevels) # where to draw vertical lines
-        yEnd = c(yEnd, max(gridPoints$y) + adjustmentFactor)
+        yEnd = c(yEnd, min(gridPoints$y) - adjustmentFactorY)
         lineDraw = FALSE
       }
       
       # dealing with sparse points
       surroundingGrid = c((row-sparsity):(row-1), (row+1):(row+sparsity))
       surroundingGrid = surroundingGrid[surroundingGrid > 0 & surroundingGrid < nrow(freqMat)] # grids sparsity horizontal distance away
-      if (sum(currentCol[surroundingGrid]) == 0 & currentCol[row] != 0 & !lineDraw){ 
+      if (sum(currentCol[surroundingGrid]) <= 0 & currentCol[row] != 0 & !lineDraw){ 
         gridPoints = colPoints[colPoints$yIntervals == row, ]
-        xStart = c(xStart, mean(gridPoints$x)) # where to draw horizontal lines
-        yStart = c(yStart, min(gridPoints$y - adjustmentFactor))
-        xEnd = c(xEnd, mean(gridPoints$x)) # where to draw horizontal lines
-        yEnd = c(yEnd, max(gridPoints$y + adjustmentFactor))
+        xStart = c(xStart, median(gridPoints$x)) # where to draw horizontal lines
+        yStart = c(yStart, min(gridPoints$y) - adjustmentFactorY)
+        xEnd = c(xEnd, median(gridPoints$x)) # where to draw horizontal lines
+        yEnd = c(yEnd, max(gridPoints$y) + adjustmentFactorY)
       }
       
       prevRow = currentCol[row]
@@ -261,7 +273,7 @@ drawVertical <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, yDif
   return(data.frame(xStart=xStart, yStart=yStart, xEnd=xEnd, yEnd=yEnd))
 }
 
-drawPositiveDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff){
+drawPositiveDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff, yDiff){
   if (density > 1){density=1}
   xBins = gridOutput[[1]]
   yBins = gridOutput[[2]]
@@ -273,7 +285,10 @@ drawPositiveDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
   yEnd = c()
   startingGrids = c(seq(1, nrow(freqMat)^2, by=nrow(freqMat)), seq((nrow(freqMat) * (nrow(freqMat)-1)) + 2, nrow(freqMat)^2)) # which grids diagnol will start
   diagnolDraw = TRUE # wheater to draw in current diagnol or not
-  adjustmentFactor = 1.75/898 * size * diff(xDiff)
+  slope = diff(yDiff)/diff(xDiff)
+  adjustmentFactorX = convertSizeToCartesian(size, xDiff, 'x') * cos(atan(slope)) # trignometry ensures adjusted point remains on diagnol
+  adjustmentFactorY = convertSizeToCartesian(size, yDiff, 'y') * sin(atan(slope))
+  
   for (startingGrid in startingGrids){
 
     ## deals with determining grids in diagnol
@@ -306,34 +321,34 @@ drawPositiveDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
       
       currentGridVal = freqMat[row, col] # number of points in current grid
       if (!lineDraw & prevGrid == 0 & currentGridVal != 0 & diagnolDraw){ # when to start a line
-        xStart = c(xStart, xBins[col])
-        yStart = c(yStart, yBins[row])
+        xStart = c(xStart, xBins[col] - adjustmentFactorX)
+        yStart = c(yStart, yBins[row] - adjustmentFactorY)
         lineDraw = TRUE
       }
       
       
       if (lineDraw & currentGridVal == 0 & diagnolDraw){ # when to end a line
-        xEnd = c(xEnd, xBins[col])
-        yEnd = c(yEnd, yBins[row])
+        xEnd = c(xEnd, xBins[col] + adjustmentFactorX)
+        yEnd = c(yEnd, yBins[row] + adjustmentFactorY)
         lineDraw = FALSE
       }
       
       # dealing with sparse points
-      surroundingCol= c((col-sparsity):(col-1), (col+1):(col+sparsity))
-      surroundingCol = surroundingCol[surroundingCol > 0 & surroundingCol < nrow(freqMat)] # grids sparsity vertical distance away
+      surroundingCol = c((col-sparsity):(col-1), (col+1):(col+sparsity))
+      surroundingCol = surroundingCol[surroundingCol > 0 & surroundingCol < nrow(freqMat)] # grids sparsity horizontal distance away
       
       surroundingRow = c((row-sparsity):(row-1), (row+1):(row+sparsity))
       surroundingRow = surroundingRow[surroundingRow > 0 & surroundingRow< ncol(freqMat)] # grids sparsity vertical distance away
       
-      
-      if (sum(freqMat[row, surroundingCol]) + sum(freqMat[surroundingRow, col]) == 0 & currentGridVal != 0 & !lineDraw){ 
-        
+
+      if (sum(freqMat[row, surroundingCol]) + sum(freqMat[surroundingRow, col]) <= 2 & currentGridVal != 0 & !lineDraw){ 
         gridPoints = pointsToGrid[pointsToGrid$yIntervals == row & pointsToGrid$xIntervals == col, ]
-        xStart = c(xStart, min(gridPoints$x) - adjustmentFactor)
-        xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactor)
-        slope = diff(range(yBins))/diff(range(xBins))
-        yStart = c(yStart, min(gridPoints$y) - adjustmentFactor)
-        yEnd = c(yEnd, (tail(xEnd, 1)-tail(xStart, 1))*slope + min(gridPoints$y) - adjustmentFactor)
+        xStart = c(xStart, min(gridPoints$x) - adjustmentFactorX)
+        xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactorX)
+        centerPointX = median(gridPoints$x)
+        centerPointY = median(gridPoints$y)
+        yStart = c(yStart, centerPointY - slope*(centerPointX - tail(xStart, 1)))
+        yEnd = c(yEnd, centerPointY + slope*(tail(xEnd, 1) - centerPointX))
       }
       
       prevGrid = currentGridVal
@@ -343,7 +358,7 @@ drawPositiveDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
   return(data.frame(xStart=xStart, yStart=yStart, xEnd=xEnd, yEnd=yEnd))
 }
 
-drawNegativeDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff){
+drawNegativeDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff, yDiff){
   if (density > 1){density=1}
   xBins = gridOutput[[1]]
   yBins = gridOutput[[2]]
@@ -355,7 +370,9 @@ drawNegativeDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
   yEnd = c()
   startingGrids = c(seq(nrow(freqMat)^2 - nrow(freqMat) + 1, 1, by=-1*nrow(freqMat)), seq(2, ncol(freqMat), by=1)) # which grids diagnol will start
   diagnolDraw = TRUE # wheater to draw in current diagnol or not
-  adjustmentFactor = 1.75/898 * size * diff(xDiff)
+  slope = diff(yDiff)/diff(xDiff)
+  adjustmentFactorX = convertSizeToCartesian(size, xDiff, 'x') * cos(atan(slope)) # trignometry ensures adjusted point remains on diagnol
+  adjustmentFactorY = convertSizeToCartesian(size, yDiff, 'y') * sin(atan(slope))
 
   for (startingGrid in startingGrids){
     
@@ -386,33 +403,34 @@ drawNegativeDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
       
       currentGridVal = freqMat[row, col] # number of points in current grid
       if (!lineDraw & prevGrid == 0 & currentGridVal != 0 & diagnolDraw){ # when to start a line
-        xStart = c(xStart, xBins[col])
-        yStart = c(yStart, yBins[row])
+        xStart = c(xStart, xBins[col] - adjustmentFactorX)
+        yStart = c(yStart, yBins[row] + adjustmentFactorY)
         lineDraw = TRUE
       }
       
       
       if (lineDraw & currentGridVal == 0 & diagnolDraw){ # when to end a line
-        xEnd = c(xEnd, xBins[col])
-        yEnd = c(yEnd, yBins[row])
+        xEnd = c(xEnd, xBins[col] + adjustmentFactorX)
+        yEnd = c(yEnd, yBins[row] - adjustmentFactorY)
         lineDraw = FALSE
       }
       
       # dealing with sparse points
-      surroundingCol= c((col-sparsity):(col-1), (col+1):(col+sparsity))
+      surroundingCol = c((col-sparsity):(col-1), (col+1):(col+sparsity))
       surroundingCol = surroundingCol[surroundingCol > 0 & surroundingCol < nrow(freqMat)] # grids sparsity vertical distance away
       
       surroundingRow = c((row-sparsity):(row-1), (row+1):(row+sparsity))
       surroundingRow = surroundingRow[surroundingRow > 0 & surroundingRow< ncol(freqMat)] # grids sparsity vertical distance away
       
       
-      if (sum(freqMat[row, surroundingCol]) + sum(freqMat[surroundingRow, col]) == 0 & currentGridVal != 0 & !lineDraw){ 
+      if (sum(freqMat[row, surroundingCol]) + sum(freqMat[surroundingRow, col]) <= 2 & currentGridVal != 0 & !lineDraw){ 
         gridPoints = pointsToGrid[pointsToGrid$yIntervals == row & pointsToGrid$xIntervals == col, ]
-        xStart = c(xStart, max(gridPoints$x) + adjustmentFactor)
-        xEnd = c(xEnd, min(gridPoints$x) - adjustmentFactor)
-        slope = diff(range(yBins))/diff(range(xBins))
-        yStart = c(yStart, min(gridPoints$y) - adjustmentFactor)
-        yEnd = c(yEnd, (tail(xStart, 1)-tail(xEnd, 1))*slope + min(gridPoints$y) - adjustmentFactor)
+        xStart = c(xStart, max(gridPoints$x) + adjustmentFactorX)
+        xEnd = c(xEnd, min(gridPoints$x) - adjustmentFactorX)
+        centerPointX = median(gridPoints$x)
+        centerPointY = median(gridPoints$y)
+        yStart = c(yStart, centerPointY - slope*(tail(xStart, 1) - centerPointX))
+        yEnd = c(yEnd, centerPointY + slope*(centerPointX - tail(xEnd, 1)))
       }
       
       prevGrid = currentGridVal
@@ -421,10 +439,16 @@ drawNegativeDiagnol <- function(gridOutput, density = 1/2, sparsity = 5, size = 
   return(data.frame(xStart=xStart, yStart=yStart, xEnd=xEnd, yEnd=yEnd))
 }
 
-hatchScatter <- function(data, x, y, factor, factorName, pointSize){
-  # colors and patterns to be used
-  cbbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
-  patterns <- c('horizontal', 'vertical', 'positiveDiagnol', 'negativeDiagnol')
+hatchScatter <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSize = NULL, 
+                         patternList = list(list(pattern="horizontal"), list(pattern="vertical"), list(pattern="positiveDiagnol"), list(pattern="negativeDiagnol")),
+                         colorPalette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){
+  # getting pattern order sorted out
+  patternOrder = c("horizontal","vertical","positiveDiagnol","negativeDiagnol")
+  if (length(patternList) >= length(levels(factor))){ # when all patterns aesthetics changed
+    patternOrder = sapply(patternList, function(x){x[["pattern"]]})
+  }
+  
+  # getting legend ready
   legendDF = data.frame(x=numeric(), y=numeric(), ids=as.character())
   names = colnames(legendDF)
   legendIcons = list()
@@ -442,40 +466,63 @@ hatchScatter <- function(data, x, y, factor, factorName, pointSize){
   
   # creating the patterns for each group
   for (group in groups){
+    # setting default aesthetics
+    lineType = "solid"
+    lineColor = "black"
+    lineAlpha = 0.4
+    lineWidth = ifelse(pointSize < 0.5, 2*pointSize/.pt, pointSize/.pt)
+    pointAlpha = 0.4
+    gridSize = as.integer(500*exp(-pointSize/2.2)+43.44965) # grid size follows a exponential decay function in terms of pointSize
+    density = 1/5
+    sparsity = as.integer(0.02*gridSize)
+    
     xGroup = x[factor == group] # gets the points for each group
     yGroup = y[factor == group]
     groupData = data[factor == group, ]
     
+    # getting the necessary aesthetics for each pattern
+    pattern = patternOrder[groupNum]
+    currentPatternAes = list(pattern=patternOrder[groupNum])
+    for (i in patternList){
+      if (is.null(i$pattern)){stop("Specify pattern in patternList argument!")}
+      if (i$pattern == pattern){ currentPatternAes = i} # aesthetics for given pattern
+    }
+    
+    if (!(is.null(currentPatternAes$density))){ density =currentPatternAes$density}
+    if (!(is.null(currentPatternAes$sparsity))){ sparsity = currentPatternAes$sparsity}
+    if (!(is.null(currentPatternAes$lineType))){ lineType = currentPatternAes$lineType}
+    if (!(is.null(currentPatternAes$lineWidth))){ lineWidth = currentPatternAes$lineWidth}
+    if (!(is.null(currentPatternAes$lineColor))){ lineColor = currentPatternAes$lineColor}
+    if (!(is.null(currentPatternAes$lineAlpha))){ lineAlpha= currentPatternAes$lineAlpha}
+    if (!(is.null(currentPatternAes$pointAlpha))){ pointAlpha = currentPatternAes$pointAlpha}
+    
     # plot points for each group
-    radius = 0.01 * diff(xDiff) * pointSize
-    plt = plt + geom_point(data=groupData, x=xGroup, y=yGroup, color=cbbPalette[groupNum], alpha=0.4)
+    plt = plt + geom_point(data=groupData, x=xGroup, y=yGroup, color=colorPalette[groupNum], alpha=pointAlpha, size=pointSize)
     
     # handles creating the legend icon
-    lineType = "solid"
-    lineColor = "black"
     legendDF = rbind(legendDF, c(median(xGroup), median(yGroup), group))
-    legendIcons[[length(legendIcons) + 1]] = list(cbbPalette[groupNum], lineColor, lineType, patterns[groupNum])
+    legendIcons[[length(legendIcons) + 1]] = list(colorPalette[groupNum], lineColor, lineType, pattern)
     colnames(legendDF) = names
     
     # get grid of each group
-    groupGrid = countGridPoints(xGroup, yGroup, xDiff, yDiff, n=200)
-    if (patterns[groupNum] == "horizontal"){
-      lineCoords = drawHorizontal(groupGrid, density=1/3, size=pointSize, sparsity=3, xDiff)
+    groupGrid = countGridPoints(xGroup, yGroup, xDiff, yDiff, n=gridSize)
+    if (pattern == "horizontal"){
+      lineCoords = drawHorizontal(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     }
     
-    if (patterns[groupNum] == "vertical"){
-      lineCoords = drawVertical(groupGrid, density=1/3, size=pointSize, sparsity=3, yDiff)
+    if (pattern == "vertical"){
+      lineCoords = drawVertical(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     }
     
-    if (patterns[groupNum] == "positiveDiagnol"){
-      lineCoords = drawPositiveDiagnol(groupGrid, density=1/3, size=pointSize, sparsity=3, xDiff)
+    if (pattern == "positiveDiagnol"){
+      lineCoords = drawPositiveDiagnol(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     }
     
-    if (patterns[groupNum] == "negativeDiagnol"){
-      lineCoords = drawNegativeDiagnol(groupGrid, density=1/3, size=pointSize, sparsity=3, xDiff)
+    if (pattern == "negativeDiagnol"){
+      lineCoords = drawNegativeDiagnol(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     } 
 
-    plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=0.4, size=0.75, linetype='solid')
+    plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
     
     groupNum = groupNum + 1
   }
@@ -490,7 +537,10 @@ hatchScatter <- function(data, x, y, factor, factorName, pointSize){
   return(plt)
 }
 
-plt <- hatchScatter(sampleDF, sampleDF$Xt, sampleDF$Yt, as.factor(sampleDF$location), "Tissue Type", 1)
+
+patternList = list(list(pattern="positiveDiagnol", lineAlpha=1), list(pattern="horizontal", lineAlpha=1), list(pattern="negativeDiagnol",lineAlpha=1), list(pattern="vertical", lineAlpha=1))
+plt <- hatchScatter(sampleDF, sampleDF$Xt, sampleDF$Yt, as.factor(sampleDF$location), "Tissue Type", 0.2, patternList = patternList)
+plot(plt)
 xlabel = "X Coordinates"
 ylabel = "Y Coordinates"
 title = "Histological View of the PDAC Dataset"
@@ -505,8 +555,10 @@ plt = plt + theme(legend.title = element_text(family="serif", size=20, face="bol
 plot(plt)
 
 
+ggsave("D:/umd/summer 2020/hatchEfficientAllPatternsWithLegend5.svg")
+#ggsave("D:/umd/summer 2020/hatchEfficientAllPatternsWithLegend5.png", dpi=500)
+ 
 
-ggsave("D:/umd/summer 2020/hatchEfficientAllPatternsWithLegend.png", dpi=500)
 
 
 
