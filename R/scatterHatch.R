@@ -50,7 +50,7 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     lineAlpha = 0.4
     lineWidth = ifelse(pointSize < 0.5, 2*pointSize/.pt, pointSize/.pt)
     pointAlpha = 0.4
-    gridSize = as.integer(500*exp(-pointSize/2.2)+43.44965) # grid size follows a exponential decay function in terms of pointSize
+    gridSize = ifelse(is.null(gridSize), as.integer(500*exp(-pointSize/2.2)+43.44965), gridSize) # grid size follows a exponential decay function in terms of pointSize
     density = 1/4
     sparsity = as.integer(0.02*gridSize)
 
