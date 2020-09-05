@@ -62,6 +62,7 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     pattern = patternOrder[groupNum]
     currentPatternAes = list(pattern=patternOrder[groupNum])
     for (i in 1:length(patternList)){
+      if (length(patternList) == 0){ break}
       if (is.null(patternList[[i]]$pattern)){stop("Specify pattern in patternList argument!")}
       if (patternList[[i]]$pattern == pattern){
         currentPatternAes = patternList[[i]]  # aesthetics for given pattern
