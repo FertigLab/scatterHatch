@@ -1,4 +1,4 @@
-# draws the negative diagnol pattern
+# Developed By Tejas Guha: guhatejas@gmail.com or tguha@umd.edu
 
 #' Draws the negative diagnol pattern
 #'
