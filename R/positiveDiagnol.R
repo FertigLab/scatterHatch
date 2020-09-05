@@ -1,4 +1,4 @@
-# draws the positive diagnol pattern
+# Developed By Tejas Guha: guhatejas@gmail.com or tguha@umd.edu
 
 #' Draws the positive diagnol pattern
 #'
