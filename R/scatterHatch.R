@@ -1,3 +1,5 @@
+# Developed By Tejas Guha: guhatejas@gmail.com or tguha@umd.edu
+
 #' Creates a scatterplot with hatched patterns.
 #'
 #' This function creates a scatterplot with hatched patterns by using geom_segment().
