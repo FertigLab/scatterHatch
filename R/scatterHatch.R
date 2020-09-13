@@ -1,3 +1,5 @@
+# Tejas Guha - September 13, 2020
+
 #' Creates a scatterplot with hatched patterns.
 #'
 #' This function creates a scatterplot with hatched patterns by using geom_segment().

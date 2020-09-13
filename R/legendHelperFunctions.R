@@ -1,4 +1,5 @@
-# preparing helper functions to create the legend for graph
+# Preparing helper functions to create the legend for graph
+# Tejas Guha - September 13, 2020
 
 
 #' Creating a Legend Icon

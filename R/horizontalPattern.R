@@ -1,4 +1,5 @@
-#draws the horizontal line pattern
+# Draws the horizontal line pattern
+# Tejas Guha - September 13, 2020
 
 #' Draws the horizontal line pattern
 #'

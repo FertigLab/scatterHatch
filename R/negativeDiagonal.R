@@ -1,4 +1,5 @@
-# draws the negative diagonal pattern
+# Draws the negative diagonal pattern
+# Tejas Guha - September 13, 2020
 
 #' Draws the negative diagonal pattern
 #'
