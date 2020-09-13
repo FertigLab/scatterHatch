@@ -4,7 +4,14 @@
 \alias{legendIcon}
 \title{Creating a Legend Icon}
 \usage{
-legendIcon(color, lineColor = "black", lineType = "solid", patternType)
+legendIcon(
+  color,
+  lineColor = "black",
+  lineType = "solid",
+  patternType,
+  lineWidth = 1.5,
+  lineAlpha = 0.4
+)
 }
 \arguments{
 \item{color}{Background color of the icon}
