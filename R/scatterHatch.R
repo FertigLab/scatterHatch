@@ -45,7 +45,7 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     # setting default aesthetics
     lineType = "solid"
     lineColor = "black"
-    lineAlpha = 0.4
+    lineAlpha = 1
     lineWidth = ifelse(pointSize < 0.5, 2*pointSize/.pt, pointSize/.pt)
     pointAlpha = 0.4
     gridSize = ifelse(is.null(gridSize), as.integer(500*exp(-pointSize/2.2)+43.44965), gridSize) # grid size follows a exponential decay function in terms of pointSize
@@ -74,7 +74,6 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     if (!(is.null(currentPatternAes$lineType))){ lineType = currentPatternAes$lineType}
     if (!(is.null(currentPatternAes$lineWidth))){ lineWidth = currentPatternAes$lineWidth}
     if (!(is.null(currentPatternAes$lineColor))){ lineColor = currentPatternAes$lineColor}
-    if (!(is.null(currentPatternAes$lineAlpha))){ lineAlpha= currentPatternAes$lineAlpha}
     if (!(is.null(currentPatternAes$pointAlpha))){ pointAlpha = currentPatternAes$pointAlpha}
 
     # plot points for each group
