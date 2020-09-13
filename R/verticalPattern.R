@@ -1,4 +1,5 @@
-#draws the vertical line pattern
+# Draws the vertical line pattern
+# Tejas Guha - September 13, 2020
 
 #' Draws the vertical line pattern
 #'

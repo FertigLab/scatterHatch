@@ -1,4 +1,5 @@
-# preparing helper functions to create each pattern
+# Preparing helper functions to create each pattern
+# Tejas Guha - September 13, 2020
 
 #' Creates a 2D frequency matrix
 #'
