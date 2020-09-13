@@ -1,5 +1,3 @@
-# Developed By Tejas Guha: guhatejas@gmail.com or tguha@umd.edu
-
 #' Creates a scatterplot with hatched patterns.
 #'
 #' This function creates a scatterplot with hatched patterns by using geom_segment().
@@ -18,10 +16,10 @@
 #' @return ggplot2 object of scatterplot with hatched patterns for each group.
 #' @export
 scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSize = NULL,
-                         patternList = list(list(pattern="horizontal"), list(pattern="vertical"), list(pattern="positiveDiagnol"), list(pattern="negativeDiagnol")),
+                         patternList = list(list(pattern="horizontal"), list(pattern="vertical"), list(pattern="positiveDiagonal"), list(pattern="negativeDiagonal")),
                          colorPalette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")){
   # getting pattern order sorted out
-  patternOrder = c("horizontal","vertical","positiveDiagnol","negativeDiagnol")
+  patternOrder = c("horizontal","vertical","positiveDiagonal","negativeDiagonal")
   if (length(patternList) >= length(levels(factor))){ # when all patterns aesthetics changed
     patternOrder = sapply(patternList, function(x){x[["pattern"]]})
   }
@@ -84,7 +82,7 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
 
     # handles creating the legend icon
     legendDF = rbind(legendDF, c(median(xGroup), median(yGroup), group))
-    legendIcons[[length(legendIcons) + 1]] = list(colorPalette[groupNum], lineColor, lineType, pattern)
+    legendIcons[[length(legendIcons) + 1]] = list(colorPalette[groupNum], lineColor, lineType, pattern, lineWidth, lineAlpha)
     colnames(legendDF) = names
 
     # get grid of each group
@@ -97,12 +95,12 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
       lineCoords = drawVertical(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     }
 
-    if (pattern == "positiveDiagnol"){
-      lineCoords = drawPositiveDiagnol(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
+    if (pattern == "positiveDiagonal"){
+      lineCoords = drawPositiveDiagonal(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     }
 
-    if (pattern == "negativeDiagnol"){
-      lineCoords = drawNegativeDiagnol(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
+    if (pattern == "negativeDiagonal"){
+      lineCoords = drawNegativeDiagonal(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     }
 
     plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)

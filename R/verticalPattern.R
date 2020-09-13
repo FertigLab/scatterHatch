@@ -1,4 +1,4 @@
-# Developed By Tejas Guha: guhatejas@gmail.com or tguha@umd.edu
+#draws the vertical line pattern
 
 #' Draws the vertical line pattern
 #'

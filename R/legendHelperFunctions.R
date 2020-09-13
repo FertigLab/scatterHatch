@@ -1,4 +1,3 @@
-# Developed By Tejas Guha: guhatejas@gmail.com or tguha@umd.edu
 # preparing helper functions to create the legend for graph
 
 
@@ -16,62 +15,40 @@
 #' @param patternType Pattern Type of icon (e.g. vertical, horizontal, etc.)
 #' @return List of grob objects
 #' @export
-legendIcon <- function(color, lineColor="black", lineType = "solid", patternType){
+legendIcon <- function(color, lineColor="black", lineType = "solid", patternType, lineWidth=1.5, lineAlpha=0.4){
+  linePar = grid::gpar(col = lineColor, fill = color, lwd = 2*lineWidth, lty = lineType, alpha=1)
   if (patternType == "horizontal"){
     return(grid::grobTree(
-      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, lwd=1)),
-      grid::linesGrob(x=c(0,1), y=c(0.5, 0.5)),
-      grid::linesGrob(x=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), y=c(0.25, 0.25)),
-      grid::linesGrob(x=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), y=c(0.75, 0.75)),
-      gp = grid::gpar(
-        col = lineColor,
-        fill = color,
-        lwd = 1.5,
-        lty = lineType
-      )
-    ))
+      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, fill=color, lwd=1, alpha=1)),
+      grid::linesGrob(x=c(0,1), y=c(0.5, 0.5), gp=linePar),
+      grid::linesGrob(x=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), y=c(0.25, 0.25), gp=linePar),
+      grid::linesGrob(x=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), y=c(0.75, 0.75), gp=linePar),
+      gp=grid::gpar(alpha=1)))
   }
   if (patternType == "vertical"){
     return(grid::grobTree(
-      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, lwd=1)),
-      grid::linesGrob(y=c(0,1), x=c(0.5, 0.5)),
-      grid::linesGrob(y=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), x=c(0.25, 0.25)),
-      grid::linesGrob(y=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), x=c(0.75, 0.75)),
-      gp = grid::gpar(
-        col = lineColor,
-        fill = color,
-        lwd = 1.5,
-        lty = lineType
-      )
-    ))
+      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, fill=color, lwd=1, alpha=1)),
+      grid::linesGrob(y=c(0,1), x=c(0.5, 0.5), gp=linePar),
+      grid::linesGrob(y=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), x=c(0.25, 0.25), gp=linePar),
+      grid::linesGrob(y=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), x=c(0.75, 0.75), gp=linePar),
+      gp=grid::gpar(alpha=1)))
   }
-  if (patternType == "positiveDiagnol"){
+  if (patternType == "positiveDiagonal"){
     return(grid::grobTree(
-      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, lwd=1)),
-      grid::linesGrob(x=c(-sqrt((0.5)^2/2)+0.5,sqrt((0.5)^2/2)+0.5), y=c(-sqrt((0.5)^2/2)+0.5, sqrt((0.5)^2/2)+0.5)),
-      grid::linesGrob(x=c(0.01779486, 0.6322051), y=c(0.3677949, 0.9822051)),
-      grid::linesGrob(x=c(0.3677949, 0.9822051), y=c(0.01779486, 0.6322051)),
-      gp = grid::gpar(
-        col = lineColor,
-        fill = color,
-        lwd = 1.75,
-        lty = lineType
-      )
-    ))
+      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, lwd=1, alpha=1, fill=color)),
+      grid::linesGrob(x=c(-sqrt((0.5)^2/2)+0.5,sqrt((0.5)^2/2)+0.5), y=c(-sqrt((0.5)^2/2)+0.5, sqrt((0.5)^2/2)+0.5), gp=linePar),
+      grid::linesGrob(x=c(0.01779486, 0.6322051), y=c(0.3677949, 0.9822051), gp=linePar),
+      grid::linesGrob(x=c(0.3677949, 0.9822051), y=c(0.01779486, 0.6322051), gp=linePar),
+      gp=grid::gpar(alpha=1)
+      ))
   }
-  if (patternType == "negativeDiagnol"){
+  if (patternType == "negativeDiagonal"){
     return(grid::grobTree(
-      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, lwd=1)),
-      grid::linesGrob(x=c(-sqrt((0.5)^2/2)+0.5,sqrt((0.5)^2/2)+0.5), y=c(sqrt((0.5)^2/2)+0.5, -sqrt((0.5)^2/2)+0.5)),
-      grid::linesGrob(x=c(0.01779486, 0.6322051), y=c(0.6322051, 0.01779486)),
-      grid::linesGrob(x=c(0.3677949, 0.9822051), y=c(0.9822051, 0.3677949)),
-      gp = grid::gpar(
-        col = lineColor,
-        fill = color,
-        lwd = 1.75,
-        lty = lineType
-      )
-    ))
+      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, fill=color, lwd=1, alpha=1)),
+      grid::linesGrob(x=c(-sqrt((0.5)^2/2)+0.5,sqrt((0.5)^2/2)+0.5), y=c(sqrt((0.5)^2/2)+0.5, -sqrt((0.5)^2/2)+0.5), gp=linePar),
+      grid::linesGrob(x=c(0.01779486, 0.6322051), y=c(0.6322051, 0.01779486), gp=linePar),
+      grid::linesGrob(x=c(0.3677949, 0.9822051), y=c(0.9822051, 0.3677949), gp=linePar),
+      gp=grid::gpar(alpha=1)))
   }
 }
 
@@ -86,7 +63,7 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
                        draw_key = function (data, params, size)
                        {
                          iconInfo = data$ids[[1]] # ids contains all the necessary info to render icon
-                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], iconInfo[[4]])
+                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], iconInfo[[4]], iconInfo[[5]], iconInfo[[6]])
                        },
 
                        draw_group = function(data, panel_scales, coord) {

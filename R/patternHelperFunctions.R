@@ -1,4 +1,3 @@
-# Developed By Tejas Guha: guhatejas@gmail.com or tguha@umd.edu
 # preparing helper functions to create each pattern
 
 #' Creates a 2D frequency matrix
