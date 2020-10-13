@@ -1,0 +1,109 @@
+---
+title: "Creating a Scatterplot with Texture"
+author: "Tejas Guha"
+date: "October 1, 2020"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating a Scatterplot with Texture}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+It is often said that a picture is worth a thousand words.  In bioinformatics, visualizations attempt to concisely convey complex relationships between a multitude of factors and groups.  One could argue these visualizations are worth a lot more than a thousand words.  However, it is important to remember there is a balance between encapsulating large amounts of information in a visualization, and correctly deciphering that same information from a visualization.  This balance is not the same for everyone in an audience.  
+
+In bioinformatics, scatterplots often contain many groups represented by many colors.  Distinguishing among distinct groups becomes an impossible task for colorblind individuals, rendering the visualization useless as no information can be retrieved.  This package provides the ```scatterHatch``` function that adds a texture to each group in a scatterplot so that colorblind individuals no longer have to solely reply on color to distinguish groups.
+
+## Importing Local Libraries
+```{r setup}
+library(scatterHatch)
+library(ggplot2)
+```
+
+## Preparing the Data
+The data that will be used to showcase the function is [a tissue-CyCIF PDAC dataset from Lin et al](http://spatial.rc.fas.harvard.edu/spatialgiotto/giotto.cycif.html).  The preprocessing begins by adding manual annotations for each cell's location in the tissue sample.
+
+```{r }
+pdacData = scatterHatch::pdacData
+pdacData$cellID = paste0('cell_', 1:nrow(pdacData))
+pdacData$Yt <- -pdacData$Yt
+pancreas_frames = c(1:6, 27:31, 15:19, 40:44)
+PDAC_frames = c(23:26, 35:37, 51:52, 64:65, 77)
+small_intestines_frames = c(49:50, 63, 75:76, 88:89, 100:103, 112:116, 125:129, 137:140)
+annotateLocation <- function(frame){
+  if (frame %in% pancreas_frames){return("Pancreas")}
+  if (frame %in% PDAC_frames){return("PDAC")}
+  if (frame %in% small_intestines_frames){return("Small Intestine")}
+  return("Other")
+}
+pdacData$location = sapply(pdacData$frame, annotateLocation)
+
+head(pdacData[, c('Xt', 'Yt', 'location')])
+```
+## Creating a Basic ScatterHatch Plot
+
+```scatterHatch()``` must have a data frame passed to it, along with two vectors denoting the x and y coordinates of each point being plotted.  Additionally, the factor argument must have a factor vector that identifies the group each point is part of.  Lastly, factorName is the title of the legend for the scatterplot.  ```scatterHatch()``` returns a ggplot2 object where each line texture is represented as a ```geom_segment()```.
+```{r echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", fig.width=7, fig.height=4.365256}
+myTheme <- theme_classic() + theme(plot.title = element_text(family="serif", face="bold", size=25), 
+                  axis.title.x = element_text(family="serif", size=20),
+                  axis.text.x = element_text(family="serif",color="black", size=15),
+                  axis.title.y = element_text(family="serif", size=20),
+                  axis.text.y = element_text(family="serif",color="black", size=15)) +
+                  theme(legend.title = element_text(family="serif", size=20, face="bold"),
+                  legend.text = element_text(family="serif", size=15))
+
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1) + myTheme
+plot(plt)
+```
+
+## Customizing ScatterHatch Plot
+### Changing the Order of Pattern Assignment
+Controlling the aesthetics of each pattern is done by passing a list to the ```patternList``` argument.  Each element of the list should contain a list that denotes the desired aesthetics for each pattern.  Every element of ```patternList``` must have a named element called "pattern" that contains the unique pattern type for which the aesthetics are being changed.  If the length of ```patternList``` is equal to the number of groups in ```factor``` then pattern assignment for each group will be based on the order of patterns in ```patternList```.  Below, the first group, "Pancreas", uses the aesthetics of the first element in ````patternList``` - positiveDiagnol - instead of horizontal.
+```{r echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", fig.width=8, fig.height=4.988864}
+patternList = list(list(pattern="positiveDiagonal"), list(pattern="horizontal"), list(pattern="negativeDiagonal"), list(pattern="vertical"))
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
+plot(plt)
+```
+
+### Changing the Aesthetics of each Pattern
+Changing the aesthetics of each pattern, like line color or line size, is done by adding a named element for the respective aesthetic being changed and the value desired.  Note, pattern assignment for each group is unaffected when the number of groups in ```factor``` is greater than the number of elements in ```patternList```.  To make the positiveDiagonal pattern have red lines and the vertical pattern have a decreased line density:
+```{r echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", fig.width=8, fig.height=4.988864}
+patternList = list(list(pattern="positiveDiagonal", lineColor="red"), list(pattern="vertical", density=1/8))
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
+plot(plt)
+```
+
+## scatterHatch() Arguments Explained
+```{r echo=FALSE}
+parameters = c('data', 'x', 'y', 'factor', 'factorName', 'pointSize', 'gridSize', 'patternList', 'colorPalette')
+paramDescript = c('A dataframe of the dataset being plotted', 'A numeric vector describing the x-coordinates of the points being plotted', 'A numeric vector describing the y-coordinates of the points being plotted', 'A vector describing what group each point belongs to', 'The legend title', 'ggplot2 point size', 'Integer describing the precision of the hatched patterns.  Larger the value, greater the precision at the expense of efficiency.  Default follows this expotential decay function: 500*e^(-pointSize/2.2) + 43.44965', 'List containing the aesthethics of each pattern', 'Character vector describing the point color of each group; default is color-blind friendly')
+
+paramTable = data.frame(parameters, paramDescript)
+knitr::kable(paramTable, col.names = c("Argument","Description"))
+
+myTheme <- theme_classic() + theme(plot.title = element_text(family="serif", face="bold", size=25), 
+                  axis.title.x = element_text(family="serif", size=20),
+                  axis.text.x = element_text(family="serif",color="black", size=15),
+                  axis.title.y = element_text(family="serif", size=20),
+                  axis.text.y = element_text(family="serif",color="black", size=15)) +
+                  theme(legend.title = element_text(family="serif", size=20, face="bold"),
+                  legend.text = element_text(family="serif", size=15))
+```
+
+## Pattern Aesthetics Arguments
+These pattern aesthetics are passed into a list in the patternList argument of ```scatterHatch()```.
+
+```{r echo=FALSE}
+aesthe = c('pattern', 'density', 'sparsity', 'lineColor', 'lineType', 'lineWidth', 'pointAlpha')
+aestheDescript = c('A string representing which pattern to use ("horizontal", "vertical", "positiveDiagonal", "negativeDiagonal")', 'A fraction representing how dense the lines in a pattern should be.  Must be less than or equal to 1, with the denominator as an integer and the numerator the number 1.  Greater the density value, denser the pattern. Default is 1/4', 'Value controlling the requirements for a point to be labelled as sparse and have an individual line pattern be rendered on it.  Less the sparsity value, less the requirements.  Value >= 1 and <= gridSize.  Default is 2% of the gridSize', 'Color of the pattern line', 'Type of line (e.g. dashed, dotted, etc.)',
+                  'Width of the lines in the pattern',
+                  'Alpha value of the points being plotted for each group')
+
+aestheTable = data.frame(aesthe, aestheDescript)
+knitr::kable(aestheTable, col.names = c("Aesthetics","Description"))
+```
