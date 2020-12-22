@@ -54,18 +54,18 @@ ggplot2 object where each line texture is represented as a
 `geom_segment()`.
 
 ``` r
-myTheme <- theme_classic() + theme(plot.title = element_text(family = "serif", face = "bold", 
-    size = 25), axis.title.x = element_text(family = "serif", size = 20), axis.text.x = element_text(family = "serif", 
-    color = "black", size = 15), axis.title.y = element_text(family = "serif", size = 20), 
-    axis.text.y = element_text(family = "serif", color = "black", size = 15)) + theme(legend.title = element_text(family = "serif", 
+myTheme <- theme_classic() + theme(plot.title = element_text(family = "serif", face = "bold",
+    size = 25), axis.title.x = element_text(family = "serif", size = 20), axis.text.x = element_text(family = "serif",
+    color = "black", size = 15), axis.title.y = element_text(family = "serif", size = 20),
+    axis.text.y = element_text(family = "serif", color = "black", size = 15)) + theme(legend.title = element_text(family = "serif",
     size = 20, face = "bold"), legend.text = element_text(family = "serif", size = 15))
 
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), 
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location),
     factorName = "Tissue Type", pointSize = 1) + myTheme
 plot(plt)
 ```
 
-![](C:/Users/guhat/AppData/Local/Temp/Rtmp8mHHv1/preview-47501e8e1bb3.dir/vignette_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ## Customizing ScatterHatch Plot
 
@@ -83,14 +83,14 @@ uses the aesthetics of the first element in \``patternList` -
 positiveDiagnol - instead of horizontal.
 
 ``` r
-patternList = list(list(pattern = "positiveDiagonal"), list(pattern = "horizontal"), 
+patternList = list(list(pattern = "positiveDiagonal"), list(pattern = "horizontal"),
     list(pattern = "negativeDiagonal"), list(pattern = "vertical"))
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), 
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location),
     factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
 plot(plt)
 ```
 
-![](C:/Users/guhat/AppData/Local/Temp/Rtmp8mHHv1/preview-47501e8e1bb3.dir/vignette_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ### Changing the Aesthetics of each Pattern
 
@@ -103,14 +103,14 @@ pattern have red lines and the vertical pattern have a decreased line
 density:
 
 ``` r
-patternList = list(list(pattern = "positiveDiagonal", lineColor = "red"), list(pattern = "vertical", 
+patternList = list(list(pattern = "positiveDiagonal", lineColor = "red"), list(pattern = "vertical",
     density = 1/8))
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), 
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location),
     factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
 plot(plt)
 ```
 
-![](C:/Users/guhat/AppData/Local/Temp/Rtmp8mHHv1/preview-47501e8e1bb3.dir/vignette_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ## scatterHatch() Arguments Explained
 
