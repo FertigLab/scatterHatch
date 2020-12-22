@@ -17,7 +17,7 @@ BiocManager::install("scatterHatch")
 You can also install scatterHatch directly from the Github source.
 ```
 install.packages("remotes")
-remotes::install_github("dynverse/dyngen", dependencies = TRUE, build_vignettes = TRUE)
+remotes::install_github("FertigLab/scatterHatchPlots", dependencies = TRUE, build_vignettes = TRUE)
 ```
 
 ## Vignettes
