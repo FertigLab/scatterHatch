@@ -23,4 +23,4 @@ remotes::install_github("dynverse/dyngen", dependencies = TRUE, build_vignettes 
 ## Vignettes
 To learn how to use the scatterHatch package, visit the vignette below.
 
-* [scatterHatch Vignette](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette.html)
+* [scatterHatch Vignette](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette.md)
