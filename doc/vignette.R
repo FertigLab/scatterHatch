@@ -34,12 +34,14 @@ myTheme <- theme_classic() + theme(plot.title = element_text(family="serif", fac
                   theme(legend.title = element_text(family="serif", size=20, face="bold"),
                   legend.text = element_text(family="serif", size=15))
 
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1) + myTheme
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, 
+                    factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1) + myTheme
 plot(plt)
 
 ## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", fig.width=8, fig.height=4.988864----
 patternList = list(list(pattern="positiveDiagonal"), list(pattern="horizontal"), list(pattern="negativeDiagonal"), list(pattern="vertical"))
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, 
+                    factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
 plot(plt)
 
 ## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", fig.width=8, fig.height=4.988864----
