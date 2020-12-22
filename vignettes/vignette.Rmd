@@ -15,9 +15,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-It is often said that a picture is worth a thousand words.  In bioinformatics, visualizations attempt to concisely convey complex relationships between a multitude of factors and groups.  One could argue these visualizations are worth a lot more than a thousand words.  However, it is important to remember there is a balance between encapsulating large amounts of information in a visualization, and correctly deciphering that same information from a visualization.  This balance is not the same for everyone in an audience.  
-
-In bioinformatics, scatterplots often contain many groups represented by many colors.  Distinguishing among distinct groups becomes an impossible task for colorblind individuals, rendering the visualization useless as no information can be retrieved.  This package provides the ```scatterHatch``` function that adds a texture to each group in a scatterplot so that colorblind individuals no longer have to solely reply on color to distinguish groups.
 
 ## Importing Local Libraries
 ```{r setup}
@@ -57,7 +54,8 @@ myTheme <- theme_classic() + theme(plot.title = element_text(family="serif", fac
                   theme(legend.title = element_text(family="serif", size=20, face="bold"),
                   legend.text = element_text(family="serif", size=15))
 
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1) + myTheme
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, 
+                    factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1) + myTheme
 plot(plt)
 ```
 
@@ -66,7 +64,8 @@ plot(plt)
 Controlling the aesthetics of each pattern is done by passing a list to the ```patternList``` argument.  Each element of the list should contain a list that denotes the desired aesthetics for each pattern.  Every element of ```patternList``` must have a named element called "pattern" that contains the unique pattern type for which the aesthetics are being changed.  If the length of ```patternList``` is equal to the number of groups in ```factor``` then pattern assignment for each group will be based on the order of patterns in ```patternList```.  Below, the first group, "Pancreas", uses the aesthetics of the first element in ````patternList``` - positiveDiagnol - instead of horizontal.
 ```{r echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", fig.width=8, fig.height=4.988864}
 patternList = list(list(pattern="positiveDiagonal"), list(pattern="horizontal"), list(pattern="negativeDiagonal"), list(pattern="vertical"))
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
+plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, 
+                    factor = as.factor(pdacData$location), factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
 plot(plt)
 ```
 
