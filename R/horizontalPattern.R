@@ -17,41 +17,43 @@
 #' @return Dataframe with 4 columns defining the starting and ending coordinates of each line to be drawn.
 #' @export
 
-drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff, yDiff){
-  if (density > 1){density=1} #density must be 1 or less
+drawHorizontal <- function(gridOutput, density = 1/3, sparsity = 5, size, xDiff, yDiff){
+  if (density > 1){density=1} # density must be 1 or less
   xBins = gridOutput[[1]]
   yBins = gridOutput[[2]]
   freqMat = gridOutput[[3]]
   pointsToGrid = gridOutput[[4]]
+  pointsToGrid = sparsityDistanceCalc(pointsToGrid, size, xDiff, yDiff, 'x') # annotates sparse points
+  sparsePointsToGrid = pointsToGrid[pointsToGrid$sparsePoints == TRUE, ]
+  pointsToGrid = pointsToGrid[pointsToGrid$sparsePoints == FALSE, ] # removes sparse points from regular pattern drawing
+  for (i in 1:nrow(sparsePointsToGrid)){ # removes sparse points from 2D frequency matrix
+    freqMat[sparsePointsToGrid$yIntervals[i], sparsePointsToGrid$xIntervals[i]] = freqMat[sparsePointsToGrid$yIntervals[i], sparsePointsToGrid$xIntervals[i]] - 1
+  }
   xStart = c()
   yStart = c()
   xEnd = c()
   yEnd = c()
   adjustmentFactorX = convertSizeToCartesian(size, xDiff, 'x')
   adjustmentFactorY = convertSizeToCartesian(size, yDiff, 'y')
-  rowDraw = TRUE # wheater to draw lines in current row or not
+
+  rowDraw = TRUE # whether to draw lines in current row or not
   for (row in 1:nrow(freqMat)){ # iterates by every row
     currentRow = freqMat[row, ]
     rowPoints = pointsToGrid[pointsToGrid$yIntervals == row, ]
 
-    if (density <= 1 & row+1 <= nrow(freqMat)){  # where to draw y levels if density < 1
-      yLevels = median(rowPoints$y)
-    }
-
-    if (density <= 1){ # if density < 1, when to skip rows
-      rowDraw = (as.integer(row * density)*(1/density)) == row
-    }
-
-    if (row + 1 > nrow(freqMat)){ # for top rows exception case
+    yLevels = yBins[row] - (yBins[1] - yBins[2])/2 # where to draw y level
+    if (row == nrow(freqMat)){ # for bottom row exception
       yLevels = yBins[row]
     }
 
+    rowDraw = (as.integer(row * density)*(1/density)) == row # when to skip rows
+
     prevCol = 0
-    lineDraw = FALSE # wheather line being drawn or not
+    lineDraw = FALSE # whether line being drawn or not
 
 
     for (col in 1:ncol(freqMat)){
-      if (!lineDraw & prevCol == 0 & freqMat[row, col] != 0 & rowDraw){ # starting a line segment
+      if (!lineDraw & prevCol == 0 & freqMat[row, col] != 0  & rowDraw){ # starting a line segment
         gridPoints = rowPoints[rowPoints$xIntervals == col, ] # points corresponding to current grid square
         xStart = c(xStart, min(gridPoints$x) - adjustmentFactorX) # where to draw horizontal lines
         yStart = c(yStart, yLevels)
@@ -60,25 +62,31 @@ drawHorizontal <- function(gridOutput, density = 1/2, sparsity = 5, size = 1, xD
 
       if (lineDraw & currentRow[col] == 0 & rowDraw){ # ending line segment
         gridPoints = rowPoints[rowPoints$xIntervals == col-1, ] # points corresponding to current grid square
+
         xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactorX) # where to draw horizontal lines
         yEnd = c(yEnd, yLevels)
         lineDraw = FALSE
-      }
 
-      # dealing with sparse points
-      surroundingGrid = c((col-sparsity):(col-1), (col+1):(col+sparsity))
-      surroundingGrid = surroundingGrid[surroundingGrid > 0 & surroundingGrid < ncol(freqMat)] # grids sparsity horizontal distance away
-      if (sum(currentRow[surroundingGrid]) <= 0 & currentRow[col] != 0 & !lineDraw){
-        gridPoints = rowPoints[rowPoints$xIntervals == col, ]
-        xStart = c(xStart, min(gridPoints$x) - adjustmentFactorX) # where to draw horizontal lines
-        yStart = c(yStart, median(gridPoints$y))
-        xEnd = c(xEnd, max(gridPoints$x) + adjustmentFactorX) # where to draw horizontal lines
-        yEnd = c(yEnd, median(gridPoints$y))
       }
 
       prevCol = currentRow[col]
     }
+
   }
+
+  # dealing with sparse points
+  sparseGridSize = as.integer(diff(xDiff)/(adjustmentFactorX * 6))
+  sparsePointsToGrid = countGridPoints(sparsePointsToGrid$x, sparsePointsToGrid$y, xDiff, yDiff, sparseGridSize)[[4]]
+  sparsePointsToGrid$gridNum = (sparsePointsToGrid$yIntervals - 1) * sparseGridSize + sparsePointsToGrid$xIntervals
+  for (gridNum in unique(sparsePointsToGrid$gridNum)){
+    xRange = sparsePointsToGrid$x[sparsePointsToGrid$gridNum == gridNum]
+    yRange = sparsePointsToGrid$y[sparsePointsToGrid$gridNum == gridNum]
+    xStart = c(xStart, min(xRange) - adjustmentFactorX)
+    xEnd = c(xEnd, max(xRange) + adjustmentFactorX)
+    yStart = c(yStart, median(yRange))
+    yEnd = c(yEnd, median(yRange))
+  }
+
 
   return(data.frame(xStart=xStart, yStart=yStart, xEnd=xEnd, yEnd=yEnd))
 }
