@@ -19,7 +19,7 @@
 countGridPoints <- function(x, y, xDiff, yDiff, n = 25){
   xIntervals = as.numeric(cut(x, breaks = seq(xDiff[1], xDiff[2], by=diff(xDiff)/(n-1))))
   yIntervals = as.numeric(cut(y, breaks = seq(yDiff[2], yDiff[1], by=-1*diff(yDiff)/(n-1))))
-  yIntervals = n+1-yIntervals
+  yIntervals = n+1-yIntervals # ensures as row index increases, y decreases in matrix
   intervals = as.data.frame(cbind(xIntervals, yIntervals))
   pointsToGrid = as.data.frame(cbind(xIntervals, yIntervals, x, y))
   freqs = plyr::count(intervals, vars=c("xIntervals", "yIntervals"))
@@ -47,11 +47,12 @@ countGridPoints <- function(x, y, xDiff, yDiff, n = 25){
 #' @export
 convertSizeToCartesian <- function(size, scale, axis){
   fontSize = size*ggplot2::.pt + ggplot2::.stroke*0.5/2
+  aspectRatio = dev.size()[1]/dev.size()[2]
   if (axis == 'x'){
-    cartesianConvert = grid::convertWidth(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/2.440651
+    cartesianConvert = grid::convertWidth(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/aspectRatio
   }
   if (axis == 'y'){
-    cartesianConvert = grid::convertHeight(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/2.440651
+    cartesianConvert = grid::convertHeight(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/aspectRatio
   }
   return(cartesianConvert)
 }

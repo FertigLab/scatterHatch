@@ -10,6 +10,9 @@ An object of class \code{imagePoints} (inherits from \code{Geom}, \code{ggproto}
 \usage{
 imagePoints
 }
+\value{
+List of grob objects
+}
 \description{
 ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
 }

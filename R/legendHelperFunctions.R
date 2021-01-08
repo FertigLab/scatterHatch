@@ -55,8 +55,9 @@ legendIcon <- function(color, lineColor="black", lineType = "solid", patternType
 
 #' Creates custom ggplot2 object
 #'
-#' ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
-#'
+#'  ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
+#' @return List of grob objects
+
 imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
                        required_aes = c("x", "y", "ids"),
                        default_aes = ggplot2::aes(size = 5, shape=19),
@@ -74,7 +75,10 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
                        }
 )
 
-
+#' Creates custom ggplot2 layer with geom mentioned above
+#'
+#' ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
+#' @return List of grob objects
 geom_imagePoint <- function(mapping = NULL, data = NULL, stat = "identity",
                             position = "identity", na.rm = FALSE, show.legend = NA,
                             inherit.aes = TRUE, ...) {

@@ -4,7 +4,7 @@
 \alias{drawHorizontal}
 \title{Draws the horizontal line pattern}
 \usage{
-drawHorizontal(gridOutput, density = 1/2, sparsity = 5, size = 1, xDiff, yDiff)
+drawHorizontal(gridOutput, density = 1/3, sparsity = 5, size, xDiff, yDiff)
 }
 \arguments{
 \item{gridOutput}{List: x & y bins of the grid, 2D frequency matrix, and dataframe matching each point to its corresponding grid in the matrix}

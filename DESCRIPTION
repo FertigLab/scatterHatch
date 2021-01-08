@@ -19,6 +19,7 @@ Suggests: knitr, rmarkdown
 Imports:
 	grid,
 	ggplot2,
-	plyr
+	plyr,
+        spatstat
 Depends: 
     R (>= 2.10)

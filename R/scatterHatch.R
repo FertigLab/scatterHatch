@@ -71,7 +71,7 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
       }
     }
 
-    if (!(is.null(currentPatternAes$density))){ density =currentPatternAes$density}
+    if (!(is.null(currentPatternAes$density))){ density = currentPatternAes$density}
     if (!(is.null(currentPatternAes$sparsity))){ sparsity = currentPatternAes$sparsity}
     if (!(is.null(currentPatternAes$lineType))){ lineType = currentPatternAes$lineType}
     if (!(is.null(currentPatternAes$lineWidth))){ lineWidth = currentPatternAes$lineWidth}
@@ -87,8 +87,9 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     colnames(legendDF) = names
 
     # get grid of each group
-    groupGrid = countGridPoints(xGroup, yGroup, xDiff, yDiff, n=gridSize)
+
     if (pattern == "horizontal"){
+      groupGrid = countGridPoints(xGroup, yGroup, xDiff, yDiff, n=gridSize)
       lineCoords = drawHorizontal(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     }
 
@@ -97,6 +98,18 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     }
 
     if (pattern == "positiveDiagonal"){
+      # rotatedCoords = rotateCoords(xGroup, yGroup, angle = 90)
+      # #rotatedxDiff =
+      # rotatedGroupGrid = countGridPoints(rotatedCoords$x, rotatedCoords$y, -yDiff, xDiff, n=gridSize)
+      #
+      # lineCoords = drawHorizontal(rotatedGroupGrid, density=density, size=pointSize, sparsity=sparsity, -yDiff, xDiff)
+      # rotatedStartPoints = rotateCoords(lineCoords$xStart, lineCoords$yStart, -90)
+      # rotatedEndPoints = rotateCoords(lineCoords$xEnd, lineCoords$yEnd, -90)
+      #
+      # lineCoords$xStart = rotatedStartPoints$x
+      # lineCoords$yStart = rotatedStartPoints$y
+      # lineCoords$xEnd = rotatedEndPoints$x
+      # lineCoords$yEnd = rotatedEndPoints$y
       lineCoords = drawPositiveDiagonal(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
     }
 
