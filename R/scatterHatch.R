@@ -52,7 +52,6 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     pointAlpha = 0.4
     gridSize = ifelse(is.null(gridSize), as.integer(500*exp(-pointSize/2.2)+43.44965), gridSize) # grid size follows a exponential decay function in terms of pointSize
     density = 1/4
-    sparsity = as.integer(0.02*gridSize)
 
     xGroup = x[factor == group] # gets the points for each group
     yGroup = y[factor == group]
@@ -63,8 +62,19 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     currentPatternAes = list(pattern=patternOrder[groupNum])
     for (i in 1:length(patternList)){
       if (length(patternList) == 0){ break}
-      if (is.null(patternList[[i]]$pattern)){stop("Specify pattern in patternList argument!")}
+      if (is.null(patternList[[i]]$pattern)){ stop("Specify pattern in patternList argument!")}
       if (patternList[[i]]$pattern == pattern){
+        if (pattern == "horizontal" | pattern == "vertical"){ # default parameters for each pattern type
+          density = 1/4
+          if (pattern == "horizontal"){ angle = 0}
+          if (pattern == "vertical"){ angle = 90}
+        }else{
+          density = 1/3
+          if (pattern == "positiveDiagonal"){ angle = 135}
+          if (pattern == "negativeDiagonal"){ angle = 45}
+          if (pattern == "x"){ angle = c(45, 135)}
+          if (pattern == "checkers"){ angle = c(0, 90)}
+        }
         currentPatternAes = patternList[[i]]  # aesthetics for given pattern
         patternList = patternList[-i] # to allow duplicate patterns with different aesthetics
         break
@@ -72,52 +82,49 @@ scatterHatch <- function(data, x, y, factor, factorName, pointSize = 1.5, gridSi
     }
 
     if (!(is.null(currentPatternAes$density))){ density = currentPatternAes$density}
-    if (!(is.null(currentPatternAes$sparsity))){ sparsity = currentPatternAes$sparsity}
     if (!(is.null(currentPatternAes$lineType))){ lineType = currentPatternAes$lineType}
     if (!(is.null(currentPatternAes$lineWidth))){ lineWidth = currentPatternAes$lineWidth}
     if (!(is.null(currentPatternAes$lineColor))){ lineColor = currentPatternAes$lineColor}
     if (!(is.null(currentPatternAes$pointAlpha))){ pointAlpha = currentPatternAes$pointAlpha}
+    if (!(is.null(currentPatternAes$angle))){ angle = currentPatternAes$angle; angle = -angle}
 
     # plot points for each group
     plt = plt + geom_point(data=groupData, x=xGroup, y=yGroup, color=colorPalette[groupNum], alpha=pointAlpha, size=pointSize)
 
     # handles creating the legend icon
     legendDF = rbind(legendDF, c(median(xGroup), median(yGroup), group))
-    legendIcons[[length(legendIcons) + 1]] = list(colorPalette[groupNum], lineColor, lineType, pattern, lineWidth, lineAlpha)
+    legendIcons[[length(legendIcons) + 1]] = list(colorPalette[groupNum], lineColor, lineType, pattern, lineWidth, lineAlpha, angle)
     colnames(legendDF) = names
 
     # get grid of each group
-
     if (pattern == "horizontal"){
       groupGrid = countGridPoints(xGroup, yGroup, xDiff, yDiff, n=gridSize)
-      lineCoords = drawHorizontal(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
+      lineCoords = drawHorizontal(groupGrid, density=density, pointSize=pointSize, xDiff, yDiff, xDiff, yDiff)
+
+      plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
     }
 
-    if (pattern == "vertical"){
-      lineCoords = drawVertical(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
-    }
+    else {
+      for (a in angle){
+        rotatedCoords = rotateCoords(xGroup, yGroup, angle = a) # rotating group coordinates
+        rotatedCoordsRange = rotateCoords(c(xDiff[1], xDiff[1], xDiff[2], xDiff[2]), c(yDiff[1], yDiff[2], yDiff[1], yDiff[2]), a) # rotating coordinate bounds
+        rotatedxDiff = range(rotatedCoordsRange$x)
+        rotatedyDiff = range(rotatedCoordsRange$y)
+        rotatedGroupGrid = countGridPoints(rotatedCoords$x, rotatedCoords$y, rotatedxDiff, rotatedyDiff, n=gridSize)
 
-    if (pattern == "positiveDiagonal"){
-      # rotatedCoords = rotateCoords(xGroup, yGroup, angle = 90)
-      # #rotatedxDiff =
-      # rotatedGroupGrid = countGridPoints(rotatedCoords$x, rotatedCoords$y, -yDiff, xDiff, n=gridSize)
-      #
-      # lineCoords = drawHorizontal(rotatedGroupGrid, density=density, size=pointSize, sparsity=sparsity, -yDiff, xDiff)
-      # rotatedStartPoints = rotateCoords(lineCoords$xStart, lineCoords$yStart, -90)
-      # rotatedEndPoints = rotateCoords(lineCoords$xEnd, lineCoords$yEnd, -90)
-      #
-      # lineCoords$xStart = rotatedStartPoints$x
-      # lineCoords$yStart = rotatedStartPoints$y
-      # lineCoords$xEnd = rotatedEndPoints$x
-      # lineCoords$yEnd = rotatedEndPoints$y
-      lineCoords = drawPositiveDiagonal(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
-    }
+        lineCoords = drawHorizontal(rotatedGroupGrid, density=density, pointSize=pointSize, xDiff, yDiff, rotatedxDiff, rotatedyDiff)
+        rotatedStartPoints = rotateCoords(lineCoords$xStart, lineCoords$yStart, -a)
+        rotatedEndPoints = rotateCoords(lineCoords$xEnd, lineCoords$yEnd, -a)
 
-    if (pattern == "negativeDiagonal"){
-      lineCoords = drawNegativeDiagonal(groupGrid, density=density, size=pointSize, sparsity=sparsity, xDiff, yDiff)
-    }
+        lineCoords$xStart = rotatedStartPoints$x
+        lineCoords$yStart = rotatedStartPoints$y
+        lineCoords$xEnd = rotatedEndPoints$x
+        lineCoords$yEnd = rotatedEndPoints$y
 
-    plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
+        plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
+      }
+
+    }
 
     groupNum = groupNum + 1
   }

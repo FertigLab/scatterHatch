@@ -7,8 +7,7 @@
 #' based on the average distance from its ten closest points
 #' and the a multiple of the diameter of a point.
 #'
-#' @param x Vector of the x-coordinates of points in a group.
-#' @param density Vector of the y-coordinates of points in a group.
+#' @param pointsToGrid Dataframe specifyingevery point in a group and the grid it belongs to
 #' @param pointSize Point size of the plot.
 #' @param xDiff x-coordinate range of the plot.
 #' @param yDiff y-coordinate range of the plot.
@@ -21,11 +20,15 @@ sparsityDistanceCalc <- function(pointsToGrid, pointSize, xDiff, yDiff, scale){
   sparsityDistance = pointRadius *  1.75 # 3/4 a point away
   pointsToGrid$closest2Points = spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 2) # distance from the second closest point
   pointsToGrid$closest5Points = spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 5) # distance from the fifth closest point
-  pointsToGrid$closest20Points = spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 20) # distance from the twentieth closest point
+  pointsToGrid$closest20Points = spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 20) # distance from the thirtieth closest point
   pointsToGrid$outliers = pointsToGrid$closest5Points > sparsityDistance
+
+
   pointsToGrid$smallClusters = (pointsToGrid$closest2Points < pointRadius) & (pointsToGrid$closest20Points > pointRadius*4)
   pointsToGrid$sparsePoints = pointsToGrid$outliers | pointsToGrid$smallClusters
-  #print(table(pointsToGrid$sparsePoints))
+
+  #sparseClusterMinDistance = as.double(quantile(pointsToGrid$closest20Points, 0.995))
+  # print(table(pointsToGrid$sparsePoints))
   #quantile method doesn't work
 
   # identifying sparse cluster points
