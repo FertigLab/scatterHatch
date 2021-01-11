@@ -10,20 +10,19 @@
 #'
 #' @param gridOutput List: x & y bins of the grid, 2D frequency matrix, and dataframe matching each point to its corresponding grid in the matrix
 #' @param density Density of the pattern to be drawn.  Must be 1 or less.  Skips drawing the pattern every n rows.
-#' @param sparsity Threshold for defining a sparse grid.
-#' @param size Point size of the pattern.
+#' @param pointSize Point size of the pattern.
 #' @param xDiff x-coordinate range of the plot.
 #' @param yDiff y-coordinate range of the plot.
 #' @return Dataframe with 4 columns defining the starting and ending coordinates of each line to be drawn.
 #' @export
 
-drawHorizontal <- function(gridOutput, density = 1/3, sparsity = 5, size, xDiff, yDiff){
+drawHorizontal <- function(gridOutput, density = 1/3, pointSize, xDiff, yDiff, rotatedxDiff, rotatedyDiff){
   if (density > 1){density=1} # density must be 1 or less
   xBins = gridOutput[[1]]
   yBins = gridOutput[[2]]
   freqMat = gridOutput[[3]]
   pointsToGrid = gridOutput[[4]]
-  pointsToGrid = sparsityDistanceCalc(pointsToGrid, size, xDiff, yDiff, 'x') # annotates sparse points
+  pointsToGrid = sparsityDistanceCalc(pointsToGrid, pointSize, rotatedxDiff, rotatedyDiff, 'x') # annotates sparse points
   sparsePointsToGrid = pointsToGrid[pointsToGrid$sparsePoints == TRUE, ]
   pointsToGrid = pointsToGrid[pointsToGrid$sparsePoints == FALSE, ] # removes sparse points from regular pattern drawing
   for (i in 1:nrow(sparsePointsToGrid)){ # removes sparse points from 2D frequency matrix
@@ -33,8 +32,8 @@ drawHorizontal <- function(gridOutput, density = 1/3, sparsity = 5, size, xDiff,
   yStart = c()
   xEnd = c()
   yEnd = c()
-  adjustmentFactorX = convertSizeToCartesian(size, xDiff, 'x')
-  adjustmentFactorY = convertSizeToCartesian(size, yDiff, 'y')
+  adjustmentFactorX = convertSizeToCartesian(pointSize, rotatedxDiff, 'x')
+  adjustmentFactorY = convertSizeToCartesian(pointSize, rotatedyDiff, 'y')
 
   rowDraw = TRUE # whether to draw lines in current row or not
   for (row in 1:nrow(freqMat)){ # iterates by every row
@@ -75,8 +74,8 @@ drawHorizontal <- function(gridOutput, density = 1/3, sparsity = 5, size, xDiff,
   }
 
   # dealing with sparse points
-  sparseGridSize = as.integer(diff(xDiff)/(adjustmentFactorX * 6))
-  sparsePointsToGrid = countGridPoints(sparsePointsToGrid$x, sparsePointsToGrid$y, xDiff, yDiff, sparseGridSize)[[4]]
+  sparseGridSize = as.integer(diff(rotatedxDiff)/(adjustmentFactorX * 5))
+  sparsePointsToGrid = countGridPoints(sparsePointsToGrid$x, sparsePointsToGrid$y, rotatedxDiff, rotatedyDiff, sparseGridSize)[[4]]
   sparsePointsToGrid$gridNum = (sparsePointsToGrid$yIntervals - 1) * sparseGridSize + sparsePointsToGrid$xIntervals
   for (gridNum in unique(sparsePointsToGrid$gridNum)){
     xRange = sparsePointsToGrid$x[sparsePointsToGrid$gridNum == gridNum]

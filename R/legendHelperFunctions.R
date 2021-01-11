@@ -16,41 +16,29 @@
 #' @param patternType Pattern Type of icon (e.g. vertical, horizontal, etc.)
 #' @return List of grob objects
 #' @export
-legendIcon <- function(color, lineColor="black", lineType = "solid", patternType, lineWidth=1.5, lineAlpha=0.4){
+legendIcon <- function(color, lineColor="black", lineType = "solid", patternType, lineWidth=1.5, lineAlpha=0.4, angle){
+  angle = -angle
+  angle = (angle/180) * pi # converting angle from radians to degrees
+  phaseDiff = pi/6
   linePar = grid::gpar(col = lineColor, fill = color, lwd = 2*lineWidth, lty = lineType, alpha=1)
-  if (patternType == "horizontal"){
-    return(grid::grobTree(
-      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, fill=color, lwd=1, alpha=1)),
-      grid::linesGrob(x=c(0,1), y=c(0.5, 0.5), gp=linePar),
-      grid::linesGrob(x=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), y=c(0.25, 0.25), gp=linePar),
-      grid::linesGrob(x=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), y=c(0.75, 0.75), gp=linePar),
-      gp=grid::gpar(alpha=1)))
+  circle = grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col = color, fill = color, lwd = 1, alpha = 1))
+  grobs = list(circle)
+  for (a in angle){
+    centralLineX = c(0.5 * cos(a) + 0.5, -0.5 * cos(a) + 0.5) # x/y coordinates of center line segment
+    centralLineY = c(0.5 * sin(a) + 0.5, -0.5 * sin(a) + 0.5)
+    grobs[[length(grobs) + 1]] = grid::linesGrob(x = centralLineX, y = centralLineY, gp = linePar)
+
+    leftLineX = c(0.5 * cos(a + phaseDiff) + 0.5, -0.5 * cos(a - phaseDiff) + 0.5) # x/y coordinates of left line segment
+    leftLineY = c(0.5 * sin(a + phaseDiff) + 0.5, -0.5 * sin(a - phaseDiff) + 0.5)
+    grobs[[length(grobs) + 1]] = grid::linesGrob(x = leftLineX, y = leftLineY, gp = linePar)
+
+    rightLineX = c(0.5 * cos(a - phaseDiff) + 0.5, -0.5 * cos(a + phaseDiff) + 0.5) # x/y coordinates of right line segment
+    rightLineY = c(0.5 * sin(a - phaseDiff) + 0.5, -0.5 * sin(a + phaseDiff) + 0.5)
+    grobs[[length(grobs) + 1]] = grid::linesGrob(x = rightLineX, y = rightLineY, gp = linePar)
   }
-  if (patternType == "vertical"){
-    return(grid::grobTree(
-      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, fill=color, lwd=1, alpha=1)),
-      grid::linesGrob(y=c(0,1), x=c(0.5, 0.5), gp=linePar),
-      grid::linesGrob(y=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), x=c(0.25, 0.25), gp=linePar),
-      grid::linesGrob(y=c(-sqrt((0.5^2)-(0.25^2)) + 0.5, sqrt((0.5^2)-(0.25^2)) +0.5), x=c(0.75, 0.75), gp=linePar),
-      gp=grid::gpar(alpha=1)))
-  }
-  if (patternType == "positiveDiagonal"){
-    return(grid::grobTree(
-      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, lwd=1, alpha=1, fill=color)),
-      grid::linesGrob(x=c(-sqrt((0.5)^2/2)+0.5,sqrt((0.5)^2/2)+0.5), y=c(-sqrt((0.5)^2/2)+0.5, sqrt((0.5)^2/2)+0.5), gp=linePar),
-      grid::linesGrob(x=c(0.01779486, 0.6322051), y=c(0.3677949, 0.9822051), gp=linePar),
-      grid::linesGrob(x=c(0.3677949, 0.9822051), y=c(0.01779486, 0.6322051), gp=linePar),
-      gp=grid::gpar(alpha=1)
-      ))
-  }
-  if (patternType == "negativeDiagonal"){
-    return(grid::grobTree(
-      grid::circleGrob(0.5, 0.5, 0.5, gp=grid::gpar(col=color, fill=color, lwd=1, alpha=1)),
-      grid::linesGrob(x=c(-sqrt((0.5)^2/2)+0.5,sqrt((0.5)^2/2)+0.5), y=c(sqrt((0.5)^2/2)+0.5, -sqrt((0.5)^2/2)+0.5), gp=linePar),
-      grid::linesGrob(x=c(0.01779486, 0.6322051), y=c(0.6322051, 0.01779486), gp=linePar),
-      grid::linesGrob(x=c(0.3677949, 0.9822051), y=c(0.9822051, 0.3677949), gp=linePar),
-      gp=grid::gpar(alpha=1)))
-  }
+  grobs[["gp"]] = grid::gpar(alpha = 1)
+  return(do.call(grid::grobTree, args = grobs))
+
 }
 
 #' Creates custom ggplot2 object
@@ -65,7 +53,7 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
                        draw_key = function (data, params, size)
                        {
                          iconInfo = data$ids[[1]] # ids contains all the necessary info to render icon
-                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], iconInfo[[4]], iconInfo[[5]], iconInfo[[6]])
+                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], iconInfo[[4]], iconInfo[[5]], iconInfo[[6]], iconInfo[[7]])
                        },
 
                        draw_group = function(data, panel_scales, coord) {
