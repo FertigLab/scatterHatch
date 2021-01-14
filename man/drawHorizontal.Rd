@@ -4,20 +4,33 @@
 \alias{drawHorizontal}
 \title{Draws the horizontal line pattern}
 \usage{
-drawHorizontal(gridOutput, density = 1/3, sparsity = 5, size, xDiff, yDiff)
+drawHorizontal(
+  gridOutput,
+  density = 1/3,
+  pointSize,
+  xDiff,
+  yDiff,
+  rotatedxDiff,
+  rotatedyDiff,
+  sparsePoints = NULL
+)
 }
 \arguments{
 \item{gridOutput}{List: x & y bins of the grid, 2D frequency matrix, and dataframe matching each point to its corresponding grid in the matrix}
 
 \item{density}{Density of the pattern to be drawn.  Must be 1 or less.  Skips drawing the pattern every n rows.}
 
-\item{sparsity}{Threshold for defining a sparse grid.}
-
-\item{size}{Point size of the pattern.}
+\item{pointSize}{Point size of the pattern.}
 
 \item{xDiff}{x-coordinate range of the plot.}
 
 \item{yDiff}{y-coordinate range of the plot.}
+
+\item{rotatedxDiff}{Rotated x-coordinate range of the plot.}
+
+\item{rotatedyDiff}{Rotated y-coordinate range of the plot.}
+
+\item{sparsePoints}{Logical Vector denoting points annotated as sparse.  If NULL, default sparsity detector will be used to annotate sparse points in dataset.}
 }
 \value{
 Dataframe with 4 columns defining the starting and ending coordinates of each line to be drawn.
