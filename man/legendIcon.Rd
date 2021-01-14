@@ -10,7 +10,8 @@ legendIcon(
   lineType = "solid",
   patternType,
   lineWidth = 1.5,
-  lineAlpha = 0.4
+  lineAlpha = 0.4,
+  angle
 )
 }
 \arguments{
@@ -21,6 +22,12 @@ legendIcon(
 \item{lineType}{Line type of pattern lines (e.g. dashed, dotted, etc.)}
 
 \item{patternType}{Pattern Type of icon (e.g. vertical, horizontal, etc.)}
+
+\item{lineWidth}{Width of the line}
+
+\item{angle}{Vector of the line angles for a given pattern}
+
+\item{alpha}{Transparency of the line}
 }
 \value{
 List of grob objects

@@ -12,6 +12,7 @@ scatterHatch(
   factorName,
   pointSize = 1.5,
   gridSize = NULL,
+  sparsePoints = NULL,
   patternList = list(list(pattern = "horizontal"), list(pattern = "vertical"),
     list(pattern = "positiveDiagonal"), list(pattern = "negativeDiagonal")),
   colorPalette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
@@ -32,6 +33,8 @@ scatterHatch(
 \item{pointSize}{Point size for the scatterplot}
 
 \item{gridSize}{Controls the precision of the hatched pattern.  Larger values correspond to greater precision.  Default follows a exponential decay function based on point size.}
+
+\item{sparsePoints}{Logical Vector denoting points annotated as sparse.  If NULL, default sparsity detector will be used to annotate sparse points in dataset.}
 
 \item{patternList}{Aesthetics to be passed for each pattern (must be a list where each element has a named pattern)}
 

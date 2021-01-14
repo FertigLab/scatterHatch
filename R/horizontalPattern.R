@@ -13,21 +13,36 @@
 #' @param pointSize Point size of the pattern.
 #' @param xDiff x-coordinate range of the plot.
 #' @param yDiff y-coordinate range of the plot.
+#' @param rotatedxDiff Rotated x-coordinate range of the plot.
+#' @param rotatedyDiff Rotated y-coordinate range of the plot.
+#' @param sparsePoints Logical Vector denoting points annotated as sparse.  If NULL, default sparsity detector will be used to annotate sparse points in dataset.
 #' @return Dataframe with 4 columns defining the starting and ending coordinates of each line to be drawn.
 #' @export
 
-drawHorizontal <- function(gridOutput, density = 1/3, pointSize, xDiff, yDiff, rotatedxDiff, rotatedyDiff){
+drawHorizontal <- function(gridOutput, density = 1/3, pointSize, xDiff, yDiff, rotatedxDiff, rotatedyDiff, sparsePoints = NULL){
   if (density > 1){density=1} # density must be 1 or less
   xBins = gridOutput[[1]]
   yBins = gridOutput[[2]]
   freqMat = gridOutput[[3]]
   pointsToGrid = gridOutput[[4]]
-  pointsToGrid = sparsityDistanceCalc(pointsToGrid, pointSize, rotatedxDiff, rotatedyDiff, 'x') # annotates sparse points
-  sparsePointsToGrid = pointsToGrid[pointsToGrid$sparsePoints == TRUE, ]
-  pointsToGrid = pointsToGrid[pointsToGrid$sparsePoints == FALSE, ] # removes sparse points from regular pattern drawing
+
+  if (is.null(sparsePoints)){ # if sparse points are not given
+    sparsePoints = sparsityAnnotate(pointsToGrid, pointSize, rotatedxDiff, rotatedyDiff, 'x')$sparsePoints # annotates sparse points
+  }
+
+  sparsePointsToGrid = pointsToGrid[sparsePoints == TRUE, ]
+  pointsToGrid = pointsToGrid[sparsePoints == FALSE, ] # removes sparse points from regular pattern drawing
+
+  # removes sparse points from 2D frequency matrix
+  # freqMat = sapply(1:(nrow(freqMat)^2), function (i){
+  #   row = ceiling(i/nrow(freqMat))
+  #   col = i - (row * nrow(freqMat))
+  #   freqMat[row, col] = freqMat[row, col] - sum(sparsePointsToGrid$yIntervals == row & sparsePointsToGrid$xIntervals == col)})
+
   for (i in 1:nrow(sparsePointsToGrid)){ # removes sparse points from 2D frequency matrix
     freqMat[sparsePointsToGrid$yIntervals[i], sparsePointsToGrid$xIntervals[i]] = freqMat[sparsePointsToGrid$yIntervals[i], sparsePointsToGrid$xIntervals[i]] - 1
   }
+
   xStart = c()
   yStart = c()
   xEnd = c()
