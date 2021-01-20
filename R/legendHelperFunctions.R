@@ -19,8 +19,8 @@
 #' @param angle Vector of the line angles for a given pattern
 #' @return List of grob objects
 #' @export
-legendIcon <- function(color, lineColor="black", lineType = "solid", patternType, lineWidth=1.5, lineAlpha=0.4, angle){
-  radius = 0.5
+legendIcon <- function(color, lineColor="black", lineType = "solid", patternType, lineWidth=1.5, lineAlpha=0.4, angle = NULL){
+  radius = 0.25
   linePar = grid::gpar(col = lineColor, fill = color, lwd = 2*lineWidth, lty = lineType, alpha=1)
   circle = grid::circleGrob(0.5, 0.5, radius, gp=grid::gpar(col = color, fill = color, lwd = 1, alpha = 1))
   grobs = list(circle)

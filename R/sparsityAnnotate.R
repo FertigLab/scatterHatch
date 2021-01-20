@@ -21,12 +21,13 @@ sparsityAnnotate <- function(pointsToGrid, pointSize, xDiff, yDiff, scale){
   pointsToGrid$closest2Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 2)) # distance from the second closest point
   pointsToGrid$closest5Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 5)) # distance from the fifth closest point
   pointsToGrid$closest20Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 20)) # distance from the twentieth closest point
-  pointsToGrid$outliers = pointsToGrid$closest5Points > sparsityDistance
+  pointsToGrid$sparsePoints = pointsToGrid$closest5Points > sparsityDistance
 
 
-  pointsToGrid$smallClusters = (pointsToGrid$closest20Points > pointRadius*4)
-  #pointsToGrid$smallClusters = (pointsToGrid$closest2Points < pointRadius) & (pointsToGrid$closest20Points > pointRadius*4)
-  pointsToGrid$sparsePoints = pointsToGrid$outliers | pointsToGrid$smallClusters
+  pointsToGrid$smallClusters = (pointsToGrid$closest20Points > pointRadius*4) & !pointsToGrid$sparsePoints
+
+
+  #pointsToGrid$sparsePoints = pointsToGrid$outliers | pointsToGrid$smallClusters
 
 
   return(pointsToGrid)
