@@ -11,7 +11,7 @@ legendIcon(
   patternType,
   lineWidth = 1.5,
   lineAlpha = 0.4,
-  angle
+  angle = NULL
 )
 }
 \arguments{

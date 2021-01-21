@@ -21,7 +21,8 @@ sparsityAnnotate(pointsToGrid, pointSize, xDiff, yDiff, scale)
 Dataframe of each point in a group, which grid it belongs to, distance from fifth nearest point, and whether a point is sparse or not.
 }
 \description{
-Determines if points within a given group are sparse
-based on the average distance from its ten closest points
-and the a multiple of the diameter of a point.
+Determines which points within a given group are sparse
+and which are in small clusters.  Outlying points are determined if
+fifth closest point is a point away.  Small clusters are determined
+if twentieth closest point is 2 points away.
 }
