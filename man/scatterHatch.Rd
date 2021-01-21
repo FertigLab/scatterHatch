@@ -9,28 +9,29 @@ scatterHatch(
   x,
   y,
   factor,
-  factorName,
-  pointSize = 1.5,
+  legendTitle = "",
+  pointSize = 1,
+  pointAlpha = 0.5,
   gridSize = NULL,
   sparsePoints = NULL,
-  patternList = list(list(pattern = "horizontal"), list(pattern = "vertical"),
-    list(pattern = "positiveDiagonal"), list(pattern = "negativeDiagonal")),
-  colorPalette = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
-    "#CC79A7")
+  patternList = NULL,
+  colorPalette = NULL
 )
 }
 \arguments{
-\item{data}{Dataset (what normally would be passed to ggplot2)}
+\item{data}{Dataset to be used (Dataframe)}
 
-\item{x}{x-coordinates of the plot}
+\item{x}{Column name of x-coordinates (String)}
 
-\item{y}{y-coordinates of the plot}
+\item{y}{Column name of y-coordinates (String)}
 
-\item{factor}{Factor vector that defines what group each point is part of}
+\item{factor}{Column name of factor that defines groupings of each point (String)}
 
-\item{factorName}{Title of the legend}
+\item{legendTitle}{Title of the legend}
 
 \item{pointSize}{Point size for the scatterplot}
+
+\item{pointAlpha}{Transparency of points in the scatterplot}
 
 \item{gridSize}{Controls the precision of the hatched pattern.  Larger values correspond to greater precision.  Default follows a exponential decay function based on point size.}
 

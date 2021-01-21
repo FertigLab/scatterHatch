@@ -3,9 +3,10 @@
 
 #' Determines sparse points in a group
 #'
-#' Determines if points within a given group are sparse
-#' based on the average distance from its ten closest points
-#' and the a multiple of the diameter of a point.
+#' Determines which points within a given group are sparse
+#' and which are in small clusters.  Outlying points are determined if
+#' fifth closest point is a point away.  Small clusters are determined
+#' if twentieth closest point is 2 points away.
 #'
 #' @param pointsToGrid Dataframe specifying every point in a group and the grid it belongs to
 #' @param pointSize Point size of the plot.
@@ -17,18 +18,13 @@
 sparsityAnnotate <- function(pointsToGrid, pointSize, xDiff, yDiff, scale){
   if (scale == 'x'){ pointRadius = abs(convertSizeToCartesian(pointSize, xDiff, 'x'))}
   if (scale == 'y'){ pointRadius = abs(convertSizeToCartesian(pointSize, yDiff, 'y'))}
-  sparsityDistance = pointRadius *  1.75 # 3/4 a point away
+  sparsityDistance = pointRadius * 2  # a point away
   pointsToGrid$closest2Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 2)) # distance from the second closest point
   pointsToGrid$closest5Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 5)) # distance from the fifth closest point
   pointsToGrid$closest20Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 20)) # distance from the twentieth closest point
-  pointsToGrid$sparsePoints = pointsToGrid$closest5Points > sparsityDistance
+  pointsToGrid$sparsePoints = pointsToGrid$closest5Points > sparsityDistance # outlying points within a group
 
-
-  pointsToGrid$smallClusters = (pointsToGrid$closest20Points > pointRadius*4) & !pointsToGrid$sparsePoints
-
-
-  #pointsToGrid$sparsePoints = pointsToGrid$outliers | pointsToGrid$smallClusters
-
+  pointsToGrid$smallClusters = (pointsToGrid$closest20Points > pointRadius*4) & !pointsToGrid$sparsePoints # smaller clusters within a group
 
   return(pointsToGrid)
 }

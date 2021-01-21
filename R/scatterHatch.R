@@ -6,12 +6,13 @@
 #' Also creates the legend to represent each hatched group.  The aesthetics defining each pattern,
 #' like the lineType and lineColor are all passed to geom_segment().
 #'
-#' @param data Dataset (what normally would be passed to ggplot2)
-#' @param x x-coordinates of the plot
-#' @param y y-coordinates of the plot
-#' @param groupAnnotation Factor vector that defines what group each point is part of
+#' @param data Dataset to be used (Dataframe)
+#' @param x Column name of x-coordinates (String)
+#' @param y Column name of y-coordinates (String)
+#' @param factor Column name of factor that defines groupings of each point (String)
 #' @param legendTitle Title of the legend
 #' @param pointSize Point size for the scatterplot
+#' @param pointAlpha Transparency of points in the scatterplot
 #' @param gridSize Controls the precision of the hatched pattern.  Larger values correspond to greater precision.  Default follows a exponential decay function based on point size.
 #' @param sparsePoints Logical Vector denoting points annotated as sparse.  If NULL, default sparsity detector will be used to annotate sparse points in dataset.
 #' @param patternList Aesthetics to be passed for each pattern (must be a list where each element has a named pattern)
@@ -19,18 +20,28 @@
 #' @return ggplot2 object of scatterplot with hatched patterns for each group.
 #' @export
 
-scatterHatch <- function(data, x, y, groupAnnotation, legendTitle = "", pointSize = 1.5, gridSize = NULL, sparsePoints = NULL,
+scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, pointAlpha = 0.5, gridSize = NULL, sparsePoints = NULL,
                          patternList = NULL, colorPalette = NULL){
 
+  if (!(x %in% names(data))){ stop("x column name not present in dataset.")}
+  if (!(y %in% names(data))){ stop("y column name not present in dataset.")}
+  if (!(factor %in% names(data))){ stop("factor column name not present in dataset.")}
+  x = data[, x]
+  y = data[, y]
+
+  if (!is.numeric(x)){ stop("x column is not numeric.")}
+  if (!is.numeric(y)){ stop("y column is not numeric.")}
+
+  factor = as.factor(data[, factor])
+
   # figuring out how many groups present
-  groups <- unique(groupAnnotation)
+  groups = levels(factor)
 
   # default aesthetics
   lineType = "solid"
   lineColor = "black"
   lineAlpha = 1
   lineWidth = ifelse(pointSize < 0.5, 2*pointSize/.pt, pointSize/.pt)
-  pointAlpha = 0.4
   gridSize = ifelse(is.null(gridSize), as.integer(500*exp(-pointSize/2.2)+43.44965), gridSize) # grid size follows a exponential decay function in terms of pointSize
   patterns = c("-","|","/","\\", "x", "+", "")
 
@@ -45,8 +56,8 @@ scatterHatch <- function(data, x, y, groupAnnotation, legendTitle = "", pointSiz
     colorPalette = dittoSeq::dittoColors(reps = ceiling(length(groups)/40))[1:length(groups)]
   }
 
-  if (unique(colorPalette) < length(groups)){
-    # GIVE WARNING THAT COLOR REPEATING WITH DIFFERENT PATTERNS
+  if (length(unique(colorPalette)) < length(groups)){
+    warning("Same point colors will be repeated with different hatching patterns!")
   }
 
   # getting legend ready
@@ -60,16 +71,24 @@ scatterHatch <- function(data, x, y, groupAnnotation, legendTitle = "", pointSiz
   yDiff = ggplot_build(plt)$layout$panel_params[[1]]$y.range # gets y range
   plt = plt + lims(x=xDiff, y=yDiff)
 
+  # plot points for all the groups
+  plt = plt + geom_point(aes(color = factor), alpha=pointAlpha, size=pointSize, show.legend = FALSE) +
+    scale_color_manual(values = colorPalette)
+
+  lineCoords = data.frame(matrix(ncol = 4, nrow = 0))
+  names(lineCoords) = c("xStart", "yStart", "xEnd", "yEnd")
+
+
   groupNum = 1
 
   # creating the patterns for each group
   for (group in groups){
-    xGroup = x[groupAnnotation == group] # gets the points for each group
-    yGroup = y[groupAnnotation == group]
-    groupData = data[groupAnnotation == group, ]
+    xGroup = x[factor == group] # gets the points for each group
+    yGroup = y[factor == group]
+    groupData = data[factor == group, ]
 
     # finding the sparse points for the group if any are given
-    if (!is.null(sparsePoints)){ sparseGroupPoints = sparsePoints[groupAnnotation == group]}
+    if (!is.null(sparsePoints)){ sparseGroupPoints = sparsePoints[factor == group]}
     if (is.null(sparsePoints)){ sparseGroupPoints = NULL}
 
     currentPatternAes = patternList[[groupNum]]  # aesthetics for given pattern
@@ -108,16 +127,6 @@ scatterHatch <- function(data, x, y, groupAnnotation, legendTitle = "", pointSiz
     }
 
 
-    # if any missing aesthetics for a pattern use default
-    if (is.null(currentPatternAes$lineType)){ lineType = lineType}
-    if (is.null(currentPatternAes$lineWidth)){ lineWidth = lineWidth}
-    if (is.null(currentPatternAes$lineColor)){ lineColor = lineColor}
-    if (is.null(currentPatternAes$pointAlpha)){ pointAlpha = pointAlpha}
-
-
-    # plot points for each group
-    plt = plt + geom_point(data=groupData, x=xGroup, y=yGroup, color=colorPalette[groupNum], alpha=pointAlpha, size=pointSize)
-
     # handles creating the legend icon
     legendDF = rbind(legendDF, c(median(xGroup), median(yGroup), group))
     legendIcons[[length(legendIcons) + 1]] = list(colorPalette[groupNum], lineColor, lineType, pattern, lineWidth, lineAlpha, angle)
@@ -129,13 +138,13 @@ scatterHatch <- function(data, x, y, groupAnnotation, legendTitle = "", pointSiz
 
     else if (pattern %in% c("horizontal","-")){
       groupGrid = countGridPoints(xGroup, yGroup, xDiff, yDiff, n=gridSize)
-      lineCoords = drawHorizontal(groupGrid, density=density, pointSize=pointSize, xDiff, yDiff, xDiff, yDiff, sparseGroupPoints)
+      groupLineCoords = drawHorizontal(groupGrid, density=density, pointSize=pointSize, xDiff, yDiff, xDiff, yDiff, sparseGroupPoints)
 
       adjustmentFactorX = convertSizeToCartesian(pointSize, xDiff, 'x')
-      lineCoords$xStart = lineCoords$xStart - adjustmentFactorX
-      lineCoords$xEnd = lineCoords$xEnd + adjustmentFactorX
+      groupLineCoords$xStart = groupLineCoords$xStart - adjustmentFactorX
+      groupLineCoords$xEnd = groupLineCoords$xEnd + adjustmentFactorX
 
-      plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
+      lineCoords = rbind(lineCoords, groupLineCoords)
     }
 
     else {
@@ -146,32 +155,22 @@ scatterHatch <- function(data, x, y, groupAnnotation, legendTitle = "", pointSiz
         rotatedyDiff = range(rotatedCoordsRange$y)
         rotatedGroupGrid = countGridPoints(rotatedCoords$x, rotatedCoords$y, rotatedxDiff, rotatedyDiff, n=gridSize)
 
-        lineCoords = drawHorizontal(rotatedGroupGrid, density=density, pointSize=pointSize, xDiff, yDiff, rotatedxDiff, rotatedyDiff, sparseGroupPoints)
-
+        groupLineCoords = drawHorizontal(rotatedGroupGrid, density=density, pointSize=pointSize, xDiff, yDiff, rotatedxDiff, rotatedyDiff, sparseGroupPoints)
 
         adjX = convertSizeToCartesian(pointSize, xDiff, 'x')
         adjY = convertSizeToCartesian(pointSize, yDiff, 'y')
         R = matrix(c(cos(a/180 * pi),sin(a/180 * pi),-sin(a/180 * pi),cos(a/180 * pi)),2,2) # rotation matrix
-        rotatedAdjX = diag(sqrt(R %*% diag(c(adjX,adjY),2,2)^2 %*% t(R)))[1]
+        rotatedAdjX = suppressWarnings(diag(sqrt(R %*% diag(c(adjX,adjY),2,2)^2 %*% t(R)))[1]) # handles rotating adjument based on rotation
 
-        rotatedStartPoints = rotateCoords(lineCoords$xStart - rotatedAdjX, lineCoords$yStart, -a)
-        rotatedEndPoints = rotateCoords(lineCoords$xEnd + rotatedAdjX, lineCoords$yEnd, -a)
+        rotatedStartPoints = rotateCoords(groupLineCoords$xStart - rotatedAdjX, groupLineCoords$yStart, -a) # converting back to regular coordinates
+        rotatedEndPoints = rotateCoords(groupLineCoords$xEnd + rotatedAdjX, groupLineCoords$yEnd, -a)
 
-        # adjustmentFactorX = convertSizeToCartesian(pointSize, xDiff, 'x') * cos(-a/180 * pi)
-        # adjustmentFactorY = convertSizeToCartesian(pointSize, yDiff, 'y') * sin(-a/180 * pi)
+        groupLineCoords$xStart = rotatedStartPoints$x
+        groupLineCoords$yStart = rotatedStartPoints$y
+        groupLineCoords$xEnd = rotatedEndPoints$x
+        groupLineCoords$yEnd = rotatedEndPoints$y
 
-        lineCoords$xStart = rotatedStartPoints$x
-        lineCoords$yStart = rotatedStartPoints$y
-        lineCoords$xEnd = rotatedEndPoints$x
-        lineCoords$yEnd = rotatedEndPoints$y
-
-
-        #lineCoords$xStart = rotatedStartPoints$x - adjustmentFactorX
-        #lineCoords$yStart = rotatedStartPoints$y - adjustmentFactorY
-        #lineCoords$xEnd = rotatedEndPoints$x + adjustmentFactorX
-        #lineCoords$yEnd = rotatedEndPoints$y + adjustmentFactorY
-
-        plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
+        lineCoords = rbind(lineCoords, groupLineCoords)
       }
 
     }
@@ -179,12 +178,16 @@ scatterHatch <- function(data, x, y, groupAnnotation, legendTitle = "", pointSiz
     groupNum = groupNum + 1
   }
 
+  plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
+
   # creating the legend
   legendDF$legendIcons = legendIcons
   scale_image <- function(..., guide="legend"){ # adding in the factor names and pattern info to legend
-    scale_discrete_manual(aes="ids", labels=as.character(levels(groupAnnotation)), values=legendDF$legendIcons)
+    scale_discrete_manual(aes="ids", labels=as.character(levels(factor)), values=legendDF$legendIcons)
   }
   plt = plt + geom_imagePoint(data=legendDF, aes(x = as.numeric(x), y = as.numeric(y), ids = as.character(ids))) + scale_image()
   plt$labels$ids <- legendTitle # renaming legend title
+
+  plt = plt + theme_classic() # adding in classic theme
   return(plt)
 }
