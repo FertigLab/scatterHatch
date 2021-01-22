@@ -41,7 +41,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
   lineType = "solid"
   lineColor = "black"
   lineAlpha = 1
-  lineWidth = ifelse(pointSize < 0.5, 2*pointSize/.pt, pointSize/.pt)
+  lineWidth = ifelse(pointSize < 0.5, 2*pointSize/ggplot2::.pt, pointSize/ggplot2::.pt)
   gridSize = ifelse(is.null(gridSize), as.integer(500*exp(-pointSize/2.2)+43.44965), gridSize) # grid size follows a exponential decay function in terms of pointSize
   patterns = c("-","|","/","\\", "x", "+", "")
 
@@ -50,6 +50,10 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     patternList = vector(mode = "list", length = length(groups)) # initializing patternList
     patternList = lapply(1:length(groups), function(i){patternList[[i]] =
       list(pattern = patterns[i], lineType = lineType, lineAlpha = lineAlpha, lineWidth = lineWidth, pointAlpha = pointAlpha)})
+  }
+
+  if (length(patternList) != length(groups)){ # checks if patternList length is ok
+    stop("The length of patternList must be equal to the number of groups present.")
   }
 
   if (is.null(colorPalette)){
@@ -66,14 +70,14 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
   legendIcons = list()
 
   # creating the master plot
-  plt = ggplot(data=data, aes(x=x, y=y))
-  xDiff = ggplot_build(plt)$layout$panel_params[[1]]$x.range # gets x range
-  yDiff = ggplot_build(plt)$layout$panel_params[[1]]$y.range # gets y range
-  plt = plt + lims(x=xDiff, y=yDiff)
+  plt = ggplot2::ggplot(data=data, ggplot2::aes(x=x, y=y))
+  xDiff = ggplot2::ggplot_build(plt)$layout$panel_params[[1]]$x.range # gets x range
+  yDiff = ggplot2::ggplot_build(plt)$layout$panel_params[[1]]$y.range # gets y range
+  plt = plt + ggplot2::lims(x=xDiff, y=yDiff)
 
   # plot points for all the groups
-  plt = plt + geom_point(aes(color = factor), alpha=pointAlpha, size=pointSize, show.legend = FALSE) +
-    scale_color_manual(values = colorPalette)
+  plt = plt + ggplot2::geom_point(ggplot2::aes(color = factor), alpha=pointAlpha, size=pointSize, show.legend = FALSE) +
+    ggplot2::scale_color_manual(values = colorPalette)
 
   lineCoords = data.frame(matrix(ncol = 4, nrow = 0))
   names(lineCoords) = c("xStart", "yStart", "xEnd", "yEnd")
@@ -112,6 +116,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
       }
     }
 
+
     # ensures pattern line rotation is what's expected by user
     if (!is.null(currentPatternAes$angle)){ angle = currentPatternAes$angle; angle = -angle}
 
@@ -126,6 +131,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
       }
     }
 
+    if (!is.null(currentPatternAes$density)){ density = currentPatternAes$density}
 
     # handles creating the legend icon
     legendDF = rbind(legendDF, c(median(xGroup), median(yGroup), group))
@@ -178,16 +184,16 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     groupNum = groupNum + 1
   }
 
-  plt = plt + geom_segment(data=lineCoords, aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
+  plt = plt + ggplot2::geom_segment(data=lineCoords, ggplot2::aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
 
   # creating the legend
   legendDF$legendIcons = legendIcons
   scale_image <- function(..., guide="legend"){ # adding in the factor names and pattern info to legend
-    scale_discrete_manual(aes="ids", labels=as.character(levels(factor)), values=legendDF$legendIcons)
+    ggplot2::scale_discrete_manual(aes="ids", labels=as.character(levels(factor)), values=legendDF$legendIcons)
   }
-  plt = plt + geom_imagePoint(data=legendDF, aes(x = as.numeric(x), y = as.numeric(y), ids = as.character(ids))) + scale_image()
+  plt = plt + geom_imagePoint(data=legendDF, ggplot2::aes(x = as.numeric(x), y = as.numeric(y), ids = as.character(ids))) + scale_image()
   plt$labels$ids <- legendTitle # renaming legend title
 
-  plt = plt + theme_classic() # adding in classic theme
+  plt = plt + ggplot2::theme_classic() # adding in classic theme
   return(plt)
 }

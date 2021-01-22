@@ -1,13 +1,7 @@
-Creating a Scatterplot with Texture
-================
-Tejas Guha
-October 1, 2020
-
 ## Importing Local Libraries
 
 ``` r
 library(scatterHatch)
-library(ggplot2)
 ```
 
 ## Preparing the Data
@@ -33,39 +27,130 @@ annotateLocation <- function(frame){
 }
 pdacData$location = sapply(pdacData$frame, annotateLocation)
 
-head(pdacData[, c('Xt', 'Yt', 'location')])
-#>         Xt        Yt location
-#> 1 1342.878  -801.154 Pancreas
-#> 2 5688.494 -1391.393 Pancreas
-#> 3 6295.826 -1393.807 Pancreas
-#> 4 5344.257 -1391.650 Pancreas
-#> 5 5640.034 -1391.416 Pancreas
-#> 6 5923.357 -1390.776 Pancreas
+head(pdacData[, c('Xt', 'Yt', 'location', 'frame')])
+#>         Xt        Yt location frame
+#> 1 1342.878  -801.154 Pancreas     1
+#> 2 5688.494 -1391.393 Pancreas     4
+#> 3 6295.826 -1393.807 Pancreas     4
+#> 4 5344.257 -1391.650 Pancreas     4
+#> 5 5640.034 -1391.416 Pancreas     4
+#> 6 5923.357 -1390.776 Pancreas     4
 ```
 
 ## Creating a Basic ScatterHatch Plot
 
-`scatterHatch()` must have a data frame passed to it, along with two
-vectors denoting the x and y coordinates of each point being plotted.
-Additionally, the factor argument must have a factor vector that
-identifies the group each point is part of. Lastly, factorName is the
-title of the legend for the scatterplot. `scatterHatch()` returns a
-ggplot2 object where each line texture is represented as a
-`geom_segment()`.
+`scatterHatch()` must have a data frame passed to it, along with three
+strings denoting the columns with the x/y coordinates and a factor
+variable of each point being plotted. The factor variable identifies the
+group each point is a part of. `scatterHatch()` returns a ggplot2 object
+with three layers; the points, the line segments (the hatching), and an
+invisible custom geom to render the legend icons.
 
 ``` r
-myTheme <- theme_classic() + theme(plot.title = element_text(family = "serif", face = "bold",
-    size = 25), axis.title.x = element_text(family = "serif", size = 20), axis.text.x = element_text(family = "serif",
-    color = "black", size = 15), axis.title.y = element_text(family = "serif", size = 20),
-    axis.text.y = element_text(family = "serif", color = "black", size = 15)) + theme(legend.title = element_text(family = "serif",
-    size = 20, face = "bold"), legend.text = element_text(family = "serif", size = 15))
 
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location),
-    factorName = "Tissue Type", pointSize = 1) + myTheme
+
+plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", legendTitle = "Tissue Type")
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
 plot(plt)
 ```
 
-![](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+<img src="C:/Users/guhat/AppData/Local/Temp/RtmpM3p5xl/preview-56bc49ef1a32.dir/vignette_files/figure-gfm/unnamed-chunk-2-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+
+## Creating ScatterHatch Plot with Many Groups
+
+``` r
+
+
+plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "frame", pointSize = 0.5, 
+    legendTitle = "Frame")
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.25
+[1] 0.25
+[1] 0.25
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+plot(plt)
+```
+
+<img src="C:/Users/guhat/AppData/Local/Temp/RtmpM3p5xl/preview-56bc49ef1a32.dir/vignette_files/figure-gfm/unnamed-chunk-3-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ## Customizing ScatterHatch Plot
 
@@ -76,67 +161,72 @@ the `patternList` argument. Each element of the list should contain a
 list that denotes the desired aesthetics for each pattern. Every element
 of `patternList` must have a named element called “pattern” that
 contains the unique pattern type for which the aesthetics are being
-changed. If the length of `patternList` is equal to the number of groups
-in `factor` then pattern assignment for each group will be based on the
-order of patterns in `patternList`. Below, the first group, “Pancreas”,
-uses the aesthetics of the first element in \``patternList` -
-positiveDiagnol - instead of horizontal.
+changed. If patternList is passed, then the length of patternList must
+be equal to the number of groups being plotted.
 
 ``` r
-patternList = list(list(pattern = "positiveDiagonal"), list(pattern = "horizontal"),
-    list(pattern = "negativeDiagonal"), list(pattern = "vertical"))
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location),
-    factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
+patternList = list(list(pattern = "/"), list(pattern = "x"), list(pattern = ""), 
+    list(pattern = "-"))
+plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", legendTitle = "Tissue Type", 
+    patternList = patternList)
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
 plot(plt)
 ```
 
-![](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+<img src="C:/Users/guhat/AppData/Local/Temp/RtmpM3p5xl/preview-56bc49ef1a32.dir/vignette_files/figure-gfm/unnamed-chunk-4-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ### Changing the Aesthetics of each Pattern
 
-Changing the aesthetics of each pattern, like line color or line size,
-is done by adding a named element for the respective aesthetic being
-changed and the value desired. Note, pattern assignment for each group
-is unaffected when the number of groups in `factor` is greater than the
-number of elements in `patternList`. To make the positiveDiagonal
-pattern have red lines and the vertical pattern have a decreased line
-density:
+There are currently two aesthetics of each pattern that can be changed:
+density and angle. Density denotes the density of the hatching for a
+pattern. The densest a pattern can be is 1 and must be a reciprocal of
+an integer (e.g. 1/4, 1/2, 1/3, etc.). Angle denotes the angle(s) for
+which the lines of a particular hatching pattern should be drawn. For
+example, the default horizontal pattern (“+”) is an angle of 0 while the
+default vertical pattern (“-”) is an angle of 90. Angle can be a vector
+with multiple angles. For example, the cross (“x”) is an angle of 45 and
+135.
 
 ``` r
-patternList = list(list(pattern = "positiveDiagonal", lineColor = "red"), list(pattern = "vertical",
-    density = 1/8))
-plt <- scatterHatch(data = pdacData, x = pdacData$Xt, y = pdacData$Yt, factor = as.factor(pdacData$location),
-    factorName = "Tissue Type", pointSize = 1, patternList = patternList) + myTheme
+patternList = list(list(pattern = "/", angle = 70), list(pattern = "-", density = 1/2), 
+    list(pattern = "x", angle = c(15, 165)), list(pattern = "+", density = 1/10))
+plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", legendTitle = "Tissue Type", 
+    patternList = patternList)
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.3333333
+[1] 0.1
+[1] 0.1
 plot(plt)
 ```
 
-![](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+<img src="C:/Users/guhat/AppData/Local/Temp/RtmpM3p5xl/preview-56bc49ef1a32.dir/vignette_files/figure-gfm/unnamed-chunk-5-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ## scatterHatch() Arguments Explained
 
 | Argument     | Description                                                                                                                                                                                                         |
 | :----------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | data         | A dataframe of the dataset being plotted                                                                                                                                                                            |
-| x            | A numeric vector describing the x-coordinates of the points being plotted                                                                                                                                           |
-| y            | A numeric vector describing the y-coordinates of the points being plotted                                                                                                                                           |
-| factor       | A vector describing what group each point belongs to                                                                                                                                                                |
-| factorName   | The legend title                                                                                                                                                                                                    |
+| x            | A string describing the column name with the x-coordinates of the points being plotted                                                                                                                              |
+| y            | A string describing the column name with the y-coordinates of the points being plotted                                                                                                                              |
+| factor       | A string describing the column name of the factor variable                                                                                                                                                          |
+| legendTitle  | The legend title                                                                                                                                                                                                    |
 | pointSize    | ggplot2 point size                                                                                                                                                                                                  |
+| pointAlpha   | Transparency of each point                                                                                                                                                                                          |
 | gridSize     | Integer describing the precision of the hatched patterns. Larger the value, greater the precision at the expense of efficiency. Default follows this expotential decay function: 500\*e^(-pointSize/2.2) + 43.44965 |
+| sparsePoints | A logical vector that denotes the outlying points. Default utilizies an in-built sparsity detector                                                                                                                  |
 | patternList  | List containing the aesthethics of each pattern                                                                                                                                                                     |
-| colorPalette | Character vector describing the point color of each group; default is color-blind friendly                                                                                                                          |
+| colorPalette | Character vector describing the point color of each group; default is color-blind friendly and uses colors from the dittoSeq package                                                                                |
 
 ## Pattern Aesthetics Arguments
 
 These pattern aesthetics are passed into a list in the patternList
 argument of `scatterHatch()`.
 
-| Aesthetics | Description                                                                                                                                                                                                                                |
-| :--------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| pattern    | A string representing which pattern to use (“horizontal”, “vertical”, “positiveDiagonal”, “negativeDiagonal”)                                                                                                                              |
-| density    | A fraction representing how dense the lines in a pattern should be. Must be less than or equal to 1, with the denominator as an integer and the numerator the number 1. Greater the density value, denser the pattern. Default is 1/4      |
-| sparsity   | Value controlling the requirements for a point to be labelled as sparse and have an individual line pattern be rendered on it. Less the sparsity value, less the requirements. Value \>= 1 and \<= gridSize. Default is 2% of the gridSize |
-| lineColor  | Color of the pattern line                                                                                                                                                                                                                  |
-| lineType   | Type of line (e.g. dashed, dotted, etc.)                                                                                                                                                                                                   |
-| lineWidth  | Width of the lines in the pattern                                                                                                                                                                                                          |
-| pointAlpha | Alpha value of the points being plotted for each group                                                                                                                                                                                     |
+| Aesthetics | Description                                                                                                                                                                                                            |
+| :--------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| pattern    | A string representing one of the possible 7 patterns to be used: (horizontal or “-”), (vertical or “|”), (positiveDiagonal or “/”), (negativeDiagonal or “"), (checkers or”+“), (cross or”x“), and (blank or”").       |
+| density    | A fraction representing how dense the lines in a pattern should be. Must be less than or equal to 1, with the denominator as an integer and the numerator the number 1. Greater the density value, denser the pattern. |
+| angle      | Vector or number denoting at what angle(s) the lines in a hatching pattern should be drawn.                                                                                                                            |
