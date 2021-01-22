@@ -69,7 +69,7 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
 
                        draw_group = function(data, panel_scales, coord) {
                          coords <- coord$transform(data, panel_scales)
-                         grid::pointsGrob(coords$x, coords$y, unit(0, "char"), pch = coords$shape,
+                         grid::pointsGrob(coords$x, coords$y, grid::unit(0, "char"), pch = coords$shape,
                                           gp = grid::gpar(col = "black"))
                        }
 )
