@@ -50,13 +50,10 @@ invisible custom geom to render the legend icons.
 
 
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", legendTitle = "Tissue Type")
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
 plot(plt)
 ```
 
-<img src="C:/Users/guhat/AppData/Local/Temp/RtmpM3p5xl/preview-56bc49ef1a32.dir/vignette_files/figure-gfm/unnamed-chunk-2-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+<img src="C:/Users/guhat/AppData/Local/Temp/RtmpMJfc2N/preview-6fe4722d7cfa.dir/vignette_files/figure-gfm/unnamed-chunk-2-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ## Creating ScatterHatch Plot with Many Groups
 
@@ -65,92 +62,10 @@ plot(plt)
 
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "frame", pointSize = 0.5, 
     legendTitle = "Frame")
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.25
-[1] 0.25
-[1] 0.25
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
 plot(plt)
 ```
 
-<img src="C:/Users/guhat/AppData/Local/Temp/RtmpM3p5xl/preview-56bc49ef1a32.dir/vignette_files/figure-gfm/unnamed-chunk-3-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+<img src="C:/Users/guhat/AppData/Local/Temp/RtmpMJfc2N/preview-6fe4722d7cfa.dir/vignette_files/figure-gfm/unnamed-chunk-3-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ## Customizing ScatterHatch Plot
 
@@ -169,13 +84,10 @@ patternList = list(list(pattern = "/"), list(pattern = "x"), list(pattern = ""),
     list(pattern = "-"))
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", legendTitle = "Tissue Type", 
     patternList = patternList)
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
 plot(plt)
 ```
 
-<img src="C:/Users/guhat/AppData/Local/Temp/RtmpM3p5xl/preview-56bc49ef1a32.dir/vignette_files/figure-gfm/unnamed-chunk-4-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+<img src="C:/Users/guhat/AppData/Local/Temp/RtmpMJfc2N/preview-6fe4722d7cfa.dir/vignette_files/figure-gfm/unnamed-chunk-4-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ### Changing the Aesthetics of each Pattern
 
@@ -194,15 +106,10 @@ patternList = list(list(pattern = "/", angle = 70), list(pattern = "-", density 
     list(pattern = "x", angle = c(15, 165)), list(pattern = "+", density = 1/10))
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", legendTitle = "Tissue Type", 
     patternList = patternList)
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.3333333
-[1] 0.1
-[1] 0.1
 plot(plt)
 ```
 
-<img src="C:/Users/guhat/AppData/Local/Temp/RtmpM3p5xl/preview-56bc49ef1a32.dir/vignette_files/figure-gfm/unnamed-chunk-5-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+<img src="C:/Users/guhat/AppData/Local/Temp/RtmpMJfc2N/preview-6fe4722d7cfa.dir/vignette_files/figure-gfm/unnamed-chunk-5-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ## scatterHatch() Arguments Explained
 
