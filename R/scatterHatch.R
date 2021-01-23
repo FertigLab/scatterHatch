@@ -64,6 +64,10 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     warning("Same point colors will be repeated with different hatching patterns!")
   }
 
+  if (length(unique(colorPalette)) * length(patterns) < length(groups)){
+    stop("Not enough unique combinations of patterns and columns for each group.")
+  }
+
   # getting legend ready
   legendDF = data.frame(x=numeric(), y=numeric(), ids=as.character())
   names = colnames(legendDF)
