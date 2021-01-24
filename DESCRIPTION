@@ -1,6 +1,6 @@
 Package: scatterHatch
 Title: Creates hatched patterns for scatterplots
-Version: 0.1
+Version: 0.1.0
 Authors@R:
     person(given = "Tejas",
            family = "Guha",
@@ -11,7 +11,7 @@ Description: The objective of this algorithm is to efficiently create unique pat
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
@@ -24,3 +24,5 @@ Imports:
   dittoSeq
 Depends:
     R (>= 2.10)
+biocViews: Visualization, SingleCell
+URL: https://github.com/FertigLab/scatterHatchPlots
