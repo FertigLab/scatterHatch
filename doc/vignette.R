@@ -28,28 +28,28 @@ pdacData$location = sapply(pdacData$frame, annotateLocation)
 
 head(pdacData[, c('Xt', 'Yt', 'location', 'frame')])
 
-## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='svg', fig.width = 9, fig.height = 6.5, fig.align="center"----
+## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='png', out.width = "800px", out.height = "662px", fig.width = 11, fig.height = 8, dpi = 500, fig.align="center"----
 
 
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", 
                     factor = "location", legendTitle = "Tissue Type")
 plot(plt)
 
-## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='svg', fig.width = 9, fig.height = 6.5, fig.align="center"----
+## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='png',  out.width = "800px", out.height = "620px", fig.width = 11, fig.height = 8, dpi = 500, fig.align="center"----
 
 
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", 
                     factor = "frame", pointSize = 0.5, legendTitle = "Frame")
 plot(plt)
 
-## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='svg', fig.width = 9, fig.height = 6.5, fig.align="center"----
+## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='png', out.width = "800px", out.height = "620px", fig.width = 11, fig.height = 8, dpi = 500, fig.align="center"----
 patternList = list(list(pattern="/"), list(pattern="x"), list(pattern=""), list(pattern="-"))
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", 
                     factor = "location", legendTitle = "Tissue Type", 
                     patternList = patternList)
 plot(plt)
 
-## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='svg', fig.width = 9, fig.height = 6.5, fig.align="center"----
+## ----echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='png',  out.width = "800px", out.height = "620px", fig.width = 11, fig.height = 8, dpi = 500, fig.align="center"----
 patternList = list(list(pattern="/", angle = 70), list(pattern="-", density = 1/2), list(pattern="x", angle = c(15,165)), list(pattern="+", density = 1/10))
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", 
                     factor = "location", legendTitle = "Tissue Type", 
