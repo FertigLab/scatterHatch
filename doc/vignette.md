@@ -53,7 +53,7 @@ plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", le
 plot(plt)
 ```
 
-<img src="https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-2-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+<img src="https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-2-1.png" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ## Creating ScatterHatch Plot with Many Groups
 
@@ -65,7 +65,7 @@ plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "frame", point
 plot(plt)
 ```
 
-<img src="https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-3-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+<img src="https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-3-1.png" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ## Customizing ScatterHatch Plot
 
@@ -87,7 +87,7 @@ plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", le
 plot(plt)
 ```
 
-<img src="https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-4-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+<img src="https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-4-1.png" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ### Changing the Aesthetics of each Pattern
 
@@ -109,7 +109,7 @@ plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", factor = "location", le
 plot(plt)
 ```
 
-<img src="https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-5-1.svg" style="display:block; margin:auto;" style="display: block; margin: auto;" />
+<img src="https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette_files/figure-gfm/unnamed-chunk-5-1.png" style="display:block; margin:auto;" style="display: block; margin: auto;" />
 
 ## scatterHatch() Arguments Explained
 
