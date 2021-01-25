@@ -15,9 +15,26 @@ geom_imagePoint(
   ...
 )
 }
+\arguments{
+\item{mapping}{Set of aesthetic mappings}
+
+\item{data}{Data to be displayed in this layer}
+
+\item{stat}{Statistical transformation to use on the data for this layer}
+
+\item{position}{Position adjustment}
+
+\item{na.rm}{if missing values are to be removed}
+
+\item{show.legend}{if layer be included in the legends}
+
+\item{inherit.aes}{if layer should inherit behavior}
+
+\item{...}{all remaining params passed to create a layer}
+}
 \value{
 List of grob objects
 }
 \description{
-ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
+Creates custom ggplot2 layer with geom mentioned above
 }
