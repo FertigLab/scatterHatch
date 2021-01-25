@@ -25,9 +25,9 @@ legendIcon(
 
 \item{lineWidth}{Width of the line}
 
-\item{angle}{Vector of the line angles for a given pattern}
+\item{lineAlpha}{Transparency of the line}
 
-\item{alpha}{Transparency of the line}
+\item{angle}{Vector of the line angles for a given pattern}
 }
 \value{
 List of grob objects

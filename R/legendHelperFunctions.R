@@ -15,7 +15,7 @@
 #' @param lineType Line type of pattern lines (e.g. dashed, dotted, etc.)
 #' @param patternType Pattern Type of icon (e.g. vertical, horizontal, etc.)
 #' @param lineWidth Width of the line
-#' @param alpha Transparency of the line
+#' @param lineAlpha Transparency of the line
 #' @param angle Vector of the line angles for a given pattern
 #' @return List of grob objects
 #' @export
@@ -75,8 +75,14 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
 )
 
 #' Creates custom ggplot2 layer with geom mentioned above
-#'
-#' ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
+#'@param mapping Set of aesthetic mappings
+#'@param data Data to be displayed in this layer
+#'@param stat Statistical transformation to use on the data for this layer
+#'@param position Position adjustment
+#'@param na.rm if missing values are to be removed
+#'@param show.legend if layer be included in the legends
+#'@param inherit.aes if layer should inherit behavior
+#'@param ... all remaining params passed to create a layer
 #' @return List of grob objects
 geom_imagePoint <- function(mapping = NULL, data = NULL, stat = "identity",
                             position = "identity", na.rm = FALSE, show.legend = NA,
