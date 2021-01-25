@@ -2,10 +2,10 @@
 title: "Creating a Scatterplot with Texture"
 author: "Tejas Guha"
 date: "January 21, 2021"
-output:
-  md_document:
-    variant: gfm
-#output: rmarkdown::html_vignette
+# output:
+#   md_document:
+#     variant: gfm
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Creating a Scatterplot with Texture}
   %\VignetteEngine{knitr::rmarkdown}
