@@ -54,5 +54,5 @@ convertSizeToCartesian <- function(size, scale, axis){
   if (axis == 'y'){
     cartesianConvert = grid::convertHeight(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/aspectRatio
   }
-  return(cartesianConvert)
+  return(cartesianConvert/2)
 }
