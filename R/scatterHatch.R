@@ -124,10 +124,10 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     if (is.null(currentPatternAes$density)){
       density = 1/2
       if (pattern %in% c("horizontal", "-", "vertical", "|", "checkers", "+")){
-        density = 1/4
+        density = 1/2
       }
       if (pattern %in% c("positiveDiagonal", "/", "negativeDiagonal", "\\", "cross", "x")){
-        density = 1/3
+        density = 1/2
       }
     }
 
@@ -147,6 +147,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
       groupLineCoords = drawHorizontal(groupGrid, density=density, pointSize=pointSize, xDiff, yDiff, xDiff, yDiff, sparseGroupPoints)
 
       adjustmentFactorX = convertSizeToCartesian(pointSize, xDiff, 'x')
+      #adjustmentFactorX = pointSize*ggplot2::.pt + ggplot2::.stroke*0.5/2;
       groupLineCoords$xStart = groupLineCoords$xStart - adjustmentFactorX
       groupLineCoords$xEnd = groupLineCoords$xEnd + adjustmentFactorX
 

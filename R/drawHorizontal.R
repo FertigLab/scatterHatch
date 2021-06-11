@@ -21,6 +21,7 @@
 
 drawHorizontal <- function(gridOutput, density = NULL, pointSize, xDiff, yDiff, rotatedxDiff, rotatedyDiff, sparsePoints = NULL){
   if (density > 1){density=1} # density must be 1 or less
+  #density = 1;
   xBins = gridOutput[[1]]
   yBins = gridOutput[[2]]
   freqMat = gridOutput[[3]]
@@ -50,9 +51,10 @@ drawHorizontal <- function(gridOutput, density = NULL, pointSize, xDiff, yDiff, 
   for (row in 1:nrow(freqMat)){ # iterates by every row
     rowPoints = pointsToGrid[pointsToGrid$yIntervals == row, ]
 
-    yLevels = yBins[row] - (yBins[1] - yBins[2])/2 # where to draw y level
+    #yLevels = yBins[row] - (yBins[1] - yBins[2])/2 # where to draw y level @Tejas's version
+    yLevels = yBins[row] - diff(yBins)[1]/2 #atul's version
     if (row == nrow(freqMat)){ # for bottom row exception
-      yLevels = yBins[row]
+      yLevels = yBins[row] - diff(yBins)[1]/2
     }
 
     rowDraw = (as.integer(row * density)*(1/density)) == row # when to skip rows
