@@ -2,7 +2,8 @@
 % Please edit documentation in R/legendHelperFunctions.R
 \name{geom_imagePoint}
 \alias{geom_imagePoint}
-\title{Creates custom ggplot2 layer with geom mentioned above}
+\title{Creates custom ggplot2 layer that transfers the pattern
+aesthetics (e.g. color, lineColor, etc.) to render the legend icon.}
 \usage{
 geom_imagePoint(
   mapping = NULL,
@@ -15,9 +16,29 @@ geom_imagePoint(
   ...
 )
 }
+\arguments{
+\item{mapping}{Set of aesthetic mappings}
+
+\item{data}{The data to be displayed in this layer.}
+
+\item{stat}{The statistical transformation to use on the data for this layer.}
+
+\item{position}{Position adjustment, either as a string, or the result of}
+
+\item{na.rm}{logical.  Should missing data (NA) be removed?}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+a call to a position adjustment function.}
+
+\item{inherit.aes}{If FALSE, overrides the default aesthetics,
+rather than combining with them.}
+
+\item{...}{Additional parameters that may be passed to ggplot2::layer()}
+}
 \value{
 List of grob objects
 }
 \description{
-ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
+Creates custom ggplot2 layer that transfers the pattern
+aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
 }

@@ -15,13 +15,14 @@
 #' @param scale If the sparsity of the pattern calculated is dependent which axes
 #' @return Dataframe of each point in a group, which grid it belongs to, distance from fifth nearest point, and whether a point is sparse or not.
 #' @export
+#' @importFrom spatstat.geom nndist
 sparsityAnnotate <- function(pointsToGrid, pointSize, xDiff, yDiff, scale){
   if (scale == 'x'){ pointRadius = abs(convertSizeToCartesian(pointSize, xDiff, 'x'))}
   if (scale == 'y'){ pointRadius = abs(convertSizeToCartesian(pointSize, yDiff, 'y'))}
   sparsityDistance = pointRadius * 2  # a point away
-  pointsToGrid$closest2Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 2)) # distance from the second closest point
-  pointsToGrid$closest5Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 5)) # distance from the fifth closest point
-  pointsToGrid$closest20Points = suppressMessages(spatstat::nndist(pointsToGrid$x, pointsToGrid$y, k = 20)) # distance from the twentieth closest point
+  pointsToGrid$closest2Points = suppressMessages(nndist(pointsToGrid$x, pointsToGrid$y, k = 2)) # distance from the second closest point
+  pointsToGrid$closest5Points = suppressMessages(nndist(pointsToGrid$x, pointsToGrid$y, k = 5)) # distance from the fifth closest point
+  pointsToGrid$closest20Points = suppressMessages(nndist(pointsToGrid$x, pointsToGrid$y, k = 20)) # distance from the twentieth closest point
   pointsToGrid$sparsePoints = pointsToGrid$closest5Points > sparsityDistance # outlying points within a group
 
   pointsToGrid$smallClusters = (pointsToGrid$closest20Points > pointRadius*4) & !pointsToGrid$sparsePoints # smaller clusters within a group
