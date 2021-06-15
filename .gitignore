@@ -1,0 +1,8 @@
+*.Rproj.user
+*.rproj
+*.rhistory
+.Rhistory
+man/.Rhistory
+R/.Rhistory
+.Rproj.user
+.Rbuildignore
