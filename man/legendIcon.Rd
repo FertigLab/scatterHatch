@@ -10,7 +10,6 @@ legendIcon(
   lineType = "solid",
   patternType,
   lineWidth = 1.5,
-  lineAlpha = 0.4,
   angle = NULL
 )
 }
@@ -26,16 +25,11 @@ legendIcon(
 \item{lineWidth}{Width of the line}
 
 \item{angle}{Vector of the line angles for a given pattern}
-
-\item{alpha}{Transparency of the line}
 }
 \value{
 List of grob objects
 }
 \description{
-This function creates the legend icons for the four distinct patterns supported at the moment:
-horizontal, vertical, positiveDiagnol, and negativeDiagnol.  The legend icons are rendered using
-grob raster objects in the grid package.  Before the grid method, the icons were drawn using
-image_draw in the Magick package.  The Magick method was proven impractical because it created
-an issue with the graphic device preventing ggsave from rendering the final plot.
+This function creates the legend icons for the patterns inputted to scatterHatch.
+The legend icons are rendered using grob raster objects in the grid package.
 }

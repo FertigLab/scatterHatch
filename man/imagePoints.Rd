@@ -3,7 +3,8 @@
 \docType{data}
 \name{imagePoints}
 \alias{imagePoints}
-\title{Creates custom ggplot2 object}
+\title{Creates custom ggplot2 object
+ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.}
 \format{
 An object of class \code{imagePoints} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 5.
 }
@@ -14,6 +15,7 @@ imagePoints
 List of grob objects
 }
 \description{
+Creates custom ggplot2 object
 ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
 }
 \keyword{datasets}

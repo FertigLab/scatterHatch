@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Tejas",
            family = "Guha",
            role = c("aut", "cre"),
-           email = "guhatejas@gmail.com",
+           email = "tguha@umd.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: The objective of this algorithm is to efficiently create unique patterns for individual groups in a scatterplot so that if the groups were colored the same they would be distinguishable.  Thus, this algorithm would be useful in increasing the accessiblity of scatterplot visualizations to those with visual impairments such as color blindness.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
@@ -20,7 +20,6 @@ Imports:
 	grid,
 	ggplot2,
 	plyr,
-  spatstat,
-  dittoSeq
+  spatstat.geom
 Depends:
     R (>= 2.10)

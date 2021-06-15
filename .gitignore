@@ -1,3 +1,6 @@
-.Rproj.user
-Meta
-
+*.Rproj.user
+*.rproj
+*.rhistory
+.Rhistory
+.Rhistory
+.Rhistory
