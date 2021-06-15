@@ -14,9 +14,9 @@ An object of class \code{data.frame} with 158159 rows and 41 columns.
 data(pdacData)
 }
 \description{
-Single-cell resolution of 21 proteins and 3 cellular compartment in a human
-pancreatic dual adenocarcionma sample that spans across three distinct tissues:
-the pancreas, small intestine, and tumor.  160,000 cells profiled.
+Single-cell resolution of 21 proteins and 3 cellular compartments in a human
+Pancreatic Dual Adenocarcinoma sample that spans across three distinct tissues:
+the pancreas, small intestine, and tumor.
 }
 \references{
 Lin et al. (2018) eLife 2018;7:e31657
