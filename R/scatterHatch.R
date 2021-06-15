@@ -70,9 +70,15 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     #colorPalette = dittoSeq::dittoColors(reps = ceiling(length(groups)/40))[1:length(groups)]
   }
 
+  nOfPatterns = length(unique(vapply(patternList, function(i){i[[1]]}, character(1)))) # finds number of unique patterns
+  if (length(unique(colorPalette)) * nOfPatterns < length(groups)){
+    stop("Not enough unique combinations of patterns and columns for each group.")
+  }
+
   if (length(unique(colorPalette)) < length(groups)){
     warning("Same point colors will be repeated with different hatching patterns!")
   }
+
 
   # getting legend ready
   legendDF = data.frame(x=numeric(), y=numeric(), ids=as.character())
@@ -132,7 +138,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
 
     # default density if not given
     if (is.null(currentPatternAes$density)){
-      density = 1/2
+      density = 1/3
       if (pattern %in% c("horizontal", "-", "vertical", "|", "checkers", "+")){
         density = 1/2
       }
