@@ -3,15 +3,15 @@
 \docType{data}
 \name{pdacData}
 \alias{pdacData}
-\title{Pancreatic Dual Adenocarcionma (PDAC) tissue-CyCIF dataset}
+\title{Tissue-CyCIF data of Pancreatic Ductal Adenocarcinoma (PDAC)}
 \format{
-An object of class \code{data.frame} with 158159 rows and 41 columns.
+A data frame with 158159 rows and 41 variables:
 }
 \source{
-\href{http://spatial.rc.fas.harvard.edu/spatialgiotto/giotto.dataset.html}{Giotto Datasets}
+\url{http://spatialgiotto.rc.fas.harvard.edu/giotto.cycif.html}
 }
 \usage{
-data(pdacData)
+pdacData
 }
 \description{
 Single-cell resolution of 21 proteins and 3 cellular compartments in a human
