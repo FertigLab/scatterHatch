@@ -3,23 +3,18 @@
 \docType{data}
 \name{pdacData}
 \alias{pdacData}
-\title{Pancreatic Dual Adenocarcionma (PDAC) tissue-CyCIF dataset}
+\title{Tissue-CyCIF data of Pancreatic Ductal Adenocarcinoma (PDAC)}
 \format{
-An object of class \code{data.frame} with 158159 rows and 41 columns.
+A data frame with 158159 rows and 41 variables:
 }
 \source{
-\href{http://spatial.rc.fas.harvard.edu/spatialgiotto/giotto.dataset.html}{Giotto Datasets}
+\url{http://spatialgiotto.rc.fas.harvard.edu/giotto.cycif.html}
 }
 \usage{
-data(pdacData)
+pdacData
 }
 \description{
-Single-cell resolution of 21 proteins and 3 cellular compartment in a human
-pancreatic dual adenocarcionma sample that spans across three distinct tissues:
-the pancreas, small intestine, and tumor.  160,000 cells profiled.
-}
-\references{
-Lin et al. (2018) eLife 2018;7:e31657
-(\href{https://pubmed.ncbi.nlm.nih.gov/29993362/}{PubMed})
+A dataset containing antibody expression of a human tissue sample with
+PDAC at a single-cell resolution used in Lin et al.
 }
 \keyword{datasets}

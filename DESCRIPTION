@@ -1,33 +1,31 @@
 Package: scatterHatch
 Title: Creates hatched patterns for scatterplots
-Version: 0.1.0
+Version: 0.99.0
 Authors@R:
     person(given = "Tejas",
            family = "Guha",
            role = c("aut", "cre"),
-           email = "guhatejas@gmail.com",
+           email = "tguha@umd.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: The objective of this algorithm is to efficiently create unique patterns for individual groups in a scatterplot so that if the groups were colored the same they would be distinguishable.  Thus, this algorithm would be useful in increasing the accessiblity of scatterplot visualizations to those with visual impairments such as color blindness.
+Description: The objective of this package is to efficiently create scatterplots where groups can be distinguished by color and texture.
+Visualizations in computational biology tend to have many groups making it difficult to distinguish between groups solely on color.
+Thus, this package is useful for increasing the accessibility of scatterplot visualizations to those with visual impairments such as color blindness.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
 Encoding: UTF-8
-LazyData: TRUE
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
-Suggests: 
-    knitr,
-    rmarkdown,
-    testthat (>= 2.0.0)
+Suggests: knitr, rmarkdown
 Imports:
 	grid,
 	ggplot2,
 	plyr,
-  spatstat,
-  dittoSeq
+  spatstat.geom,
+  stats,
+  grDevices
 Depends:
-    R (>= 2.10)
-Config/testthat/edition: 2
+    R (>= 4.0)
 biocViews: Visualization, SingleCell
 URL: https://github.com/FertigLab/scatterHatchPlots
-
