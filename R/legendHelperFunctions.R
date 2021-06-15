@@ -4,22 +4,18 @@
 
 #' Creating a Legend Icon
 #'
-#' This function creates the legend icons for the four distinct patterns supported at the moment:
-#' horizontal, vertical, positiveDiagnol, and negativeDiagnol.  The legend icons are rendered using
-#' grob raster objects in the grid package.  Before the grid method, the icons were drawn using
-#' image_draw in the Magick package.  The Magick method was proven impractical because it created
-#' an issue with the graphic device preventing ggsave from rendering the final plot.
+#' This function creates the legend icons for the patterns inputted to scatterHatch.
+#' The legend icons are rendered using grob raster objects in the grid package.
 #'
 #' @param color Background color of the icon
 #' @param lineColor Color of the pattern lines
 #' @param lineType Line type of pattern lines (e.g. dashed, dotted, etc.)
 #' @param patternType Pattern Type of icon (e.g. vertical, horizontal, etc.)
 #' @param lineWidth Width of the line
-#' @param lineAlpha Transparency of the line
 #' @param angle Vector of the line angles for a given pattern
 #' @return List of grob objects
 #' @export
-legendIcon <- function(color, lineColor="black", lineType = "solid", patternType, lineWidth=1.5, lineAlpha=0.4, angle = NULL){
+legendIcon <- function(color, lineColor="black", lineType = "solid", patternType, lineWidth=1.5, angle = NULL){
   radius = 0.25
   linePar = grid::gpar(col = lineColor, fill = color, lwd = 2*lineWidth, lty = lineType, alpha=1)
   circle = grid::circleGrob(0.5, 0.5, radius, gp=grid::gpar(col = color, fill = color, lwd = 1, alpha = 1))
@@ -53,8 +49,7 @@ legendIcon <- function(color, lineColor="black", lineType = "solid", patternType
 }
 
 #' Creates custom ggplot2 object
-#'
-#'  ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
+#' ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
 #' @return List of grob objects
 
 imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
@@ -64,7 +59,7 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
                        draw_key = function (data, params, size)
                        {
                          iconInfo = data$ids[[1]] # ids contains all the necessary info to render icon
-                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], iconInfo[[4]], iconInfo[[5]], iconInfo[[6]], iconInfo[[7]])
+                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], iconInfo[[4]], iconInfo[[5]], iconInfo[[7]])
                        },
 
                        draw_group = function(data, panel_scales, coord) {
@@ -74,15 +69,19 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
                        }
 )
 
-#' Creates custom ggplot2 layer with geom mentioned above
-#'@param mapping Set of aesthetic mappings
-#'@param data Data to be displayed in this layer
-#'@param stat Statistical transformation to use on the data for this layer
-#'@param position Position adjustment
-#'@param na.rm if missing values are to be removed
-#'@param show.legend if layer be included in the legends
-#'@param inherit.aes if layer should inherit behavior
-#'@param ... all remaining params passed to create a layer
+#' Creates custom ggplot2 layer that transfers the pattern
+#' aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
+#' @param mapping Set of aesthetic mappings
+#' @param data The data to be displayed in this layer.
+#' @param stat The statistical transformation to use on the data for this layer.
+#' @param position Position adjustment, either as a string, or the result of
+#' @param na.rm logical.  Should missing data (NA) be removed?
+#' @param show.legend logical. Should this layer be included in the legends?
+#' a call to a position adjustment function.
+#' @param inherit.aes If FALSE, overrides the default aesthetics,
+#' rather than combining with them.
+#' @param ...  Additional parameters that may be passed to ggplot2::layer()
+#'
 #' @return List of grob objects
 geom_imagePoint <- function(mapping = NULL, data = NULL, stat = "identity",
                             position = "identity", na.rm = FALSE, show.legend = NA,

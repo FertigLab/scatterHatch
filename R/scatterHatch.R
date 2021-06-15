@@ -19,10 +19,13 @@
 #' @param colorPalette Colors to be used for each group.  Default is color-blind friendly.
 #' @return ggplot2 object of scatterplot with hatched patterns for each group.
 #' @export
+#' @importFrom grDevices dev.size
+#' @importFrom stats median
 
 scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, pointAlpha = 0.5, gridSize = NULL, sparsePoints = NULL,
                          patternList = NULL, colorPalette = NULL){
 
+  ids <- xEnd <- xStart <- yEnd <- yStart <- NULL
   if (!(x %in% names(data))){ stop("x column name not present in dataset.")}
   if (!(y %in% names(data))){ stop("y column name not present in dataset.")}
   if (!(factor %in% names(data))){ stop("factor column name not present in dataset.")}
@@ -52,12 +55,19 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
       list(pattern = patterns[i], lineType = lineType, lineAlpha = lineAlpha, lineWidth = lineWidth, pointAlpha = pointAlpha)})
   }
 
-  if (length(patternList) < length(groups)){ # checks if patternList length is ok
-    stop("The length of patternList must be greater than or equal to the number of groups present.")
+  nOfPatterns = length(unique(vapply(patternList, function(i){i[[1]]}, character(1)))) # finds number of unique patterns
+  if (40 * nOfPatterns < length(groups)){
+    stop("Not enough unique combinations of patterns and columns for each group.")
   }
 
+
   if (is.null(colorPalette)){
-    colorPalette = dittoSeq::dittoColors(reps = ceiling(length(groups)/40))[1:length(groups)]
+    dittoColors = c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#666666", "#AD7700", "#1C91D4",
+    "#007756", "#D5C711", "#005685", "#A04700", "#B14380", "#4D4D4D", "#FFBE2D", "#80C7EF", "#00F6B3", "#F4EB71",
+    "#06A5FF", "#FF8320", "#D99BBD", "#8C8C8C", "#FFCB57", "#9AD2F2", "#2CFFC6", "#F6EF8E", "#38B7FF", "#FF9B4D",
+    "#E0AFCA", "#A3A3A3", "#8A5F00", "#1674A9", "#005F45", "#AA9F0D", "#00446B", "#803800", "#8D3666", "#3D3D3D")
+    colorPalette = rep(dittoColors, times=ceiling(length(groups)/40))[1:length(groups)]
+    #colorPalette = dittoSeq::dittoColors(reps = ceiling(length(groups)/40))[1:length(groups)]
   }
 
   nOfPatterns = length(unique(vapply(patternList, function(i){i[[1]]}, character(1)))) # finds number of unique patterns
@@ -130,10 +140,10 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     if (is.null(currentPatternAes$density)){
       density = 1/3
       if (pattern %in% c("horizontal", "-", "vertical", "|", "checkers", "+")){
-        density = 1/4
+        density = 1/2
       }
       if (pattern %in% c("positiveDiagonal", "/", "negativeDiagonal", "\\", "cross", "x")){
-        density = 1/3
+        density = 1/2
       }
     }
 
@@ -153,6 +163,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
       groupLineCoords = drawHorizontal(groupGrid, density=density, pointSize=pointSize, xDiff, yDiff, xDiff, yDiff, sparseGroupPoints)
 
       adjustmentFactorX = convertSizeToCartesian(pointSize, xDiff, 'x')
+      #adjustmentFactorX = pointSize*ggplot2::.pt + ggplot2::.stroke*0.5/2;
       groupLineCoords$xStart = groupLineCoords$xStart - adjustmentFactorX
       groupLineCoords$xEnd = groupLineCoords$xEnd + adjustmentFactorX
 
