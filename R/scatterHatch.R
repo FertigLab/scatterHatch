@@ -55,9 +55,8 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
       list(pattern = patterns[i], lineType = lineType, lineAlpha = lineAlpha, lineWidth = lineWidth, pointAlpha = pointAlpha)})
   }
 
-  nOfPatterns = length(unique(vapply(patternList, function(i){i[[1]]}, character(1)))) # finds number of unique patterns
-  if (40 * nOfPatterns < length(groups)){
-    stop("Not enough unique combinations of patterns and columns for each group.")
+  if (length(patternList) < length(groups)){ # checks if patternList length is ok
+    stop("The length of patternList must be greater than or equal to the number of groups present.")
   }
 
 
