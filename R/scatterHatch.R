@@ -147,6 +147,9 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     }
 
     if (!is.null(currentPatternAes$density)){ density = currentPatternAes$density}
+    if (!is.null(currentPatternAes$lineWidth)){ lineWidth = currentPatternAes$lineWidth}
+    if (!is.null(currentPatternAes$lineColor)){ lineColor = currentPatternAes$lineColor}
+    if (!is.null(currentPatternAes$lineType)){ lineType = currentPatternAes$lineType}
 
     # handles creating the legend icon
     legendDF = rbind(legendDF, c(median(xGroup), median(yGroup), group))
