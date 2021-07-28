@@ -8,13 +8,13 @@
 A data frame with 158159 rows and 41 variables:
 }
 \source{
-\url{http://spatialgiotto.rc.fas.harvard.edu/giotto.cycif.html}
+\href{http://spatial.rc.fas.harvard.edu/spatialgiotto/giotto.dataset.html}{Giotto Datasets}
 }
 \usage{
-pdacData
+data(pdacData)
 }
 \description{
-Single-cell resolution of 21 proteins and 3 cellular compartments in a human
+Single-cell resolution of 4 cellular compartments in a human
 Pancreatic Dual Adenocarcinoma sample that spans across three distinct tissues:
 the pancreas, small intestine, and tumor.
 }

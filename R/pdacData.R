@@ -1,6 +1,6 @@
 #' Tissue-CyCIF data of Pancreatic Ductal Adenocarcinoma (PDAC)
 #'
-#' Single-cell resolution of 21 proteins and 3 cellular compartments in a human
+#' Single-cell resolution of 4 cellular compartments in a human
 #' Pancreatic Dual Adenocarcinoma sample that spans across three distinct tissues:
 #' the pancreas, small intestine, and tumor.
 #'
