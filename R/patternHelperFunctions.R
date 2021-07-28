@@ -46,13 +46,26 @@ countGridPoints <- function(x, y, xDiff, yDiff, n = 25){
 #' @return Radius of the point in Cartesian units
 #' @export
 convertSizeToCartesian <- function(size, scale, axis){
-  fontSize = size*ggplot2::.pt + ggplot2::.stroke*0.5/2
+  #fontSize = size*ggplot2::.pt + ggplot2::.stroke*0.5/2
+  fontSize = size*ggplot2::.pt
   aspectRatio = dev.size()[1]/dev.size()[2]
-  if (axis == 'x'){
-    cartesianConvert = grid::convertWidth(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/aspectRatio
+  if (aspectRatio >= 1){
+    if (axis == 'x'){
+      cartesianConvert = grid::convertWidth(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/aspectRatio
+    }
+    if (axis == 'y'){
+      cartesianConvert = grid::convertHeight(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/aspectRatio
+    }
   }
-  if (axis == 'y'){
-    cartesianConvert = grid::convertHeight(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)/aspectRatio
+  
+  if (aspectRatio < 1){
+    if (axis == 'x'){
+      cartesianConvert = grid::convertWidth(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)*aspectRatio
+    }
+    if (axis == 'y'){
+      cartesianConvert = grid::convertHeight(grid::unit(fontSize, "points"), unitTo="npc", valueOnly = TRUE) * diff(scale)*aspectRatio
+    }
   }
+  
   return(cartesianConvert/2)
 }

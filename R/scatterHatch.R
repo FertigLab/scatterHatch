@@ -91,7 +91,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
   plt = plt + ggplot2::lims(x=xDiff, y=yDiff)
 
   # plot points for all the groups
-  plt = plt + ggplot2::geom_point(ggplot2::aes(color = factor), alpha=pointAlpha, size=pointSize, show.legend = FALSE) +
+  plt = plt + ggplot2::geom_point(ggplot2::aes(color = factor), alpha=pointAlpha, size=pointSize, stroke = 0, show.legend = FALSE) +
     ggplot2::scale_color_manual(values = colorPalette)
 
   lineCoords = data.frame(matrix(ncol = 4, nrow = 0))
@@ -169,7 +169,9 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
       groupLineCoords$xStart = groupLineCoords$xStart - adjustmentFactorX
       groupLineCoords$xEnd = groupLineCoords$xEnd + adjustmentFactorX
 
-      lineCoords = rbind(lineCoords, groupLineCoords)
+      #lineCoords = rbind(lineCoords, groupLineCoords)
+      
+      plt = plt + ggplot2::geom_segment(data=groupLineCoords, ggplot2::aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
     }
 
     else {
@@ -195,7 +197,10 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
         groupLineCoords$xEnd = rotatedEndPoints$x
         groupLineCoords$yEnd = rotatedEndPoints$y
 
-        lineCoords = rbind(lineCoords, groupLineCoords)
+        #lineCoords = rbind(lineCoords, groupLineCoords)
+        
+        plt = plt + ggplot2::geom_segment(data=groupLineCoords, ggplot2::aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
+        
       }
 
     }
@@ -203,7 +208,6 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     groupNum = groupNum + 1
   }
 
-  plt = plt + ggplot2::geom_segment(data=lineCoords, ggplot2::aes(x=xStart, y=yStart, xend=xEnd, yend=yEnd), alpha=lineAlpha, size=lineWidth, linetype=lineType, color=lineColor)
 
   # creating the legend
   legendDF$legendIcons = legendIcons
