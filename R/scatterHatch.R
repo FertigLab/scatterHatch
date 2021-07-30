@@ -21,6 +21,9 @@
 #' @export
 #' @importFrom grDevices dev.size
 #' @importFrom stats median
+#' @examples
+#' scatterHatch plot by each frame in pdacData
+#' scatterHatch(pdacData, "Xt", "Yt", "frame")
 
 scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, pointAlpha = 0.5, gridSize = NULL, sparsePoints = NULL,
                          patternList = NULL, colorPalette = NULL){
@@ -51,7 +54,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
   if (is.null(patternList)){ # creating pattern list if none given
     patterns = rep(patterns, ceiling(length(groups)/length(patterns)))
     patternList = vector(mode = "list", length = length(groups)) # initializing patternList
-    patternList = lapply(1:length(groups), function(i){patternList[[i]] =
+    patternList = lapply(seq(length(groups)), function(i){patternList[[i]] =
       list(pattern = patterns[i], lineType = lineType, lineAlpha = lineAlpha, lineWidth = lineWidth, pointAlpha = pointAlpha)})
   }
 
@@ -65,7 +68,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, po
     "#007756", "#D5C711", "#005685", "#A04700", "#B14380", "#4D4D4D", "#FFBE2D", "#80C7EF", "#00F6B3", "#F4EB71",
     "#06A5FF", "#FF8320", "#D99BBD", "#8C8C8C", "#FFCB57", "#9AD2F2", "#2CFFC6", "#F6EF8E", "#38B7FF", "#FF9B4D",
     "#E0AFCA", "#A3A3A3", "#8A5F00", "#1674A9", "#005F45", "#AA9F0D", "#00446B", "#803800", "#8D3666", "#3D3D3D")
-    colorPalette = rep(dittoColors, times=ceiling(length(groups)/40))[1:length(groups)]
+    colorPalette = rep(dittoColors, times=ceiling(length(groups)/40))[seq(length(groups))]
     #colorPalette = dittoSeq::dittoColors(reps = ceiling(length(groups)/40))[1:length(groups)]
   }
 

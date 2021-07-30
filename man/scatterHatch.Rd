@@ -49,3 +49,7 @@ This function creates a scatterplot with hatched patterns by using geom_segment(
 Also creates the legend to represent each hatched group.  The aesthetics defining each pattern,
 like the lineType and lineColor are all passed to geom_segment().
 }
+\examples{
+scatterHatch plot by each frame in pdacData
+scatterHatch(pdacData, "Xt", "Yt", "frame")
+}
