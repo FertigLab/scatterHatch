@@ -38,7 +38,7 @@ drawHorizontal <- function(gridOutput, density = NULL, pointSize, xDiff, yDiff, 
   pointsToGrid = pointsToGrid[!sparsePoints & !sparsityAnnotateOutput$smallClusters, ] # removes sparse and small cluster points from regular pattern drawing
   
   allIrregularPoints = rbind(sparsePointsToGrid, smallClusterToGrid)
-  for (i in 1:nrow(allIrregularPoints)){ # removes sparse points from 2D frequency matrix
+  for (i in seq(nrow(allIrregularPoints))){ # removes sparse points from 2D frequency matrix
     freqMat[allIrregularPoints$yIntervals[i], allIrregularPoints$xIntervals[i]] = freqMat[allIrregularPoints$yIntervals[i], allIrregularPoints$xIntervals[i]] - 1
   }
   
@@ -48,7 +48,7 @@ drawHorizontal <- function(gridOutput, density = NULL, pointSize, xDiff, yDiff, 
   yEnd = c()
   
   rowDraw = TRUE # whether to draw lines in current row or not
-  for (row in 1:nrow(freqMat)){ # iterates by every row
+  for (row in seq(nrow(freqMat))){ # iterates by every row
     rowPoints = pointsToGrid[pointsToGrid$yIntervals == row, ]
     
     #yLevels = yBins[row] - (yBins[1] - yBins[2])/2 # where to draw y level @Tejas's version
@@ -63,7 +63,7 @@ drawHorizontal <- function(gridOutput, density = NULL, pointSize, xDiff, yDiff, 
     lineDraw = FALSE # whether line being drawn or not
     
     
-    for (col in 1:ncol(freqMat)){
+    for (col in seq(ncol(freqMat))){
       if (prevCol == 0 & freqMat[row, col] != 0  & rowDraw){ # starting a line segment
         gridPoints = rowPoints[rowPoints$xIntervals == col, ] # points corresponding to current grid square
         xStart = c(xStart, min(gridPoints$x)) # where to draw horizontal lines

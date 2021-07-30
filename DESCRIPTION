@@ -24,5 +24,5 @@ Imports:
   grDevices
 Depends:
     R (>= 4.0)
-biocViews: Visualization, SingleCell
+biocViews: Visualization, SingleCell, CellBiology
 URL: https://github.com/FertigLab/scatterHatchPlots

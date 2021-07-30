@@ -13,10 +13,10 @@
 #' @param y y-coordinates of the group
 #' @param xDiff Range of the x-axis in the scatterplot
 #' @param yDiff Range of the y-axis in the scatterplot
-#' @param n Size of the square matrix
+#' @param n Number of grids across each side of the square matrix
 #' @return List: x & y bins of the grid, 2D frequency matrix, and dataframe matching each point to its corresponding grid in the matrix
 #' @noRd
-countGridPoints <- function(x, y, xDiff, yDiff, n = 25){
+countGridPoints <- function(x, y, xDiff, yDiff, n){
   xIntervals = as.numeric(cut(x, breaks = seq(xDiff[1], xDiff[2], by=diff(xDiff)/(n-1))))
   yIntervals = as.numeric(cut(y, breaks = seq(yDiff[2], yDiff[1], by=-1*diff(yDiff)/(n-1))))
   yIntervals = n+1-yIntervals # ensures as row index increases, y decreases in matrix
@@ -24,7 +24,7 @@ countGridPoints <- function(x, y, xDiff, yDiff, n = 25){
   pointsToGrid = as.data.frame(cbind(xIntervals, yIntervals, x, y))
   freqs = plyr::count(intervals, vars=c("xIntervals", "yIntervals"))
   freqMat = matrix(0, nrow=n, ncol=n)
-  for (x in 1:nrow(freqs)){
+  for (x in seq(nrow(freqs))){
     freqMat[freqs$yIntervals[x], freqs$xIntervals[x]] = freqs$freq[x]
   }
 
