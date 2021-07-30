@@ -7,7 +7,7 @@
 #' @param y Vector of the y coordinates
 #' @param angle Angle to rotate the coordinate system by (in degrees)
 #' @return Dataframe with 2 columns specifying the transformed coordinates for each point
-#' @export
+#' @noRd
 rotateCoords <- function(x, y, angle){
   radians <- (angle/180) * pi
   xRotate <- (x * cos(radians)) - (y * sin(radians))

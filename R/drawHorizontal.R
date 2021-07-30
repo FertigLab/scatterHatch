@@ -17,7 +17,7 @@
 #' @param rotatedyDiff Rotated y-coordinate range of the plot.
 #' @param sparsePoints Logical Vector denoting points annotated as sparse.  If NULL, default sparsity detector will be used to annotate sparse points in dataset.
 #' @return Dataframe with 4 columns defining the starting and ending coordinates of each line to be drawn.
-#' @export
+#' @noRd
 
 drawHorizontal <- function(gridOutput, density = NULL, pointSize, xDiff, yDiff, rotatedxDiff, rotatedyDiff, sparsePoints = NULL){
   if (density > 1){density=1} # density must be 1 or less

@@ -15,7 +15,7 @@
 #' @param yDiff Range of the y-axis in the scatterplot
 #' @param n Size of the square matrix
 #' @return List: x & y bins of the grid, 2D frequency matrix, and dataframe matching each point to its corresponding grid in the matrix
-#' @export
+#' @noRd
 countGridPoints <- function(x, y, xDiff, yDiff, n = 25){
   xIntervals = as.numeric(cut(x, breaks = seq(xDiff[1], xDiff[2], by=diff(xDiff)/(n-1))))
   yIntervals = as.numeric(cut(y, breaks = seq(yDiff[2], yDiff[1], by=-1*diff(yDiff)/(n-1))))
@@ -44,7 +44,7 @@ countGridPoints <- function(x, y, xDiff, yDiff, n = 25){
 #' @param scale Minimum and maximum values of given scale
 #' @param axis Cartesian axis: 'x' or 'y'
 #' @return Radius of the point in Cartesian units
-#' @export
+#' @noRd
 convertSizeToCartesian <- function(size, scale, axis){
   #fontSize = size*ggplot2::.pt + ggplot2::.stroke*0.5/2
   fontSize = size*ggplot2::.pt

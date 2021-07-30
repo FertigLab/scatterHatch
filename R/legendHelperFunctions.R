@@ -14,7 +14,7 @@
 #' @param lineWidth Width of the line
 #' @param angle Vector of the line angles for a given pattern
 #' @return List of grob objects
-#' @export
+#' @noRd
 legendIcon <- function(color, lineColor="black", lineType = "solid", patternType, lineWidth=1.5, angle = NULL){
   radius = 0.25
   linePar = grid::gpar(col = lineColor, fill = color, lwd = 2*lineWidth, lty = lineType, alpha=1)
@@ -51,6 +51,7 @@ legendIcon <- function(color, lineColor="black", lineType = "solid", patternType
 #' Creates custom ggplot2 object
 #' ggplot2 object that transfers the pattern aesthetics (e.g. color, lineColor, etc.) to render the legend icon.
 #' @return List of grob objects
+#' @noRd
 
 imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
                        required_aes = c("x", "y", "ids"),
@@ -83,6 +84,7 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
 #' @param ...  Additional parameters that may be passed to ggplot2::layer()
 #'
 #' @return List of grob objects
+#' @noRd
 geom_imagePoint <- function(mapping = NULL, data = NULL, stat = "identity",
                             position = "identity", na.rm = FALSE, show.legend = NA,
                             inherit.aes = TRUE, ...) {

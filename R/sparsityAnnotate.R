@@ -14,7 +14,7 @@
 #' @param yDiff y-coordinate range of the plot.
 #' @param scale If the sparsity of the pattern calculated is dependent which axes
 #' @return Dataframe of each point in a group, which grid it belongs to, distance from fifth nearest point, and whether a point is sparse or not.
-#' @export
+#' @noRd
 #' @importFrom spatstat.geom nndist
 sparsityAnnotate <- function(pointsToGrid, pointSize, xDiff, yDiff, scale){
   if (scale == 'x'){ pointRadius = abs(convertSizeToCartesian(pointSize, xDiff, 'x'))}
