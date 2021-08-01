@@ -93,6 +93,8 @@ basePlot <- function(data, x, y, factor, colorPalette,
 
 #' Adds default aesthetics in a pattern if missing
 #' @param patternAes List specifying pattern aesthetics
+#' @param pointSize ggplot point size
+#' @param pointAlpha Transparency of each point
 #' @noRd
 addPatternAesDefaults <- function(patternAes, pointSize, pointAlpha){
   if (length(patternAes) == 0){ stop("No given aesthetics!")}
