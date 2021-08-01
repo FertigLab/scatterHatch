@@ -1,5 +1,4 @@
-# Determines sparse points in a group
-# Tejas Guha - January 1, 2021
+# Determines sparse points in a group Tejas Guha - January 1, 2021
 
 #' Determines sparse points in a group
 #'
@@ -16,36 +15,35 @@
 #' @return Dataframe determining sparsity of a point.
 #' @noRd
 #' @importFrom spatstat.geom nndist
-sparsityAnnotate <- function(pointsToGrid, pointSize, xRange, yRange, scale){
-  if (scale == 'x'){ 
-    pointRadius <- abs(convertSizeToCartesian(pointSize, xRange, 'x'))
-  }
-  if (scale == 'y'){ 
-    pointRadius <- abs(convertSizeToCartesian(pointSize, yRange, 'y'))
-  }
-  
-  sparsityDistance <- pointRadius * 2  # a point away
-  
-  ## distance from the second closest point
-  pointsToGrid$closest2Points <- suppressMessages(
-    nndist(pointsToGrid$x, pointsToGrid$y, k=2))
-  
-  ## distance from the fifth closest point
-  pointsToGrid$closest5Points <- suppressMessages(
-    nndist(pointsToGrid$x, pointsToGrid$y, k=5))
- 
-   ## distance from the twentieth closest point
-  pointsToGrid$closest20Points <- suppressMessages(
-    nndist(pointsToGrid$x, pointsToGrid$y, k=20))
-  
-  ## outlying points within a group
-  pointsToGrid$sparsePoints <- pointsToGrid$closest5Points > sparsityDistance 
-  
-  ## smaller clusters within a group
-  pointsToGrid$smallClusters <- (pointsToGrid$closest20Points > pointRadius*4) & 
-    !pointsToGrid$sparsePoints 
+sparsityAnnotate <- function(pointsToGrid, pointSize, xRange, yRange, scale) {
+    if (scale == "x") {
+        pointRadius <- abs(convertSizeToCartesian(pointSize, xRange, "x"))
+    }
+    if (scale == "y") {
+        pointRadius <- abs(convertSizeToCartesian(pointSize, yRange, "y"))
+    }
 
-  return(pointsToGrid)
+    sparsityDistance <- pointRadius * 2  # a point away
+
+    ## distance from the second closest point
+    pointsToGrid$closest2Points <- suppressMessages(nndist(pointsToGrid$x, 
+                                                         pointsToGrid$y, k = 2))
+
+    ## distance from the fifth closest point
+    pointsToGrid$closest5Points <- suppressMessages(nndist(pointsToGrid$x, 
+                                                         pointsToGrid$y, k = 5))
+
+    ## distance from the twentieth closest point
+    pointsToGrid$closest20Points <- suppressMessages(nndist(pointsToGrid$x, 
+                                                        pointsToGrid$y, k = 20))
+
+    ## outlying points within a group
+    pointsToGrid$sparsePoints <- pointsToGrid$closest5Points > sparsityDistance
+
+    ## smaller clusters within a group
+    pointsToGrid$smallClusters <- (pointsToGrid$closest20Points > pointRadius*4) 
+                                  & !pointsToGrid$sparsePoints
+    return(pointsToGrid)
 }
 
 
