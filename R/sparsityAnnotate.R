@@ -10,39 +10,39 @@
 #'
 #' @param pointsToGrid Dataframe of points in group and the grid it belongs to
 #' @param pointSize Point size of the plot.
-#' @param xDiff x-coordinate range of the plot.
-#' @param yDiff y-coordinate range of the plot.
+#' @param xRange x-coordinate range of the plot.
+#' @param yRange y-coordinate range of the plot.
 #' @param scale Sparsity dependent on which axes?
 #' @return Dataframe determining sparsity of a point.
 #' @noRd
 #' @importFrom spatstat.geom nndist
-sparsityAnnotate <- function(pointsToGrid, pointSize, xDiff, yDiff, scale){
+sparsityAnnotate <- function(pointsToGrid, pointSize, xRange, yRange, scale){
   if (scale == 'x'){ 
-    pointRadius = abs(convertSizeToCartesian(pointSize, xDiff, 'x'))
+    pointRadius <- abs(convertSizeToCartesian(pointSize, xRange, 'x'))
   }
   if (scale == 'y'){ 
-    pointRadius = abs(convertSizeToCartesian(pointSize, yDiff, 'y'))
+    pointRadius <- abs(convertSizeToCartesian(pointSize, yRange, 'y'))
   }
   
-  sparsityDistance = pointRadius * 2  ## a point away
+  sparsityDistance <- pointRadius * 2  # a point away
   
   ## distance from the second closest point
-  pointsToGrid$closest2Points = suppressMessages(
-    nndist(pointsToGrid$x, pointsToGrid$y, k = 2))
+  pointsToGrid$closest2Points <- suppressMessages(
+    nndist(pointsToGrid$x, pointsToGrid$y, k=2))
   
   ## distance from the fifth closest point
-  pointsToGrid$closest5Points = suppressMessages(
-    nndist(pointsToGrid$x, pointsToGrid$y, k = 5))
+  pointsToGrid$closest5Points <- suppressMessages(
+    nndist(pointsToGrid$x, pointsToGrid$y, k=5))
  
    ## distance from the twentieth closest point
-  pointsToGrid$closest20Points = suppressMessages(
-    nndist(pointsToGrid$x, pointsToGrid$y, k = 20))
+  pointsToGrid$closest20Points <- suppressMessages(
+    nndist(pointsToGrid$x, pointsToGrid$y, k=20))
   
   ## outlying points within a group
-  pointsToGrid$sparsePoints = pointsToGrid$closest5Points > sparsityDistance 
+  pointsToGrid$sparsePoints <- pointsToGrid$closest5Points > sparsityDistance 
   
   ## smaller clusters within a group
-  pointsToGrid$smallClusters = (pointsToGrid$closest20Points > pointRadius*4) & 
+  pointsToGrid$smallClusters <- (pointsToGrid$closest20Points > pointRadius*4) & 
     !pointsToGrid$sparsePoints 
 
   return(pointsToGrid)

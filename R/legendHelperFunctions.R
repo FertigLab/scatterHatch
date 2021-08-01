@@ -16,49 +16,49 @@
 #' @param angle Vector of the line angles for a given pattern
 #' @return List of grob objects
 #' @noRd
-legendIcon <- function(color, lineColor="black", lineType = "solid", 
-                       patternType, lineWidth=1.5, angle = NULL){
-  radius = 0.25
-  linePar = grid::gpar(col = lineColor, fill = color, lwd = 2*lineWidth, 
+legendIcon <- function(color, lineColor="black", lineType="solid", 
+                       patternType, lineWidth=1.5, angle=NULL){
+  radius <- 0.25
+  linePar <- grid::gpar(col = lineColor, fill = color, lwd = 2*lineWidth, 
                        lty = lineType, alpha=1)
-  circle = grid::circleGrob(0.5, 0.5, radius, gp=grid::gpar(
-    col = color, fill = color, lwd = 1, alpha = 1))
-  grobs = list(circle)
-  grobs[["gp"]] = grid::gpar(alpha = 1)
+  circle <- grid::circleGrob(0.5, 0.5, radius, gp=grid::gpar(
+            col=color, fill=color, lwd=1, alpha=1))
+  grobs <- list(circle)
+  grobs[["gp"]] <- grid::gpar(alpha = 1)
 
   if (patternType %in% c("blank", "")){
-    return(do.call(grid::grobTree, args = grobs))
+    return(do.call(grid::grobTree, args=grobs))
   }
 
-  angle = -angle
-  angle = (angle/180) * pi ## converting angle from radians to degrees
-  phaseDiff = pi/6
+  angle <- -angle
+  angle <- (angle/180) * pi ## converting angle from radians to degrees
+  phaseDiff <- pi/6
 
   for (a in angle){
     ## x/y coordinates of center line segment
-    centralLineX = c(radius * cos(a) + 0.5, -radius * cos(a) + 0.5) 
-    centralLineY = c(radius * sin(a) + 0.5, -radius * sin(a) + 0.5)
-    grobs[[length(grobs) + 1]] = grid::linesGrob(x = centralLineX, 
-                                                 y = centralLineY, gp = linePar)
+    centralLineX <- c(radius * cos(a) + 0.5, -radius * cos(a) + 0.5) 
+    centralLineY <- c(radius * sin(a) + 0.5, -radius * sin(a) + 0.5)
+    grobs[[length(grobs) + 1]] <- grid::linesGrob(x=centralLineX, 
+                                                 y=centralLineY, gp=linePar)
     
     ## x/y coordinates of left line segment
-    leftLineX = c(radius * cos(a + phaseDiff) + 0.5, -radius * 
+    leftLineX <- c(radius * cos(a + phaseDiff) + 0.5, -radius * 
                     cos(a - phaseDiff) + 0.5)
-    leftLineY = c(radius * sin(a + phaseDiff) + 0.5, -radius * 
+    leftLineY <- c(radius * sin(a + phaseDiff) + 0.5, -radius * 
                     sin(a - phaseDiff) + 0.5)
-    grobs[[length(grobs) + 1]] = grid::linesGrob(x = leftLineX, 
-                                                 y = leftLineY, gp = linePar)
+    grobs[[length(grobs) + 1]] <- grid::linesGrob(x=leftLineX, 
+                                                 y=leftLineY, gp=linePar)
     
     ## x/y coordinates of right line segment
-    rightLineX = c(radius * cos(a - phaseDiff) + 0.5, -radius * 
+    rightLineX <- c(radius * cos(a - phaseDiff) + 0.5, -radius * 
                      cos(a + phaseDiff) + 0.5) 
-    rightLineY = c(radius * sin(a - phaseDiff) + 0.5, -radius * 
+    rightLineY <- c(radius * sin(a - phaseDiff) + 0.5, -radius * 
                      sin(a + phaseDiff) + 0.5)
-    grobs[[length(grobs) + 1]] = grid::linesGrob(x = rightLineX, 
-                                                 y = rightLineY, gp = linePar)
+    grobs[[length(grobs) + 1]] <- grid::linesGrob(x=rightLineX, 
+                                                 y=rightLineY, gp=linePar)
   }
 
-  return(do.call(grid::grobTree, args = grobs))
+  return(do.call(grid::grobTree, args=grobs))
 
 }
 
@@ -81,8 +81,9 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
 
                        draw_group=function(data, panel_scales, coord){
                          coords <- coord$transform(data, panel_scales)
-                         grid::pointsGrob(coords$x,coords$y, grid::unit(0, "char"),
-                                  pch=coords$shape, gp=grid::gpar(col="black"))
+                         grid::pointsGrob(coords$x,coords$y, 
+                              grid::unit(0, "char"),pch=coords$shape, 
+                              gp=grid::gpar(col="black"))
                        }
 )
 
