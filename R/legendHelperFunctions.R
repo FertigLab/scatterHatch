@@ -69,21 +69,20 @@ legendIcon <- function(color, lineColor="black", lineType = "solid",
 #' @noRd
 
 imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
-                       required_aes = c("x", "y", "ids"),
-                       default_aes = ggplot2::aes(size = 5, shape=19),
+                       required_aes=c("x", "y", "ids"),
+                       default_aes=ggplot2::aes(size = 5, shape=19),
 
-                       draw_key = function (data, params, size)
-                       {
+                       draw_key=function(data, params, size){
                          ## necessary info to render icon
-                         iconInfo = data$ids[[1]] 
-                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]], 
+                         iconInfo <- data$ids[[1]]
+                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]],
                                     iconInfo[[4]], iconInfo[[5]], iconInfo[[7]])
                        },
 
-                       draw_group = function(data, panel_scales, coord) {
+                       draw_group=function(data, panel_scales, coord){
                          coords <- coord$transform(data, panel_scales)
-                         grid::pointsGrob(coords$x,coords$y, grid::unit(0, "char"), 
-                                          pch = coords$shape, gp = grid::gpar(col = "black"))
+                         grid::pointsGrob(coords$x,coords$y, grid::unit(0, "char"),
+                                  pch=coords$shape, gp=grid::gpar(col="black"))
                        }
 )
 
@@ -99,15 +98,14 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
 #' @param inherit.aes If FALSE, overrides the default aesthetics,
 #' rather than combining with them.
 #' @param ...  Additional parameters that may be passed to ggplot2::layer()
-#'
 #' @return List of grob objects
 #' @noRd
-geom_imagePoint <- function(mapping = NULL, data = NULL, stat = "identity",
-                            position = "identity", na.rm = FALSE, 
-                            show.legend = NA, inherit.aes = TRUE, ...) {
+geom_imagePoint <- function(mapping=NULL, data=NULL, stat="identity",
+                            position="identity", na.rm=FALSE, 
+                            show.legend=NA, inherit.aes=TRUE, ...) {
   ggplot2::layer(
-    geom = imagePoints, mapping = mapping,  data = data, stat = stat,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, ...)
+    geom = imagePoints, mapping=mapping,  data=data, stat=stat,
+    position=position, show.legend=show.legend, inherit.aes=inherit.aes,
+    params=list(na.rm = na.rm, ...)
   )
 }

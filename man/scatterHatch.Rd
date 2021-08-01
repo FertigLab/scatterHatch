@@ -12,7 +12,7 @@ scatterHatch(
   legendTitle = "",
   pointSize = 1,
   pointAlpha = 0.5,
-  gridSize = NULL,
+  nBins = NULL,
   sparsePoints = NULL,
   patternList = NULL,
   colorPalette = NULL
@@ -33,7 +33,7 @@ scatterHatch(
 
 \item{pointAlpha}{Transparency of points in the scatterplot}
 
-\item{gridSize}{Controls the precision of the hatched pattern.
+\item{nBins}{Controls the precision of the hatched pattern.
 Larger values correspond to greater precision.
 Default follows a exponential decay function based on point size.}
 
