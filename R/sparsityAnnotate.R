@@ -41,8 +41,8 @@ sparsityAnnotate <- function(pointsToGrid, pointSize, xRange, yRange, scale) {
     pointsToGrid$sparsePoints <- pointsToGrid$closest5Points > sparsityDistance
 
     ## smaller clusters within a group
-    pointsToGrid$smallClusters <- (pointsToGrid$closest20Points > pointRadius*4) 
-                                  & !pointsToGrid$sparsePoints
+    pointsToGrid$smallClusters <- (pointsToGrid$closest20Points>pointRadius*4) & 
+                                  !pointsToGrid$sparsePoints
     return(pointsToGrid)
 }
 

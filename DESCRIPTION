@@ -10,7 +10,7 @@ Authors@R:
     person(given = "Atul",
            family = "Deshpande",
            role = c("aut", "cre"),
-           email = "atulpdeshpande@gmail.com",
+           email = "adeshpande@jhu.edu",
            comment = c(ORCID = "0000-0001-5144-6924"))
 Description: The objective of this package is to efficiently create scatterplots where groups can be distinguished by color and texture.  Visualizations in computational biology tend to have many groups making it difficult to distinguish between groups solely on color.  Thus, this package is useful for increasing the accessibility of scatterplot visualizations to those with visual impairments such as color blindness.
 License: MIT + file LICENSE
