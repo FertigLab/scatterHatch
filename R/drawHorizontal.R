@@ -26,42 +26,42 @@
 
 drawHorizontal <- function(gridOutput, density=1, pointSize, xRange, yRange, 
                            rotatedxRange, rotatedyRange, sparsePoints=NULL){
-  xBins <- gridOutput[[1]]; yBins <- gridOutput[[2]]
-  freqMat <- gridOutput[[3]]; pointsToGrid <- gridOutput[[4]]
+    xBins <- gridOutput[[1]]; yBins <- gridOutput[[2]]
+    freqMat <- gridOutput[[3]]; pointsToGrid <- gridOutput[[4]]
   
-  output <- getIrregularPoints(pointsToGrid, freqMat, sparsePoints, 
+    output <- getIrregularPoints(pointsToGrid, freqMat, sparsePoints, 
                                rotatedxRange, rotatedyRange, xRange, pointSize)
-  sparsePointsToGrid <- output[[1]]; smallClusterToGrid <- output[[2]]
-  pointsToGrid <- output[[3]]; freqMat <- output[[4]]
+    sparsePointsToGrid <- output[[1]]; smallClusterToGrid <- output[[2]]
+    pointsToGrid <- output[[3]]; freqMat <- output[[4]]
   
-  ## dealing with large clusters
-  output <- regularPatternDraw(freqMat, pointsToGrid, yBins, density)
-  xStart <- output[[1]]; xEnd <- output[[2]] 
-  yStart <- output[[3]]; yEnd <- output[[4]]
+    ## dealing with large clusters
+    output <- regularPatternDraw(freqMat, pointsToGrid, yBins, density)
+    xStart <- output[[1]]; xEnd <- output[[2]] 
+    yStart <- output[[3]]; yEnd <- output[[4]]
   
-  ## dealing with sparse points
-  xStart <- c(xStart, sparsePointsToGrid$x)
-  xEnd <- c(xEnd, sparsePointsToGrid$x)
-  yStart <- c(yStart, sparsePointsToGrid$y)
-  yEnd <- c(yEnd, sparsePointsToGrid$y)
+    ## dealing with sparse points
+    xStart <- c(xStart, sparsePointsToGrid$x)
+    xEnd <- c(xEnd, sparsePointsToGrid$x)
+    yStart <- c(yStart, sparsePointsToGrid$y)
+    yEnd <- c(yEnd, sparsePointsToGrid$y)
   
-  ## dealing with small cluster points
-  pointRadius <- convertSizeToCartesian(pointSize, xRange, 'x')
-  smallClusterGridSize <- as.integer(diff(rotatedxRange)/(pointRadius * 5))
-  smallClusterToGrid <- countGridPoints(smallClusterToGrid$x, 
+    ## dealing with small cluster points
+    pointRadius <- convertSizeToCartesian(pointSize, xRange, 'x')
+    smallClusterGridSize <- as.integer(diff(rotatedxRange)/(pointRadius * 5))
+    smallClusterToGrid <- countGridPoints(smallClusterToGrid$x, 
                                        smallClusterToGrid$y, rotatedxRange, 
                                        rotatedyRange, smallClusterGridSize)[[4]]
-  smallClusterToGrid$gridNum <- (smallClusterToGrid$yIntervals - 1) * 
+    smallClusterToGrid$gridNum <- (smallClusterToGrid$yIntervals - 1) * 
                             smallClusterGridSize + smallClusterToGrid$xIntervals
   
-  for (gridNum in unique(smallClusterToGrid$gridNum)){
-    xRange <- smallClusterToGrid$x[smallClusterToGrid$gridNum == gridNum]
-    yRange <- smallClusterToGrid$y[smallClusterToGrid$gridNum == gridNum]
-    xStart <- c(xStart, min(xRange))
-    xEnd <- c(xEnd, max(xRange))
-    yStart <- c(yStart, median(yRange))
-    yEnd <- c(yEnd, median(yRange))
-  }
+    for (gridNum in unique(smallClusterToGrid$gridNum)){
+        xRange <- smallClusterToGrid$x[smallClusterToGrid$gridNum == gridNum]
+        yRange <- smallClusterToGrid$y[smallClusterToGrid$gridNum == gridNum]
+        xStart <- c(xStart, min(xRange))
+        xEnd <- c(xEnd, max(xRange))
+        yStart <- c(yStart, median(yRange))
+        yEnd <- c(yEnd, median(yRange))
+    }
 
-  return(data.frame(xStart=xStart, yStart=yStart, xEnd=xEnd, yEnd=yEnd))
+    return(data.frame(xStart=xStart, yStart=yStart, xEnd=xEnd, yEnd=yEnd))
 }
