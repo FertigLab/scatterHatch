@@ -75,19 +75,19 @@ defaultColorPalette <- function(colorPalette, patternList, nGroups){
 #' @noRd
 basePlot <- function(data, x, y, factor, colorPalette, 
                           pointSize, pointAlpha){
-  ## creating the master plot
-  plt <- ggplot2::ggplot(data=data, ggplot2::aes(x=x, y=y))
-  xRange <- ggplot2::ggplot_build(plt)$layout$panel_params[[1]]$x.range
-  yRange <- ggplot2::ggplot_build(plt)$layout$panel_params[[1]]$y.range
-  plt <- plt + ggplot2::lims(x=xRange, y=yRange)
+    ## creating the master plot
+    plt <- ggplot2::ggplot(data=data, ggplot2::aes(x=x, y=y))
+    xRange <- ggplot2::ggplot_build(plt)$layout$panel_params[[1]]$x.range
+    yRange <- ggplot2::ggplot_build(plt)$layout$panel_params[[1]]$y.range
+    plt <- plt + ggplot2::lims(x=xRange, y=yRange)
   
-  ## plot points for all the groups
-  plt <- plt + ggplot2::geom_point(ggplot2::aes(color=factor), 
+    ## plot points for all the groups
+    plt <- plt + ggplot2::geom_point(ggplot2::aes(color=factor), 
                                   alpha=pointAlpha, size=pointSize, 
                                   stroke=0, show.legend=FALSE) +
-    ggplot2::scale_color_manual(values=colorPalette)
+                 ggplot2::scale_color_manual(values=colorPalette)
   
-  return(list(plt, xRange, yRange))
+    return(list(plt, xRange, yRange))
 }
 
 #' Adds default aesthetics in a pattern if missing
@@ -96,53 +96,53 @@ basePlot <- function(data, x, y, factor, colorPalette,
 #' @param pointAlpha Transparency of each point
 #' @noRd
 addPatternAesDefaults <- function(patternAes, pointSize, pointAlpha){
-  if (length(patternAes) == 0){ stop("No given aesthetics!")}
-  if (is.null(patternAes$pattern)){ 
-    stop("Specify pattern in patternList argument!")
-  }
-  
-  pattern <- patternAes$pattern
-  
-  ## ensures pattern line rotation is what's expected by user
-  if (!is.null(patternAes$angle)){ 
-    patternAes$angle <- -patternAes$angle
-  }
-  
-  ## what angle each pattern translates to
-  if (is.null(patternAes$angle)){
-    if (pattern %in% c("horizontal", "-", "vertical", "|")){
-      if (pattern %in% c("horizontal", "-")){ patternAes$angle <- 0}
-      if (pattern %in% c("vertical", "|")){ patternAes$angle <- -90}
-    }else{
-      if (pattern %in% c("positiveDiagonal", "/")){ patternAes$angle <- -135}
-      if (pattern %in% c("negativeDiagonal", "\\")){ patternAes$angle <- -45}
-      if (pattern %in% c("cross", "x")){ patternAes$angle <- c(-45, -135)}
-      if (pattern %in% c("checkers", "+")){ patternAes$angle <- c(0, -90)}
+    if (length(patternAes) == 0){ stop("No given aesthetics!")}
+    if (is.null(patternAes$pattern)){ 
+        stop("Specify pattern in patternList argument!")
     }
-  }
+    pattern <- patternAes$pattern
   
-  ## default density if not given
-  if (is.null(patternAes$density)){
-    patternAes$density <- 1/3
-    if (pattern %in% c("horizontal", "-", "vertical", "|", "checkers", "+")){
-      patternAes$density <- 1/2
+    ## ensures pattern line rotation is what's expected by user
+    if (!is.null(patternAes$angle)){ 
+        patternAes$angle <- -patternAes$angle
     }
-    if (pattern %in% 
-        c("positiveDiagonal", "/", "negativeDiagonal", "\\", "cross", "x")){
-      patternAes$density <- 1/2
-    }
-  }
   
-  ## default aesthetics
-  if (is.null(patternAes$lineType)){ patternAes$lineType <- "solid"}
-  if (is.null(patternAes$lineColor)){ patternAes$lineColor <- "black"}
-  if (is.null(patternAes$lineAlpha)){ patternAes$lineAlpha <- 1}
-  if (is.null(patternAes$lineWidth)){ 
-    patternAes$lineWidth <- ifelse(pointSize < 0.5, 2*pointSize/ggplot2::.pt, 
-                                   pointSize/ggplot2::.pt)
-  }
-  patternAes$pointAlpha = pointAlpha
-  return(patternAes)
+    ## what angle each pattern translates to
+    if (is.null(patternAes$angle)){
+        if (pattern %in% c("horizontal", "-", "vertical", "|")){
+            if (pattern %in% c("horizontal", "-")) patternAes$angle <- 0
+            if (pattern %in% c("vertical", "|")) patternAes$angle <- -90
+        }else{
+            if (pattern %in% c("positiveDiagonal", "/")) patternAes$angle<- -135
+            if (pattern %in% c("negativeDiagonal", "\\")) patternAes$angle<- -45
+            if (pattern %in% c("cross", "x")) patternAes$angle <- c(-45, -135)
+            if (pattern %in% c("checkers", "+")) patternAes$angle <- c(0, -90)
+        }
+    }
+  
+    ## default density if not given
+    if (is.null(patternAes$density)){
+        patternAes$density <- 1/3
+        if (pattern %in% c("horizontal", "-", "vertical", "|", "checkers","+")){
+            patternAes$density <- 1/2
+        }
+        if (pattern %in% 
+            c("positiveDiagonal", "/", "negativeDiagonal", "\\", "cross", "x")){
+            patternAes$density <- 1/2
+        }
+    }
+  
+    ## default aesthetics
+    if (is.null(patternAes$lineType)){ patternAes$lineType <- "solid"}
+    if (is.null(patternAes$lineColor)){ patternAes$lineColor <- "black"}
+    if (is.null(patternAes$lineAlpha)){ patternAes$lineAlpha <- 1}
+    if (is.null(patternAes$lineWidth)){ 
+        patternAes$lineWidth <- ifelse(pointSize < 0.5, 
+                                       2*pointSize/ggplot2::.pt, 
+                                       pointSize/ggplot2::.pt)
+    }
+    patternAes$pointAlpha = pointAlpha
+    return(patternAes)
 }
 
 #' Adds pattern legend icon information
@@ -151,11 +151,11 @@ addPatternAesDefaults <- function(patternAes, pointSize, pointAlpha){
 #' @param pointColor Color of points in group
 #' @noRd
 addLegendIconInfo <- function(legendIcons, patternAes, pointColor){
-  legendIcons[[length(legendIcons) + 1]] <- 
-    list(pointColor, patternAes$lineColor, patternAes$lineType,
-         patternAes$pattern, patternAes$lineWidth, 
-         patternAes$lineAlpha, patternAes$angle)
-  return(legendIcons)
+      legendIcons[[length(legendIcons) + 1]] <- 
+                     list(pointColor, patternAes$lineColor, patternAes$lineType,
+                          patternAes$pattern, patternAes$lineWidth, 
+                          patternAes$lineAlpha, patternAes$angle)
+      return(legendIcons)
 }
 
 #' Adds in line segments for a pattern
@@ -171,51 +171,51 @@ addLegendIconInfo <- function(legendIcons, patternAes, pointColor){
 #' @noRd
 addSegments <- function(plot, xGroup, yGroup, xRange, yRange, nBins, 
                         patternAes, pointSize, sparsePoints){
-  xEnd <- xStart <- yEnd <- yStart <- NULL
-  for (a in patternAes$angle){
-    ## rotating group coordinates
-    rotatedCoords <- rotateCoords(xGroup, yGroup, angle=a) 
-    rotatedCoordsRange <- rotateCoords(c(xRange[1], xRange[1], xRange[2], 
+    xEnd <- xStart <- yEnd <- yStart <- NULL
+    for (a in patternAes$angle){
+        ## rotating group coordinates
+        rotatedCoords <- rotateCoords(xGroup, yGroup, angle=a) 
+        rotatedCoordsRange <- rotateCoords(c(xRange[1], xRange[1], xRange[2], 
                                          xRange[2]), c(yRange[1], yRange[2],
                                                        yRange[1], yRange[2]), a)
-    rotatedxRange <- range(rotatedCoordsRange$x)
-    rotatedyRange <- range(rotatedCoordsRange$y)
-    rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, 
+        rotatedxRange <- range(rotatedCoordsRange$x)
+        rotatedyRange <- range(rotatedCoordsRange$y)
+        rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, 
                                          rotatedxRange, rotatedyRange, n=nBins)
-    ## getting individual line segments
-    groupLineCoords <- drawHorizontal(rotatedgridOutput, patternAes$density, 
+        ## getting individual line segments
+        groupLineCoords <- drawHorizontal(rotatedgridOutput, patternAes$density, 
                                       pointSize, xRange, yRange, rotatedxRange, 
                                       rotatedyRange, sparsePoints)
-    ## adjusting lines based on sizes of a point
-    adjX <- convertSizeToCartesian(pointSize, xRange, 'x')
-    adjY <- convertSizeToCartesian(pointSize, yRange, 'y')
+        ## adjusting lines based on sizes of a point
+        adjX <- convertSizeToCartesian(pointSize, xRange, 'x')
+        adjY <- convertSizeToCartesian(pointSize, yRange, 'y')
     
-    ## rotation matrix
-    R <- matrix(c(cos(a/180 * pi),sin(a/180 * pi),
+        ## rotation matrix
+        R <- matrix(c(cos(a/180 * pi),sin(a/180 * pi),
                   -sin(a/180 * pi),cos(a/180 * pi)), 2, 2) 
-    ## rotating adjustment based on angle
-    rotatedAdjX <- suppressWarnings(diag(sqrt(
-      R %*% diag(c(adjX, adjY), 2, 2)^2 %*% t(R)))[1])
-    if (a == 0){ rotatedAdjX <- adjX}
-    ## converting back to regular coordinates
-    rotatedStartPoints <- rotateCoords(groupLineCoords$xStart - rotatedAdjX, 
+        ## rotating adjustment based on angle
+        rotatedAdjX <- suppressWarnings(diag(sqrt(
+                       R %*% diag(c(adjX, adjY), 2, 2)^2 %*% t(R)))[1])
+        if (a == 0){ rotatedAdjX <- adjX}
+        ## converting back to regular coordinates
+        rotatedStartPoints <- rotateCoords(groupLineCoords$xStart - rotatedAdjX, 
                                        groupLineCoords$yStart, -a)
-    rotatedEndPoints <- rotateCoords(groupLineCoords$xEnd + rotatedAdjX, 
+        rotatedEndPoints <- rotateCoords(groupLineCoords$xEnd + rotatedAdjX, 
                                      groupLineCoords$yEnd, -a)
-    ## adding line segments to plot
-    groupLineCoords$xStart <- rotatedStartPoints$x
-    groupLineCoords$yStart <- rotatedStartPoints$y
-    groupLineCoords$xEnd <- rotatedEndPoints$x
-    groupLineCoords$yEnd <- rotatedEndPoints$y
-    plot <- plot + ggplot2::geom_segment(data=groupLineCoords, 
+        ## adding line segments to plot
+        groupLineCoords$xStart <- rotatedStartPoints$x
+        groupLineCoords$yStart <- rotatedStartPoints$y
+        groupLineCoords$xEnd <- rotatedEndPoints$x
+        groupLineCoords$yEnd <- rotatedEndPoints$y
+        plot <- plot + ggplot2::geom_segment(data=groupLineCoords, 
                                         ggplot2::aes(x=xStart, y=yStart, 
                                                     xend=xEnd, yend=yEnd), 
                                         alpha=patternAes$lineAlpha, 
                                         size=patternAes$lineWidth, 
                                         linetype=patternAes$lineType, 
                                         color=patternAes$lineColor)
-  }
-  return(plot)
+    }
+    return(plot)
 }
 
 #' Adds legend for scatterHatch
@@ -226,22 +226,22 @@ addSegments <- function(plot, xGroup, yGroup, xRange, yRange, nBins,
 #' @param legendTitle Title of legend
 #' @noRd
 addLegend <- function(plot, legendDF, legendIcons, factor, legendTitle){
-  ids <- x <- y <- NULL
-  legendDF$legendIcons <- legendIcons
+    ids <- x <- y <- NULL
+    legendDF$legendIcons <- legendIcons
 
-  ## Adding in the factor names and pattern info to legend
-  scale_image <- function(..., guide="legend"){
-    ggplot2::scale_discrete_manual(aes="ids",
+    ## Adding in the factor names and pattern info to legend
+    scale_image <- function(..., guide="legend"){
+        ggplot2::scale_discrete_manual(aes="ids",
                                    labels=as.character(levels(factor)),
                                    values=legendDF$legendIcons)
-  }
+    }
 
-  ## renders custom legend
-  plot <- plot + geom_imagePoint(data=legendDF, ggplot2::aes(
-    x=as.numeric(x), y=as.numeric(y), 
-    ids=as.character(ids))) + scale_image()
+    ## renders custom legend
+    plot <- plot + geom_imagePoint(data=legendDF, ggplot2::aes(
+            x=as.numeric(x), y=as.numeric(y), ids=as.character(ids))) + 
+            scale_image()
 
-  ## renaming legend title
-  plot$labels$ids <- legendTitle
-  return(plot)
+    ## renaming legend title
+    plot$labels$ids <- legendTitle
+    return(plot)
 }
