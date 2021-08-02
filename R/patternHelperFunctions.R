@@ -30,7 +30,7 @@ countGridPoints <- function(x, y, xRange, yRange, n){
     freqs <- plyr::count(intervals, vars=c("xIntervals", "yIntervals"))
     freqMat <- matrix(0, nrow=n, ncol=n)
     for (x in seq(nrow(freqs))){
-      freqMat[freqs$yIntervals[x], freqs$xIntervals[x]] <- freqs$freq[x]
+        freqMat[freqs$yIntervals[x], freqs$xIntervals[x]] <- freqs$freq[x]
     }
 
     xLevels <- seq(xRange[1], xRange[2], by=diff(xRange)/(n-1))
@@ -55,25 +55,29 @@ convertSizeToCartesian <- function(size, scale, axis){
     fontSize <- size*ggplot2::.pt
     aspectRatio <- dev.size()[1]/dev.size()[2]
     if (aspectRatio >= 1){
-      if (axis == 'x'){
-        cartesianConvert <- grid::convertWidth(grid::unit(fontSize, "points"), 
-                         unitTo="npc", valueOnly=TRUE) * diff(scale)/aspectRatio
-      }
-      if (axis == 'y'){
-        cartesianConvert <- grid::convertHeight(grid::unit(fontSize, "points"), 
-                         unitTo="npc", valueOnly=TRUE) * diff(scale)/aspectRatio
-      }
+        if (axis == 'x'){
+            cartesianConvert <- grid::convertWidth(
+              grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
+              diff(scale)/aspectRatio
+        }
+        if (axis == 'y'){
+            cartesianConvert <- grid::convertHeight(
+              grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
+              diff(scale)/aspectRatio
+        }
     }
   
     if (aspectRatio < 1){
         if (axis == 'x'){
-        cartesianConvert <- grid::convertWidth(grid::unit(fontSize, "points"), 
-                         unitTo="npc", valueOnly=TRUE) * diff(scale)*aspectRatio
-      }
-      if (axis == 'y'){
-        cartesianConvert <- grid::convertHeight(grid::unit(fontSize, "points"), 
-                         unitTo="npc", valueOnly=TRUE) * diff(scale)*aspectRatio
-      }
+            cartesianConvert <- grid::convertWidth(
+              grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
+              diff(scale)*aspectRatio
+        }
+        if (axis == 'y'){
+            cartesianConvert <- grid::convertHeight(
+              grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
+              diff(scale)*aspectRatio
+        }
     }
   
     return(cartesianConvert/2)
