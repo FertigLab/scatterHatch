@@ -7,25 +7,25 @@
 
 defaultPatternList <- function(patternList, nGroups){
   
-  ## default aesthetics
-  patterns <- c("-","|","/","\\", "x", "+", "")
+    ## default aesthetics
+    patterns <- c("-","|","/","\\", "x", "+", "")
   
-  ## creating pattern list if none given
-  if (is.null(patternList)){ 
-    patterns <- rep(patterns, ceiling(nGroups/length(patterns)))
+    ## creating pattern list if none given
+    if (is.null(patternList)){ 
+        patterns <- rep(patterns, ceiling(nGroups/length(patterns)))
     
-    ## initializing patternList
-    patternList <- vector(mode="list", length=nGroups)
-    patternList <- lapply(seq(nGroups), function(i){
-      patternList[[i]] = list(pattern=patterns[i])})
-  }
+        ## initializing patternList
+        patternList <- vector(mode="list", length=nGroups)
+        patternList <- lapply(seq(nGroups), function(i){
+                           patternList[[i]] = list(pattern=patterns[i])})
+    }
   
-  ## checks if patternList length is ok
-  if (length(patternList) < nGroups){
-    stop("The length of patternList must be greater than or equal to the number of groups present.")
-  }
+    ## checks if patternList length is ok
+    if (length(patternList) < nGroups){
+        stop("The length of patternList must be greater than or equal to the number of groups present.")
+    }
   
-  return(patternList)
+    return(patternList)
   
 }
 
@@ -36,33 +36,32 @@ defaultPatternList <- function(patternList, nGroups){
 #' @noRd
 
 defaultColorPalette <- function(colorPalette, patternList, nGroups){
-  if (is.null(colorPalette)){
-    ## Color-Blind friendly colors from dittoSeq package
-    dittoColors <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", 
-                     "#D55E00", "#CC79A7", "#666666", "#AD7700", "#1C91D4",
-                    "#007756", "#D5C711", "#005685", "#A04700", "#B14380", 
-                    "#4D4D4D", "#FFBE2D", "#80C7EF", "#00F6B3", "#F4EB71",
-                    "#06A5FF", "#FF8320", "#D99BBD", "#8C8C8C", "#FFCB57", 
-                    "#9AD2F2", "#2CFFC6", "#F6EF8E", "#38B7FF", "#FF9B4D",
-                    "#E0AFCA", "#A3A3A3", "#8A5F00", "#1674A9", "#005F45", 
-                    "#AA9F0D", "#00446B", "#803800", "#8D3666", "#3D3D3D")
-    colorPalette <- rep(dittoColors, times=ceiling(nGroups/40))[seq(nGroups)]
-  }
+    if (is.null(colorPalette)){
+        ## Color-Blind friendly colors from dittoSeq package
+        dittoColors <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", 
+                         "#D55E00", "#CC79A7", "#666666", "#AD7700", "#1C91D4",
+                         "#007756", "#D5C711", "#005685", "#A04700", "#B14380", 
+                         "#4D4D4D", "#FFBE2D", "#80C7EF", "#00F6B3", "#F4EB71",
+                         "#06A5FF", "#FF8320", "#D99BBD", "#8C8C8C", "#FFCB57", 
+                         "#9AD2F2", "#2CFFC6", "#F6EF8E", "#38B7FF", "#FF9B4D",
+                         "#E0AFCA", "#A3A3A3", "#8A5F00", "#1674A9", "#005F45", 
+                         "#AA9F0D", "#00446B", "#803800", "#8D3666", "#3D3D3D")
+         colorPalette <- rep(dittoColors, times=ceiling(nGroups/40))[seq(nGroups)]
+    }
   
-  ## finds number of unique patterns
-  nOfPatterns <- length(unique(vapply(patternList, function(i){i[[1]]}, character(1)))) 
+    ## finds number of unique patterns
+    nOfPatterns <- length(unique(vapply(patternList, function(i){i[[1]]}, character(1)))) 
   
-  ## if not enough color/pattern combinations
-  if (length(unique(colorPalette)) * nOfPatterns < nGroups){
-    stop("Not enough unique combinations of patterns and columns for each group.")
-  }
+    ## if not enough color/pattern combinations
+    if (length(unique(colorPalette)) * nOfPatterns < nGroups){
+        stop("Not enough unique combinations of patterns and columns for each group.")
+    }
   
-  ## 
-  if (length(unique(colorPalette)) < nGroups){
-    warning("Same point colors will be repeated with different hatching patterns!")
-  }
+    if (length(unique(colorPalette)) < nGroups){
+        warning("Same point colors will be repeated with different hatching patterns!")
+    }
   
-  return(colorPalette)
+    return(colorPalette)
 }
 
 #' Creates the base scatter plot for scatterHatch (without patterns)
