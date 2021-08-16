@@ -12,20 +12,20 @@ scatterHatch(
   legendTitle = "",
   pointSize = 1,
   pointAlpha = 0.5,
-  gridSize = NULL,
+  nBins = NULL,
   sparsePoints = NULL,
   patternList = NULL,
   colorPalette = NULL
 )
 }
 \arguments{
-\item{data}{Dataset to be used (Dataframe)}
+\item{data}{Dataset to be used}
 
-\item{x}{Column name of x-coordinates (String)}
+\item{x}{Column name of x-coordinates}
 
-\item{y}{Column name of y-coordinates (String)}
+\item{y}{Column name of y-coordinates}
 
-\item{factor}{Column name of factor that defines groupings of each point (String)}
+\item{factor}{Column name of factor that defines groupings}
 
 \item{legendTitle}{Title of the legend}
 
@@ -33,19 +33,28 @@ scatterHatch(
 
 \item{pointAlpha}{Transparency of points in the scatterplot}
 
-\item{gridSize}{Controls the precision of the hatched pattern.  Larger values correspond to greater precision.  Default follows a exponential decay function based on point size.}
+\item{nBins}{Controls the precision of the hatched pattern.
+Larger values correspond to greater precision.
+Default follows a exponential decay function based on point size.}
 
-\item{sparsePoints}{Logical Vector denoting points annotated as sparse.  If NULL, default sparsity detector will be used to annotate sparse points in dataset.}
+\item{sparsePoints}{Logical Vector denoting points annotated as sparse.
+If NULL, default sparsity detector will be used to annotate sparse points.}
 
-\item{patternList}{Aesthetics to be passed for each pattern (must be a list where each element has a named pattern)}
+\item{patternList}{Aesthetics to be passed for each pattern
+(must be a list where each element has a named pattern)}
 
-\item{colorPalette}{Colors to be used for each group.  Default is color-blind friendly.}
+\item{colorPalette}{Colors to be used for each group.
+Default is color-blind friendly.}
 }
 \value{
 ggplot2 object of scatterplot with hatched patterns for each group.
 }
 \description{
-This function creates a scatterplot with hatched patterns by using geom_segment().
-Also creates the legend to represent each hatched group.  The aesthetics defining each pattern,
+This function creates a scatterplot with hatched patterns
+by using geom_segment().  Also creates the legend to represent each
+hatched group.  The aesthetics defining each pattern,
 like the lineType and lineColor are all passed to geom_segment().
+}
+\examples{
+scatterHatch(pdacData, "Xt", "Yt", "frame")
 }
