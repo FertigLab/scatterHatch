@@ -18,7 +18,7 @@
 #' @noRd
 legendIcon <- function(color, lineColor="black", lineType="solid", 
                        patternType, lineWidth=1.5, angle=NULL) {
-    radius <- 0.25
+    radius <- 0.35
     linePar <- grid::gpar(col = lineColor, fill = color, lwd = 2 * lineWidth, 
                           lty = lineType, alpha = 1)
     circle <- grid::circleGrob(0.5, 0.5, radius, gp = grid::gpar(col = color, 
