@@ -31,7 +31,7 @@
 #' scatterHatch(pdacData, "Xt", "Yt", "frame")
 
 scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, 
-                         pointAlpha = 0.5, nBins = NULL, sparsePoints = NULL, 
+                         pointAlpha = 0.5, gridSize = NULL, sparsePoints = NULL, 
                          patternList = NULL, colorPalette = NULL){
     if (!(x %in% names(data))){ stop("x column name not present in dataset.")}
     if (!(y %in% names(data))){ stop("y column name not present in dataset.")}
@@ -43,8 +43,7 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1,
     nGroups <- length(levels(factor))
   
     ## grid size follows a exponential decay function in terms of pointSize
-    nBins <- ifelse(is.null(nBins), 
-                     as.integer(500*exp(-pointSize/2.2)+43.44965), nBins)
+    gridSize <- ifelse(is.null(gridSize), 100*pointSize, gridSize)
     patternList <- defaultPatternList(patternList, nGroups)
     colorPalette <- defaultColorPalette(colorPalette, patternList, nGroups)
     ## getting legend ready
@@ -71,10 +70,11 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1,
         legendIcons <- addLegendIconInfo(legendIcons, currentPatternAes, colorPalette[groupNum])
     
         ## adding in line segments for group
-        if (currentPatternAes$pattern %in% c("blank", "")){} # no line segments
-        else{plt <- addSegments(plt, xGroup, yGroup, xRange, yRange, nBins, 
+        if (!(currentPatternAes$pattern %in% c("blank", "")))
+        { # no line segments
+          plt <- addSegments(plt, xGroup, yGroup, xRange, yRange, gridSize, 
                             currentPatternAes, pointSize, sparseGroupPoints)}
-        groupNum = groupNum + 1
+          groupNum = groupNum + 1
     }
     ## creating the legend
     plt <- addLegend(plt, legendDF, legendIcons, factor, legendTitle)

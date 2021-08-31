@@ -164,12 +164,12 @@ addLegendIconInfo <- function(legendIcons, patternAes, pointColor){
 #' @param yGroup y-coordinates of the group
 #' @param xRange x-range of plot
 #' @param yRange y-range of plot
-#' @param nBins Number of bins in grid
+#' @param gridSize width of pattern grid
 #' @param patternAes Aesthetics of a pattern
 #' @param pointSize Size of points in scatterHatch
 #' @param sparsePoints Logical Vector of sparse points in group
 #' @noRd
-addSegments <- function(plot, xGroup, yGroup, xRange, yRange, nBins, 
+addSegments <- function(plt, xGroup, yGroup, xRange, yRange, gridSize, 
                         patternAes, pointSize, sparsePoints){
     xEnd <- xStart <- yEnd <- yStart <- NULL
     for (a in patternAes$angle){
@@ -180,10 +180,9 @@ addSegments <- function(plot, xGroup, yGroup, xRange, yRange, nBins,
                                                        yRange[1], yRange[2]), a)
         rotatedxRange <- range(rotatedCoordsRange$x)
         rotatedyRange <- range(rotatedCoordsRange$y)
-        rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, 
-                                         rotatedxRange, rotatedyRange, n=nBins)
+        rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, gridSize=gridSize)
         ## getting individual line segments
-        groupLineCoords <- drawHorizontal(rotatedgridOutput, patternAes$density, 
+        groupLineCoords <- drawHorizontal(rotatedgridOutput, gridSize, 
                                       pointSize, xRange, yRange, rotatedxRange, 
                                       rotatedyRange, sparsePoints)
         ## adjusting lines based on sizes of a point
@@ -207,7 +206,7 @@ addSegments <- function(plot, xGroup, yGroup, xRange, yRange, nBins,
         groupLineCoords$yStart <- rotatedStartPoints$y
         groupLineCoords$xEnd <- rotatedEndPoints$x
         groupLineCoords$yEnd <- rotatedEndPoints$y
-        plot <- plot + ggplot2::geom_segment(data=groupLineCoords, 
+        plt <- plt + ggplot2::geom_segment(data=groupLineCoords, 
                                         ggplot2::aes(x=xStart, y=yStart, 
                                                     xend=xEnd, yend=yEnd), 
                                         alpha=patternAes$lineAlpha, 
@@ -215,7 +214,7 @@ addSegments <- function(plot, xGroup, yGroup, xRange, yRange, nBins,
                                         linetype=patternAes$lineType, 
                                         color=patternAes$lineColor)
     }
-    return(plot)
+    return(plt)
 }
 
 #' Adds legend for scatterHatch
