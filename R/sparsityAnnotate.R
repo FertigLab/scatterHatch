@@ -17,10 +17,10 @@
 #' @importFrom spatstat.geom nndist
 sparsityAnnotate <- function(pointsToGrid, pointSize, xRange, yRange, scale) {
     if (scale == "x") {
-        pointRadius <- abs(convertSizeToCartesian(pointSize, xRange, "x"))
+        pointRadius <- abs(convertSizeToCartesian(1, xRange, "x"))
     }
     if (scale == "y") {
-        pointRadius <- abs(convertSizeToCartesian(pointSize, yRange, "y"))
+        pointRadius <- abs(convertSizeToCartesian(1, yRange, "y"))
     }
 
     sparsityDistance <- pointRadius * 2  # a point away
@@ -38,10 +38,10 @@ sparsityAnnotate <- function(pointsToGrid, pointSize, xRange, yRange, scale) {
                                                         pointsToGrid$y, k = 20))
 
     ## outlying points within a group
-    pointsToGrid$sparsePoints <- pointsToGrid$closest5Points > sparsityDistance
+    pointsToGrid$sparsePoints <- pointsToGrid$closest2Points > sparsityDistance
 
     ## smaller clusters within a group
-    pointsToGrid$smallClusters <- (pointsToGrid$closest20Points>pointRadius*4) & 
+    pointsToGrid$smallClusters <- (pointsToGrid$closest5Points>pointRadius*4) & 
                                   !pointsToGrid$sparsePoints
     return(pointsToGrid)
 }

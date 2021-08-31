@@ -40,43 +40,44 @@ getIrregularPoints <- function(pointsToGrid, freqMat, sparsePoints,
 #' @param yBins y-coordinate bins for every grid
 #' @param density Density of pattern drawing (how many rows to skip)
 #' @noRd
-regularPatternDraw <- function(freqMat, pointsToGrid, yBins, density){
+regularPatternDraw <- function(freqMat, pointsToGrid, yBins){
     xStart <- yStart <- xEnd <- yEnd <- c()
-    rowDraw <- TRUE # whether to draw lines in current row or not
+    rowDraw <- TRUE # whether to draw lines in current rowNum or not
   
-    for (row in seq(nrow(freqMat))){ # iterates by every row
-        rowPoints <- pointsToGrid[pointsToGrid$yIntervals == row, ]
+    for (rowNum in seq(nrow(freqMat))){ # iterates by every rowNum
+        rowPoints <- pointsToGrid[pointsToGrid$yIntervals == rowNum, ]
     
-        yLevels <- yBins[row] - diff(yBins)[1]/2 # atul's version
-        if (row == nrow(freqMat)){ # for bottom row exception
-            yLevels <- yBins[row] - diff(yBins)[1]/2
+        yLevels <- yBins[rowNum] + diff(yBins)[1]/2 # atul's version
+        if (rowNum == nrow(freqMat)){ # for bottom rowNum exception
+            yLevels <- yBins[rowNum] + diff(yBins)[1]/2
         }
-    
-        rowDraw <- (as.integer(row * density)*(1/density)) == row #when to skip
     
         prevCol <- 0
         lineDraw <- FALSE # whether line being drawn or not
     
-        for (col in seq(ncol(freqMat))){
+        for (colNum in seq(ncol(freqMat))){
             ## starting a line segment
-            if (prevCol == 0 & freqMat[row, col] != 0  & rowDraw){ 
-                gridPoints <- rowPoints[rowPoints$xIntervals == col, ]
+            if (prevCol == 0 & freqMat[rowNum, colNum]!=0){ 
+                gridPoints <- rowPoints[rowPoints$xIntervals == colNum, ]
                 xStart <- c(xStart, min(gridPoints$x))
                 yStart <- c(yStart, yLevels)
                 lineDraw <- TRUE
             }
       
-            ## ending line segment
-            if (lineDraw & freqMat[row, col] == 0 & rowDraw){ 
-                gridPoints <- rowPoints[rowPoints$xIntervals == col-1, ]
-                xEnd <- c(xEnd, max(gridPoints$x))
-                yEnd <- c(yEnd, yLevels)
-                lineDraw <- FALSE
+            ## ending line segment (added logic for handling end of freqMat before end of points)
+            if (lineDraw & (freqMat[rowNum, colNum]==0||colNum==ncol(freqMat))){ 
+              if (freqMat[rowNum, colNum]==0)
+                gridPoints <- rowPoints[rowPoints$xIntervals == colNum-1, ]
+              else
+                gridPoints <- rowPoints[rowPoints$xIntervals == colNum, ]
+              xEnd <- c(xEnd, max(gridPoints$x))
+              yEnd <- c(yEnd, yLevels)
+              lineDraw <- FALSE
             }
       
-            prevCol <- freqMat[row, col]
+            prevCol <- freqMat[rowNum, colNum]
         }
     }
   
-    return(list(xStart, xEnd, yStart, yEnd))
+    return(list(xStart=xStart, xEnd=xEnd, yStart=yStart, yEnd=yEnd))
   }
