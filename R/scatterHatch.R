@@ -14,7 +14,7 @@
 #' @param legendTitle Title of the legend
 #' @param pointSize Point size for the scatterplot
 #' @param pointAlpha Transparency of points in the scatterplot
-#' @param nBins Controls the precision of the hatched pattern.  
+#' @param gridSize Controls the precision of the hatched pattern.  
 #' Larger values correspond to greater precision.  
 #' Default follows a exponential decay function based on point size.
 #' @param sparsePoints Logical Vector denoting points annotated as sparse.  
