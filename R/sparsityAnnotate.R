@@ -16,11 +16,12 @@
 #' @noRd
 #' @importFrom spatstat.geom nndist
 sparsityAnnotate <- function(pointsToGrid, pointSize, xRange, yRange, scale) {
+    
     if (scale == "x") {
-        pointRadius <- abs(convertSizeToCartesian(1, xRange, "x"))
+        pointRadius <- abs(convertSizeToCartesian(max(pointSize,1), xRange, "x"))
     }
     if (scale == "y") {
-        pointRadius <- abs(convertSizeToCartesian(1, yRange, "y"))
+        pointRadius <- abs(convertSizeToCartesian(max(pointSize,1), yRange, "y"))
     }
 
     sparsityDistance <- pointRadius * 2  # a point away
