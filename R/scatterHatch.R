@@ -10,7 +10,7 @@
 #' @param data Dataset to be used
 #' @param x Column name of x-coordinates
 #' @param y Column name of y-coordinates
-#' @param factor Column name of factor that defines groupings
+#' @param color_by Column name of factor that defines groupings
 #' @param legendTitle Title of the legend
 #' @param pointSize Point size for the scatterplot
 #' @param pointAlpha Transparency of points in the scatterplot
@@ -30,17 +30,17 @@
 #' @examples
 #' scatterHatch(pdacData, "Xt", "Yt", "frame")
 
-scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1, 
+scatterHatch <- function(data, x, y, color_by, legendTitle = "", pointSize = 1, 
                          pointAlpha = 0.5, gridSize = NULL, sparsePoints = NULL, 
                          patternList = NULL, colorPalette = NULL){
     if (!(x %in% names(data))){ stop("x column name not present in dataset.")}
     if (!(y %in% names(data))){ stop("y column name not present in dataset.")}
-    if (!(factor %in% names(data))){ stop("factor column name not present in dataset.")}
+    if (!(color_by %in% names(data))){ stop("color_by column name not present in dataset.")}
     x <- data[, x]; y <- data[, y]
     if (!is.numeric(x)){ stop("x column is not numeric.")}
     if (!is.numeric(y)){ stop("y column is not numeric.")}
-    factor <- as.factor(data[, factor])
-    nGroups <- length(levels(factor))
+    color_by <- as.factor(data[, color_by])
+    nGroups <- length(levels(color_by))
   
     ## grid size follows a exponential decay function in terms of pointSize
     gridSize <- ifelse(is.null(gridSize), 100*pointSize, gridSize)
@@ -51,16 +51,16 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1,
     names <- colnames(legendDF)
     legendIcons <- list()
     ## building the base plot with points
-    output <- basePlot(data, x, y, factor, colorPalette, pointSize, pointAlpha)
+    output <- basePlot(data, x, y, color_by, colorPalette, pointSize, pointAlpha)
     plt <- output[[1]]; xRange <- output[[2]]; yRange <- output[[3]]
     groupNum <- 1
 
     ## creating the patterns for each group
-    for (group in levels(factor)){
+    for (group in levels(color_by)){
         ## gets the points for each group
-        xGroup <- x[factor == group]; yGroup <- y[factor == group]
+        xGroup <- x[color_by == group]; yGroup <- y[color_by == group]
         ## finding the sparse points for the group if any are given
-        sparseGroupPoints <- sparsePoints[factor == group]
+        sparseGroupPoints <- sparsePoints[color_by == group]
         ## aesthetics for given pattern
         currentPatternAes <- addPatternAesDefaults(patternList[[groupNum]], pointSize, pointAlpha)
     
@@ -77,6 +77,6 @@ scatterHatch <- function(data, x, y, factor, legendTitle = "", pointSize = 1,
           groupNum = groupNum + 1
     }
     ## creating the legend
-    plt <- addLegend(plt, legendDF, legendIcons, factor, legendTitle)
+    plt <- addLegend(plt, legendDF, legendIcons, color_by, legendTitle)
     return(plt + ggplot2::theme_classic()) # adding in classic theme
 }

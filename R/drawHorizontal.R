@@ -36,6 +36,10 @@ drawHorizontal <- function(gridOutput, gridSize=NULL, pointSize, xRange, yRange,
     sparsePointsToGrid <- pointClassification[[1]]; smallClusterToGrid <- pointClassification[[2]]
     pointsToGrid <- pointClassification[[3]]; freqMat <- pointClassification[[4]]
   
+    if (any(dim(smallClusterToGrid)==0)) plotSmallClusters <- 0
+    if (any(dim(sparsePointsToGrid)==0)) plotSparsePoints <- 0
+    if (any(dim(pointsToGrid)==0)) plotLargeClusters <- 0
+    
     if (plotLargeClusters){
       ## dealing with large clusters
       endPoints <- regularPatternDraw(freqMat, pointsToGrid, yBins)
