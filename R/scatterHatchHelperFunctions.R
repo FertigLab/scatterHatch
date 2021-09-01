@@ -121,16 +121,9 @@ addPatternAesDefaults <- function(patternAes, pointSize, pointAlpha){
     }
   
     ## default density if not given
-    if (is.null(patternAes$density)){
-        patternAes$density <- 1/3
-        if (pattern %in% c("horizontal", "-", "vertical", "|", "checkers","+")){
-            patternAes$density <- 1/2
-        }
-        if (pattern %in% 
-            c("positiveDiagonal", "/", "negativeDiagonal", "\\", "cross", "x")){
-            patternAes$density <- 1/2
-        }
-    }
+    if (is.null(patternAes$density)) patternAes$density <- 1
+    if (patternAes$density<0.1) {patternAes$density <- .1; 
+    warning("Pattern density cannot be too small. Using 0.1 instead. Please check figure for aesthetics.")}
   
     ## default aesthetics
     if (is.null(patternAes$lineType)){ patternAes$lineType <- "solid"}
@@ -181,8 +174,10 @@ addSegments <- function(plt, xGroup, yGroup, xRange, yRange, gridSize,
         rotatedxRange <- range(rotatedCoordsRange$x)
         rotatedyRange <- range(rotatedCoordsRange$y)
         rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, gridSize=gridSize)
+        ## setting group specific gridSize
+        groupGridSize <- gridSize/patternAes$density
         ## getting individual line segments
-        groupLineCoords <- drawHorizontal(rotatedgridOutput, gridSize, 
+        groupLineCoords <- drawHorizontal(rotatedgridOutput, gridSize=groupGridSize, 
                                       pointSize, xRange, yRange, rotatedxRange, 
                                       rotatedyRange, sparsePoints)
         ## adjusting lines based on sizes of a point
