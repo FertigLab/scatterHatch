@@ -54,8 +54,8 @@ countGridPoints <- function(x, y, gridSize){
 #' @return Radius of the point in Cartesian units
 #' @noRd
 convertSizeToCartesian <- function(size, scale, axis){
-  fontSize = size*ggplot2::.pt + ggplot2::.stroke*0.5/2
-    #fontSize <- size*ggplot2::.pt
+  #fontSize = size*ggplot2::.pt + ggplot2::.stroke*0.5/2
+    fontSize <- size*ggplot2::.pt
     aspectRatio <- dev.size()[1]/dev.size()[2]
     if (aspectRatio >= 1){
         if (axis == 'x'){
