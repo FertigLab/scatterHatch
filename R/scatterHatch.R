@@ -42,8 +42,9 @@ scatterHatch <- function(data, x, y, color_by, legendTitle = "", pointSize = 1,
     color_by <- as.factor(data[, color_by])
     nGroups <- length(levels(color_by))
   
-    ## grid size follows a exponential decay function in terms of pointSize
-    gridSize <- ifelse(is.null(gridSize), 100*pointSize, gridSize)
+    ## calculate default grid size from range of x and y values if not provided
+    xSpan <- abs(diff(range(x))); ySpan <- abs(diff(range(y)))
+    gridSize <- ifelse(is.null(gridSize), min(xSpan,ySpan)/100, gridSize)
     patternList <- defaultPatternList(patternList, nGroups)
     colorPalette <- defaultColorPalette(colorPalette, patternList, nGroups)
     ## getting legend ready
