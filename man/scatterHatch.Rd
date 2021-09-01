@@ -8,11 +8,11 @@ scatterHatch(
   data,
   x,
   y,
-  factor,
+  color_by,
   legendTitle = "",
   pointSize = 1,
   pointAlpha = 0.5,
-  nBins = NULL,
+  gridSize = NULL,
   sparsePoints = NULL,
   patternList = NULL,
   colorPalette = NULL
@@ -25,7 +25,7 @@ scatterHatch(
 
 \item{y}{Column name of y-coordinates}
 
-\item{factor}{Column name of factor that defines groupings}
+\item{color_by}{Column name of factor that defines groupings}
 
 \item{legendTitle}{Title of the legend}
 
@@ -33,7 +33,7 @@ scatterHatch(
 
 \item{pointAlpha}{Transparency of points in the scatterplot}
 
-\item{nBins}{Controls the precision of the hatched pattern.
+\item{gridSize}{Controls the precision of the hatched pattern.
 Larger values correspond to greater precision.
 Default follows a exponential decay function based on point size.}
 

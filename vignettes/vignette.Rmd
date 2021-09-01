@@ -58,7 +58,7 @@ head(pdacData[, c('Xt', 'Yt', 'location', 'frame')])
 
 
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", 
-                    factor = "location", legendTitle = "Tissue Type")
+                    color_by = "location", legendTitle = "Tissue Type")
 plot(plt)
 ```
 
@@ -67,7 +67,7 @@ plot(plt)
 
 
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", 
-                    factor = "frame", pointSize = 0.5, legendTitle = "Frame")
+                    color_by = "frame", pointSize = 0.5, legendTitle = "Frame")
 plot(plt)
 ```
 
@@ -77,7 +77,7 @@ Controlling the aesthetics of each pattern is done by passing a list to the ```p
 ```{r echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='png', out.width = "800px", out.height = "620px", fig.width = 11, fig.height = 8, dpi = 500, fig.align="center"}
 patternList = list(list(pattern="/"), list(pattern="x"), list(pattern=""), list(pattern="-"))
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", 
-                    factor = "location", legendTitle = "Tissue Type", 
+                    color_by = "location", legendTitle = "Tissue Type", 
                     patternList = patternList)
 plot(plt)
 ```
@@ -87,7 +87,7 @@ There are currently two aesthetics of each pattern that can be changed: density 
 ```{r echo=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, cache=FALSE, comment="", dev='png',  out.width = "800px", out.height = "620px", fig.width = 11, fig.height = 8, dpi = 500, fig.align="center"}
 patternList = list(list(pattern="/", angle = 70), list(pattern="-", density = 1/2), list(pattern="x", angle = c(15,165)), list(pattern="+", density = 1/10))
 plt <- scatterHatch(data = pdacData, x = "Xt", y = "Yt", 
-                    factor = "location", legendTitle = "Tissue Type", 
+                    color_by = "location", legendTitle = "Tissue Type", 
                     patternList = patternList)
 plot(plt)
 ```
@@ -95,7 +95,7 @@ plot(plt)
 ## scatterHatch() Arguments Explained
 ```{r echo=FALSE}
 parameters = c('data', 'x', 'y', 'factor', 'legendTitle', 'pointSize', 'pointAlpha', 'gridSize', 'sparsePoints', 'patternList', 'colorPalette')
-paramDescript = c('A dataframe of the dataset being plotted', 'A string describing the column name with the x-coordinates of the points being plotted', 'A string describing the column name with the y-coordinates of the points being plotted', 'A string describing the column name of the factor variable', 'The legend title', 'ggplot2 point size', 'Transparency of each point', 'Integer describing the precision of the hatched patterns.  Larger the value, greater the precision at the expense of efficiency.  Default follows this expotential decay function: 500*e^(-pointSize/2.2) + 43.44965', 'A logical vector that denotes the outlying points.  Default utilizies an in-built sparsity detector', 'List containing the aesthethics of each pattern', 'Character vector describing the point color of each group; default is color-blind friendly and uses colors from the dittoSeq package')
+paramDescript = c('A dataframe of the dataset being plotted', 'A string describing the column name with the x-coordinates of the points being plotted', 'A string describing the column name with the y-coordinates of the points being plotted', 'A string describing the column name of the factor variable', 'The legend title', 'ggplot2 point size', 'Transparency of each point', 'Integer describing the precision of the hatched patterns.  Larger the value, greater the precision at the expense of efficiency.  Default segregates plots into 10000 bins', 'A logical vector that denotes the outlying points.  Default utilizies an in-built sparsity detector', 'List containing the aesthethics of each pattern', 'Character vector describing the point color of each group; default is color-blind friendly and uses colors from the dittoSeq package')
 
 paramTable = data.frame(parameters, paramDescript)
 knitr::kable(paramTable, col.names = c("Argument","Description"))

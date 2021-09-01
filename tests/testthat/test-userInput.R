@@ -47,9 +47,9 @@ test_that("character or complex type y column", {
                "y column is not numeric.")
 })
 
-test_that("incorrect factor name", {
+test_that("incorrect color_by name", {
   expect_error(scatterHatch(pdacData, "Xt", "Yt", ""),
-               "factor column name not present in dataset.")
+               "color_by column name not present in dataset.")
 })
 
 test_that("inputted patternList less than number of groups", {

@@ -8,18 +8,18 @@
 A data frame with 158159 rows and 41 variables:
 }
 \source{
-\href{http://spatial.rc.fas.harvard.edu/spatialgiotto/giotto.dataset.html}{Giotto Datasets}
+(\href{http://spatial.rc.fas.harvard.edu/spatialgiotto/giotto.dataset.html}{Giotto Datasets})
 }
 \usage{
 data(pdacData)
 }
 \description{
 Single-cell resolution of 4 cellular compartments in a human
-Pancreatic Dual Adenocarcinoma sample that spans across three distinct tissues:
-the pancreas, small intestine, and tumor.
+Pancreatic Dual Adenocarcinoma sample that spans across three distinct
+tissues: the pancreas, small intestine, and tumor.
 }
 \references{
-Lin et al. (2018) eLife 2018;7:e31657
+{Lin et al. (2018) eLife 2018;7:e31657}
 (\href{https://pubmed.ncbi.nlm.nih.gov/29993362/}{PubMed})
 }
 \keyword{datasets}
