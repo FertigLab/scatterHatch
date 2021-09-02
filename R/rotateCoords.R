@@ -10,8 +10,8 @@
 #' @return Dataframe specifying the transformed coordinates for each point
 #' @noRd
 rotateCoords <- function(x, y, angle){
-  radians <- (angle/180) * pi
-  xRotate <- (x * cos(radians)) - (y * sin(radians))
-  yRotate <- (x * sin(radians)) + (y * cos(radians))
-  return(data.frame(x = xRotate, y = yRotate))
+    radians <- (angle/180) * pi
+    xRotate <- (x * cos(radians)) - (y * sin(radians))
+    yRotate <- (x * sin(radians)) + (y * cos(radians))
+    return(data.frame(x = xRotate, y = yRotate))
 }
