@@ -14,8 +14,6 @@
 #' dataframe matching each point to its corresponding grid in the matrix
 #' @param gridSize pattern grid size to be drawn
 #' @param pointSize Point size of the pattern.
-#' @param xRange x-coordinate range of the plot.
-#' @param yRange y-coordinate range of the plot.
 #' @param rotatedxRange Rotated x-coordinate range of the plot.
 #' @param rotatedyRange Rotated y-coordinate range of the plot.
 #' @param sparsePoints Logical Vector denoting points annotated as sparse.  
@@ -23,61 +21,51 @@
 #' @return Dataframe defining the coordinates of each line to be drawn.
 #' @noRd
 
-drawHorizontal <- function(gridOutput, gridSize=NULL, pointSize, xRange, yRange, 
-                           rotatedxRange, rotatedyRange, sparsePoints=NULL){
-    xStart <- xEnd <- yStart <- yEnd <- c(); 
-    plotLargeClusters <- 1; plotSparsePoints <-1; plotSmallClusters <- 1; plotSmallClustersAsSparse <-0
+drawHorizontal <- function(gridOutput, gridSize=NULL, pointSize,  
+    rotatedxRange, rotatedyRange, sparsePoints=NULL){
+    lineEndPoints <- data.frame(xStart=NULL,xEnd=NULL,yStart=NULL,yEnd=NULL)
+    plotLargeClusters <- plotSparsePoints <- plotSmallClusters <- 1 
     
     xBins <- gridOutput[[1]]; yBins <- gridOutput[[2]]
     freqMat <- gridOutput[[3]]; pointsToGrid <- gridOutput[[4]]
-  
+    
     pointClassification <- getIrregularPoints(pointsToGrid, freqMat, sparsePoints, 
-                               rotatedxRange, rotatedyRange, xRange, pointSize)
-    sparsePointsToGrid <- pointClassification[[1]]; smallClusterToGrid <- pointClassification[[2]]
+        rotatedxRange, rotatedyRange, pointSize)
+    sparsePointsToGrid <- pointClassification[[1]] 
+    smallClusterToGrid <- pointClassification[[2]]
     pointsToGrid <- pointClassification[[3]]; freqMat <- pointClassification[[4]]
-  
+    
     if (any(dim(smallClusterToGrid)==0)) plotSmallClusters <- 0
     if (any(dim(sparsePointsToGrid)==0)) plotSparsePoints <- 0
     if (any(dim(pointsToGrid)==0)) plotLargeClusters <- 0
     
     if (plotLargeClusters){
-      ## dealing with large clusters
-      endPoints <- regularPatternDraw(freqMat, pointsToGrid, yBins)
-      xStart <- c(xStart,endPoints[[1]]); xEnd <- c(xEnd,endPoints[[2]])
-      yStart <- c(yStart,endPoints[[3]]); yEnd <- c(yEnd,endPoints[[4]])  
+        ## dealing with large clusters
+        lineEndPoints <- regularPatternDraw(freqMat, pointsToGrid, yBins)
     }
     
-  
+    
     ## dealing with sparse points
     if (plotSparsePoints){
-      xStart <- c(xStart, sparsePointsToGrid$x)
-      xEnd <- c(xEnd, sparsePointsToGrid$x)
-      yStart <- c(yStart, sparsePointsToGrid$y)
-      yEnd <- c(yEnd, sparsePointsToGrid$y)  
+        sparsePointEnds <- sparsePointsToGrid[,c('x','x','y','y')]
+        names(sparsePointEnds) <- c("xStart","xEnd","yStart","yEnd")
+        lineEndPoints <- rbind(lineEndPoints, sparsePointEnds)
     }
     
     ## dealing with small cluster points
     if (plotSmallClusters){
-      smallClusterGridSize <- gridSize
-      smallClusterToGrid <- countGridPoints(smallClusterToGrid$x, 
-                                            smallClusterToGrid$y, smallClusterGridSize)[[4]]
-      ## creating a unique identifier for each grid
-      smallClusterToGrid$gridNum <- (smallClusterToGrid$yIntervals - 1)/max(smallClusterToGrid$yIntervals) + smallClusterToGrid$xIntervals
-      
-      for (gridNum in unique(smallClusterToGrid$gridNum)){
-        xRange <- smallClusterToGrid$x[smallClusterToGrid$gridNum == gridNum]
-        yRange <- smallClusterToGrid$y[smallClusterToGrid$gridNum == gridNum]
-        xStart <- c(xStart, min(xRange))
-        xEnd <- c(xEnd, max(xRange))
-        yStart <- c(yStart, median(yRange))
-        yEnd <- c(yEnd, median(yRange))
-      }
-    } else if (plotSmallClustersAsSparse){
-        xStart <- c(xStart, smallClusterToGrid$x)
-        xEnd <- c(xEnd, smallClusterToGrid$x)
-        yStart <- c(yStart, smallClusterToGrid$y)
-        yEnd <- c(yEnd, smallClusterToGrid$y)  
-      }
-    
-    return(data.frame(xStart=xStart, yStart=yStart, xEnd=xEnd, yEnd=yEnd))
+        gridSize
+        smallClusterToGrid <- countGridPoints(smallClusterToGrid$x, 
+            smallClusterToGrid$y, gridSize)[[4]]
+        ## creating a unique identifier for each grid
+        smallClusterToGrid$gridNum <- (smallClusterToGrid$yIntervals - 1)/max(smallClusterToGrid$yIntervals) + smallClusterToGrid$xIntervals
+        
+        for (gridNum in unique(smallClusterToGrid$gridNum)){
+            xRange <- smallClusterToGrid$x[smallClusterToGrid$gridNum == gridNum]
+            yRange <- smallClusterToGrid$y[smallClusterToGrid$gridNum == gridNum]
+            clusterEnds <- data.frame(xStart=min(xRange),xEnd=max(xRange),yStart=min(yRange),yEnd=max(yRange))
+            lineEndPoints <- rbind(lineEndPoints,clusterEnds)
+        }
+    }
+    return(lineEndPoints)
 }

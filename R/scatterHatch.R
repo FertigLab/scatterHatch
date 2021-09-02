@@ -31,8 +31,8 @@
 #' scatterHatch(pdacData, "Xt", "Yt", "frame")
 
 scatterHatch <- function(data, x, y, color_by, legendTitle = "", pointSize = 1, 
-                         pointAlpha = 0.5, gridSize = NULL, sparsePoints = NULL, 
-                         patternList = NULL, colorPalette = NULL){
+    pointAlpha = 0.5, gridSize = NULL, sparsePoints = NULL, 
+    patternList = NULL, colorPalette = NULL){
     if (!(x %in% names(data))){ stop("x column name not present in dataset.")}
     if (!(y %in% names(data))){ stop("y column name not present in dataset.")}
     if (!(color_by %in% names(data))){ stop("color_by column name not present in dataset.")}
@@ -41,10 +41,10 @@ scatterHatch <- function(data, x, y, color_by, legendTitle = "", pointSize = 1,
     if (!is.numeric(y)){ stop("y column is not numeric.")}
     color_by <- as.factor(data[, color_by])
     nGroups <- length(levels(color_by))
-  
+    
     ## calculate default grid size from range of x and y values if not provided
     xSpan <- abs(diff(range(x))); ySpan <- abs(diff(range(y)))
-    gridSize <- ifelse(is.null(gridSize), min(xSpan,ySpan)/100, gridSize)
+    gridSize <- ifelse(is.null(gridSize), min(xSpan,ySpan)/200, gridSize)
     patternList <- defaultPatternList(patternList, nGroups)
     colorPalette <- defaultColorPalette(colorPalette, patternList, nGroups)
     ## getting legend ready
@@ -55,7 +55,7 @@ scatterHatch <- function(data, x, y, color_by, legendTitle = "", pointSize = 1,
     output <- basePlot(data, x, y, color_by, colorPalette, pointSize, pointAlpha)
     plt <- output[[1]]; xRange <- output[[2]]; yRange <- output[[3]]
     groupNum <- 1
-
+    
     ## creating the patterns for each group
     for (group in levels(color_by)){
         ## gets the points for each group
@@ -64,18 +64,17 @@ scatterHatch <- function(data, x, y, color_by, legendTitle = "", pointSize = 1,
         sparseGroupPoints <- sparsePoints[color_by == group]
         ## aesthetics for given pattern
         currentPatternAes <- addPatternAesDefaults(patternList[[groupNum]], pointSize, pointAlpha)
-    
+        
         ## handles creating the legend icon
         legendDF <- rbind(legendDF, c(median(xGroup), median(yGroup), group))
         colnames(legendDF) <- names
         legendIcons <- addLegendIconInfo(legendIcons, currentPatternAes, colorPalette[groupNum])
-    
-        ## adding in line segments for group
-        if (!(currentPatternAes$pattern %in% c("blank", "")))
-        { # no line segments
-          plt <- addSegments(plt, xGroup, yGroup, xRange, yRange, gridSize, 
-                            currentPatternAes, pointSize, sparseGroupPoints)}
-          groupNum = groupNum + 1
+        
+        ## adding in line segments for each group with non-blank pattern
+        if (!(currentPatternAes$pattern %in% c("blank", ""))){ 
+            plt <- addSegments(plt, xGroup, yGroup, xRange, yRange, gridSize, 
+                currentPatternAes, pointSize, sparseGroupPoints)}
+        groupNum = groupNum + 1
     }
     ## creating the legend
     plt <- addLegend(plt, legendDF, legendIcons, color_by, legendTitle)

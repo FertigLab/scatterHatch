@@ -17,47 +17,47 @@
 #' @return List of grob objects
 #' @noRd
 legendIcon <- function(color, lineColor="black", lineType="solid", 
-                       patternType, lineWidth=1.5, angle=NULL) {
+    patternType, lineWidth=1.5, angle=NULL) {
     radius <- 0.35
     linePar <- grid::gpar(col = lineColor, fill = color, lwd = 2 * lineWidth, 
-                          lty = lineType, alpha = 1)
+    lty = lineType, alpha = 1)
     circle <- grid::circleGrob(0.5, 0.5, radius, gp = grid::gpar(col = color, 
-                                            fill = color, lwd = 1, alpha = 1))
+    fill = color, lwd = 1, alpha = 1))
     grobs <- list(circle)
     grobs[["gp"]] <- grid::gpar(alpha = 1)
-  
+    
     if (patternType %in% c("blank", "")) {
-      return(do.call(grid::grobTree, args = grobs))
+        return(do.call(grid::grobTree, args = grobs))
     }
-  
+    
     angle <- -angle
     angle <- (angle/180) * pi  ## converting angle from radians to degrees
     phaseDiff <- pi/6
-  
+    
     for (a in angle) {
         ## x/y coordinates of center line segment
         centralLineX <- c(radius * cos(a) + 0.5, -radius * cos(a) + 0.5)
         centralLineY <- c(radius * sin(a) + 0.5, -radius * sin(a) + 0.5)
         grobs[[length(grobs) + 1]] <- grid::linesGrob(x = centralLineX, 
-                                                 y = centralLineY, gp = linePar)
-    
+            y = centralLineY, gp = linePar)
+        
         ## x/y coordinates of left line segment
         leftLineX <- c(radius * cos(a + phaseDiff) + 0.5, -radius * 
-                       cos(a - phaseDiff) + 0.5)
+            cos(a - phaseDiff) + 0.5)
         leftLineY <- c(radius * sin(a + phaseDiff) + 0.5, -radius * 
-                       sin(a - phaseDiff) + 0.5)
+            sin(a - phaseDiff) + 0.5)
         grobs[[length(grobs) + 1]] <- grid::linesGrob(x = leftLineX, 
-                                                    y = leftLineY, gp = linePar)
-    
+            y = leftLineY, gp = linePar)
+        
         ## x/y coordinates of right line segment
         rightLineX <- c(radius * cos(a - phaseDiff) + 0.5, -radius * 
-                          cos(a + phaseDiff) + 0.5)
+            cos(a + phaseDiff) + 0.5)
         rightLineY <- c(radius * sin(a - phaseDiff) + 0.5, -radius * 
-                          sin(a + phaseDiff) + 0.5)
+            sin(a + phaseDiff) + 0.5)
         grobs[[length(grobs) + 1]] <- grid::linesGrob(x = rightLineX, 
-                                                   y = rightLineY, gp = linePar)
+            y = rightLineY, gp = linePar)
     }
-  
+    
     return(do.call(grid::grobTree, args = grobs))
 }
 
@@ -68,22 +68,22 @@ legendIcon <- function(color, lineColor="black", lineType="solid",
 #' @noRd
 
 imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
-                       required_aes=c("x", "y", "ids"),
-                       default_aes=ggplot2::aes(size = 5, shape=19),
-
-                       draw_key=function(data, params, size){
-                         ## necessary info to render icon
-                         iconInfo <- data$ids[[1]]
-                         legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]],
-                                    iconInfo[[4]], iconInfo[[5]], iconInfo[[7]])
-                       },
-
-                       draw_group=function(data, panel_scales, coord){
-                         coords <- coord$transform(data, panel_scales)
-                         grid::pointsGrob(coords$x,coords$y, 
-                              grid::unit(0, "char"),pch=coords$shape, 
-                              gp=grid::gpar(col="black"))
-                       }
+    required_aes=c("x", "y", "ids"),
+    default_aes=ggplot2::aes(size = 5, shape=19),
+    
+    draw_key=function(data, params, size){
+    ## necessary info to render icon
+    iconInfo <- data$ids[[1]]
+    legendIcon(iconInfo[[1]], iconInfo[[2]], iconInfo[[3]],
+        iconInfo[[4]], iconInfo[[5]], iconInfo[[7]])
+    },
+    
+    draw_group=function(data, panel_scales, coord){
+        coords <- coord$transform(data, panel_scales)
+        grid::pointsGrob(coords$x,coords$y, 
+            grid::unit(0, "char"),pch=coords$shape, 
+            gp=grid::gpar(col="black"))
+    }
 )
 
 #' Creates custom ggplot2 layer that transfers the pattern
@@ -101,11 +101,11 @@ imagePoints <- ggplot2::ggproto("imagePoints", ggplot2::Geom,
 #' @return List of grob objects
 #' @noRd
 geom_imagePoint <- function(mapping=NULL, data=NULL, stat="identity",
-                            position="identity", na.rm=FALSE, 
-                            show.legend=NA, inherit.aes=TRUE, ...) {
-      ggplot2::layer(
+    position="identity", na.rm=FALSE, 
+    show.legend=NA, inherit.aes=TRUE, ...) {
+    ggplot2::layer(
         geom = imagePoints, mapping=mapping,  data=data, stat=stat,
         position=position, show.legend=show.legend, inherit.aes=inherit.aes,
         params=list(na.rm = na.rm, ...)
-      )
+    )
 }
