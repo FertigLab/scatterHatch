@@ -27,15 +27,15 @@ sparsityAnnotate <- function(pointsToGrid, pointSize, xRange, yRange, whichAxis)
     sparsityDistance <- pointRadius * 2  # a point away
     
     ## distance from the second closest point
-    pointsToGrid$closest2Points <- suppressMessages(nndist(pointsToGrid$x, 
+    pointsToGrid$closest2Points <- suppressMessages(spatstat.geom::nndist(pointsToGrid$x, 
         pointsToGrid$y, k = 2))
     
     ## distance from the fifth closest point
-    pointsToGrid$closest5Points <- suppressMessages(nndist(pointsToGrid$x, 
+    pointsToGrid$closest5Points <- suppressMessages(spatstat.geom::nndist(pointsToGrid$x, 
         pointsToGrid$y, k = 5))
     
     ## distance from the twentieth closest point
-    pointsToGrid$closest20Points <- suppressMessages(nndist(pointsToGrid$x, 
+    pointsToGrid$closest20Points <- suppressMessages(spatstat.geom::nndist(pointsToGrid$x, 
         pointsToGrid$y, k = 20))
     
     ## outlying points within a group
