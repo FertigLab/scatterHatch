@@ -71,15 +71,15 @@ convertSizeToCartesian <- function(size, dimRange, whichAxis){
     }
     
     if (aspectRatio < 1){
-        if (axis == 'x'){ th
+        if (whichAxis == 'x'){
             cartesianConvert <- grid::convertWidth(
                 grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
-                diff(scale)*aspectRatio
+                diff(dimRange)*aspectRatio
         }
-        if (axis == 'y'){
+        if (whichAxis == 'y'){
             cartesianConvert <- grid::convertHeight(
                 grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
-                diff(scale)*aspectRatio
+                diff(dimRange)*aspectRatio
         }
     }
     
