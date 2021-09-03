@@ -5,17 +5,17 @@
 \title{Creates a scatterplot with hatched patterns.}
 \usage{
 scatterHatch(
-    data,
-    x,
-    y,
-    color_by,
-    legendTitle = "",
-    pointSize = 1,
-    pointAlpha = 0.5,
-    gridSize = NULL,
-    sparsePoints = NULL,
-    patternList = NULL,
-    colorPalette = NULL
+  data,
+  x,
+  y,
+  color_by,
+  legendTitle = "",
+  pointSize = 1,
+  pointAlpha = 0.5,
+  gridSize = NULL,
+  sparsePoints = NULL,
+  patternList = NULL,
+  colorPalette = NULL
 )
 }
 \arguments{

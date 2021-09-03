@@ -11,9 +11,7 @@
 #'
 #' @param x x-coordinates of the group
 #' @param y y-coordinates of the group
-#' @param xRange Range of the x-axis in the scatterplot
-#' @param yRange Range of the y-axis in the scatterplot
-#' @param n Number of grids across each side of the square matrix
+#' @param gridSize width of pattern grid
 #' @return List: x & y bins of the grid, 2D frequency matrix, and 
 #' dataframe matching each point to its corresponding grid in the matrix
 #' @noRd
@@ -49,8 +47,8 @@ countGridPoints <- function(x, y, gridSize){
 #' a whole point or region no matter the point size.
 #'
 #' @param size Size of the pointGrob
-#' @param scale Minimum and maximum values of given scale
-#' @param axis Cartesian axis: 'x' or 'y'
+#' @param dimRange Minimum and maximum values of given scale
+#' @param whichAxis Cartesian axis: 'x' or 'y'
 #' @return Radius of the point in Cartesian units
 #' @noRd
 convertSizeToCartesian <- function(size, dimRange, whichAxis){
