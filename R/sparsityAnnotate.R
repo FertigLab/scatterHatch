@@ -11,7 +11,7 @@
 #' @param pointSize Point size of the plot.
 #' @param xRange x-coordinate range of the plot.
 #' @param yRange y-coordinate range of the plot.
-#' @param scale Sparsity dependent on which axes?
+#' @param whichAxis Sparsity dependent on which axes?
 #' @return Dataframe determining sparsity of a point.
 #' @noRd
 #' @importFrom spatstat.geom nndist

@@ -2,7 +2,7 @@
 #' @param pointsToGrid Dataframe corresponding each point to a grid
 #' @param freqMat Matrix denoting how many points within a grid
 #' @param sparsePoints Logical vector of sparse points
-#' @param rotatedxRange x-range of plot rotated based on angle of patternl
+#' @param rotatedxRange x-range of plot rotated based on angle of pattern
 #' @param rotatedyRange y-range of plot rotated based on angle of pattern
 #' @param pointSize Size of points in scatterHatch
 #' @noRd
