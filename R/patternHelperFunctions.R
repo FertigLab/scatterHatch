@@ -11,30 +11,31 @@
 #'
 #' @param x x-coordinates of the group
 #' @param y y-coordinates of the group
-#' @param xRange Range of the x-axis in the scatterplot
-#' @param yRange Range of the y-axis in the scatterplot
-#' @param n Number of grids across each side of the square matrix
+#' @param gridSize width of pattern grid
 #' @return List: x & y bins of the grid, 2D frequency matrix, and 
 #' dataframe matching each point to its corresponding grid in the matrix
 #' @noRd
-countGridPoints <- function(x, y, xRange, yRange, n){
+countGridPoints <- function(x, y, gridSize){
+    xgridStep <- gridSize
+    xRange = c(min(x)-0.5*xgridStep,max(x)+xgridStep)
+    yRange = c(min(y)-0.5*gridSize,max(y)+gridSize)
     xIntervals <- as.numeric(cut(x, breaks=seq(xRange[1], xRange[2], 
-                                              by=diff(xRange)/(n-1))))
-    yIntervals <- as.numeric(cut(y, breaks=seq(yRange[2], yRange[1], 
-                                              by=-1*diff(yRange)/(n-1))))
-  
+        by=xgridStep)))
+    yIntervals <- as.numeric(cut(y, breaks=seq(yRange[1], yRange[2], 
+        by=1*gridSize)))
+    
     ## ensures as row index increases, y decreases in matrix
-    yIntervals <- n+1-yIntervals
+    #yIntervals <- ceiling(diff(yRange)/gridSize)-yIntervals
     intervals <- as.data.frame(cbind(xIntervals, yIntervals))
     pointsToGrid <- as.data.frame(cbind(xIntervals, yIntervals, x, y))
     freqs <- plyr::count(intervals, vars=c("xIntervals", "yIntervals"))
-    freqMat <- matrix(0, nrow=n, ncol=n)
-    for (x in seq(nrow(freqs))){
-        freqMat[freqs$yIntervals[x], freqs$xIntervals[x]] <- freqs$freq[x]
+    freqMat <- matrix(0, nrow=max(yIntervals), ncol=max(xIntervals))
+    for (ind in seq(nrow(freqs))){
+        freqMat[freqs$yIntervals[ind], freqs$xIntervals[ind]] <- freqs$freq[ind]
     }
-
-    xLevels <- seq(xRange[1], xRange[2], by=diff(xRange)/(n-1))
-    yLevels <- seq(yRange[2], yRange[1], by=-1*diff(yRange)/(n-1))
+    
+    xLevels <- seq(xRange[1], xRange[2], by=xgridStep)
+    yLevels <- seq(yRange[1], yRange[2], by=1*gridSize)
     return(list(xLevels, yLevels, freqMat, pointsToGrid))
 }
 
@@ -46,39 +47,39 @@ countGridPoints <- function(x, y, xRange, yRange, n){
 #' a whole point or region no matter the point size.
 #'
 #' @param size Size of the pointGrob
-#' @param scale Minimum and maximum values of given scale
-#' @param axis Cartesian axis: 'x' or 'y'
+#' @param dimRange Minimum and maximum values of given scale
+#' @param whichAxis Cartesian axis: 'x' or 'y'
 #' @return Radius of the point in Cartesian units
 #' @noRd
-convertSizeToCartesian <- function(size, scale, axis){
-  ##fontSize = size*ggplot2::.pt + ggplot2::.stroke*0.5/2
+convertSizeToCartesian <- function(size, dimRange, whichAxis){
+    #fontSize = size*ggplot2::.pt + ggplot2::.stroke*0.5/2
     fontSize <- size*ggplot2::.pt
     aspectRatio <- dev.size()[1]/dev.size()[2]
     if (aspectRatio >= 1){
-        if (axis == 'x'){
+        if (whichAxis == 'x'){
             cartesianConvert <- grid::convertWidth(
-              grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
-              diff(scale)/aspectRatio
+                grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
+                diff(dimRange)/aspectRatio
         }
-        if (axis == 'y'){
+        if (whichAxis == 'y'){
             cartesianConvert <- grid::convertHeight(
-              grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
-              diff(scale)/aspectRatio
+                grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
+                diff(dimRange)/aspectRatio
         }
     }
-  
+    
     if (aspectRatio < 1){
-        if (axis == 'x'){
+        if (whichAxis == 'x'){
             cartesianConvert <- grid::convertWidth(
-              grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
-              diff(scale)*aspectRatio
+                grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
+                diff(dimRange)*aspectRatio
         }
-        if (axis == 'y'){
+        if (whichAxis == 'y'){
             cartesianConvert <- grid::convertHeight(
-              grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
-              diff(scale)*aspectRatio
+                grid::unit(fontSize, "points"), unitTo="npc", valueOnly=TRUE) * 
+                diff(dimRange)*aspectRatio
         }
     }
-  
+    
     return(cartesianConvert/2)
 }
