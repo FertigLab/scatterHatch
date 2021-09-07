@@ -21,6 +21,6 @@ remotes::install_github("FertigLab/scatterHatchPlots", dependencies = TRUE, buil
 ```
 
 ## Vignettes
-To learn how to use the scatterHatch package, visit the vignette below.
+To learn how to use the scatterHatch package, run the vignette below in `R`.
 
-* [scatterHatch Vignette](https://github.com/FertigLab/scatterHatchPlots/blob/master/doc/vignette.md)
+* [scatterHatch Vignette](https://github.com/FertigLab/scatterHatch/blob/master/vignettes/vignette.Rmd)
