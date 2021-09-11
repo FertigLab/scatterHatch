@@ -28,6 +28,7 @@
 #' @importFrom grDevices dev.size
 #' @importFrom stats median
 #' @examples
+#' data(pdacData)
 #' scatterHatch(pdacData, "Xt", "Yt", "frame")
 
 scatterHatch <- function(data, x, y, color_by, legendTitle = "", pointSize = 1, 

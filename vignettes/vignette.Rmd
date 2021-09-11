@@ -34,7 +34,7 @@ library(scatterHatch)
 The data that will be used to showcase the function is [a tissue-CyCIF PDAC dataset from Lin et al](http://spatial.rc.fas.harvard.edu/spatialgiotto/giotto.cycif.html).  The preprocessing begins by adding manual annotations for each cell's location in the tissue sample.
 
 ```{r }
-pdacData = scatterHatch::pdacData
+data("pdacData")
 pdacData$cellID = paste0('cell_', 1:nrow(pdacData))
 pdacData$Yt <- -pdacData$Yt
 pancreas_frames = c(1:6, 27:31, 15:19, 40:44)
@@ -111,4 +111,10 @@ aestheDescript = c('A string representing one of the possible 7 patterns to be u
 
 aestheTable = data.frame(aesthe, aestheDescript)
 knitr::kable(aestheTable, col.names = c("Aesthetics","Description"))
+```
+
+
+## Session Info
+```{r}
+sessionInfo()
 ```
