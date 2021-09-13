@@ -56,5 +56,6 @@ hatched group.  The aesthetics defining each pattern,
 like the lineType and lineColor are all passed to geom_segment().
 }
 \examples{
+data(pdacData)
 scatterHatch(pdacData, "Xt", "Yt", "frame")
 }

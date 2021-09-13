@@ -37,12 +37,9 @@ getIrregularPoints <- function(pointsToGrid, freqMat, sparsePoints,
 #' @param freqMat Matrix denoting how many points within a grid
 #' @param pointsToGrid Dataframe corresponding each point to a grid
 #' @param yBins y-coordinate bins for every grid
-#' @param density Density of pattern drawing (how many rows to skip)
 #' @noRd
 regularPatternDraw <- function(freqMat, pointsToGrid, yBins){
     xStart <- yStart <- xEnd <- yEnd <- c()
-    rowDraw <- TRUE # whether to draw lines in current rowNum or not
-    
     for (rowNum in seq(nrow(freqMat))){ # iterates by every rowNum
         rowPoints <- pointsToGrid[pointsToGrid$yIntervals == rowNum, ]
         

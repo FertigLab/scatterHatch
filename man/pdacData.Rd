@@ -14,12 +14,12 @@ A data frame with 158159 rows and 41 variables:
 data(pdacData)
 }
 \description{
+{
 Single-cell resolution of 4 cellular compartments in a human
 Pancreatic Dual Adenocarcinoma sample that spans across three distinct
-tissues: the pancreas, small intestine, and tumor.
+tissues: the pancreas, small intestine, and tumor.}
 }
 \references{
 {Lin et al. (2018) eLife 2018;7:e31657}
 (\href{https://pubmed.ncbi.nlm.nih.gov/29993362/}{PubMed})
 }
-\keyword{datasets}

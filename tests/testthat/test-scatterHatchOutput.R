@@ -1,7 +1,7 @@
 context("Testing scatterHatch output")
 
 # setting up pdac data set
-pdacData <- pdacData
+data("pdacData")
 pdacData$cellID <- paste0('cell_', 1:nrow(pdacData))
 pdacData$Yt <- -pdacData$Yt
 pancreas_frames <- c(1:6, 27:31, 15:19, 40:44)
