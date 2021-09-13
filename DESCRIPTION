@@ -1,6 +1,6 @@
 Package: scatterHatch
 Title: Creates hatched patterns for scatterplots
-Version: 0.99.0
+Version: 0.99.1
 Authors@R:
     person(given = "Tejas",
            family = "Guha",
