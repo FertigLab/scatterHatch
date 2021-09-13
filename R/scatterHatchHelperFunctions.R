@@ -188,8 +188,8 @@ addSegments <- function(plt, xGroup, yGroup, xRange, yRange, gridSize,
         R <- matrix(c(cos(a/180 * pi),sin(a/180 * pi),
             -sin(a/180 * pi),cos(a/180 * pi)), 2, 2) 
         ## rotating adjustment based on angle
-        rotatedAdjX <- suppressWarnings(diag(sqrt(
-            R %*% diag(c(adjX, adjY), 2, 2)^2 %*% t(R)))[1])
+        rotatedAdjX <- sqrt(diag(
+            R %*% diag(c(adjX, adjY), 2, 2)^2 %*% t(R)))[1]
         if (a == 0){ rotatedAdjX <- adjX}
         ## converting back to regular coordinates
         rotatedStartPoints <- rotateCoords(groupLineCoords$xStart - rotatedAdjX, 

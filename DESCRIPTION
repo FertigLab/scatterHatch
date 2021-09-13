@@ -20,6 +20,7 @@ Description: The objective of this package is to efficiently create scatterplots
              scatterplot visualizations to those with visual impairments such as
              color blindness.
 License: MIT + file LICENSE
+BugReports: https://github.com/FertigLab/scatterHatch/issues
 Encoding: UTF-8
 LazyData: false
 Roxygen: list(markdown = TRUE)
@@ -35,5 +36,5 @@ Imports:
   grDevices
 Depends:
     R (>= 4.0)
-biocViews: Visualization, SingleCell, CellBiology, Software, Spatial
+biocViews: Visualization, SingleCell, CellBiology, Software
 URL: https://github.com/FertigLab/scatterHatch
