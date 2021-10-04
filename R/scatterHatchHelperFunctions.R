@@ -166,6 +166,8 @@ addSegments <- function(plt, xGroup, yGroup, xRange, yRange, gridSize,
     patternAes, pointSize, sparsePoints){
     xEnd <- xStart <- yEnd <- yStart <- NULL
     for (a in patternAes$angle){
+        ## setting group specific gridSize
+        groupGridSize <- gridSize/patternAes$density
         ## rotating group coordinates
         rotatedCoords <- rotateCoords(xGroup, yGroup, angle=a) 
         rotatedCoordsRange <- rotateCoords(c(xRange[1], xRange[1], xRange[2], 
@@ -173,9 +175,9 @@ addSegments <- function(plt, xGroup, yGroup, xRange, yRange, gridSize,
                 yRange[1], yRange[2]), a)
         rotatedxRange <- range(rotatedCoordsRange$x)
         rotatedyRange <- range(rotatedCoordsRange$y)
-        rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, gridSize=gridSize)
-        ## setting group specific gridSize
-        groupGridSize <- gridSize/patternAes$density
+        
+        rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, gridSize=groupGridSize)
+        
         ## getting individual line segments
         groupLineCoords <- drawHorizontal(rotatedgridOutput, gridSize=groupGridSize, 
             pointSize, rotatedxRange, 
