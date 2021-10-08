@@ -7,7 +7,7 @@ It is often said that a picture is worth a thousand words.  In bioinformatics, v
 In bioinformatics, scatterplots often contain many groups represented by many colors.  Distinguishing among unique groups can be a difficult task for colorblind individuals. This package provides the ```scatterHatch``` function that adds a texture to each group in a scatterplot so that colorblind individuals can distinguish groups using two characteristics instead of one.
 
 ## Installation
-You can also scatterHatch directly from the Github source.
+You can install scatterHatch directly from the Github source.
 ```
 install.packages("remotes")
 remotes::install_github("FertigLab/scatterHatchPlots", dependencies = TRUE, build_vignettes = TRUE)
