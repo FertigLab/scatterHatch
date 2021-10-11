@@ -113,8 +113,8 @@ addPatternAesDefaults <- function(patternAes, pointSize, pointAlpha){
             if (pattern %in% c("horizontal", "-")) patternAes$angle <- 0
             if (pattern %in% c("vertical", "|")) patternAes$angle <- -90
         }else{
-            if (pattern %in% c("positiveDiagonal", "/")) patternAes$angle<- -135
-            if (pattern %in% c("negativeDiagonal", "\\")) patternAes$angle<- -45
+            if (pattern %in% c("positiveDiagonal", "/")) patternAes$angle<- 135
+            if (pattern %in% c("negativeDiagonal", "\\")) patternAes$angle<- 45
             if (pattern %in% c("cross", "x")) patternAes$angle <- c(-45, -135)
             if (pattern %in% c("checkers", "+")) patternAes$angle <- c(0, -90)
         }
