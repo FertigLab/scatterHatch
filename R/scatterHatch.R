@@ -7,23 +7,23 @@
 #' hatched group.  The aesthetics defining each pattern,
 #' like the lineType and lineColor are all passed to geom_segment().
 #'
-#' @param data Dataset to be used
-#' @param x Column name of x-coordinates
-#' @param y Column name of y-coordinates
-#' @param color_by Column name of factor that defines groupings
-#' @param legendTitle Title of the legend
-#' @param pointSize Point size for the scatterplot
-#' @param pointAlpha Transparency of points in the scatterplot
-#' @param gridSize Controls the precision of the hatched pattern.  
+#' @param   data Dataset to be used
+#' @param   x Column name of x-coordinates
+#' @param   y Column name of y-coordinates
+#' @param   color_by Column name of factor that defines groupings
+#' @param   legendTitle Title of the legend
+#' @param   pointSize Point size for the scatterplot
+#' @param   pointAlpha Transparency of points in the scatterplot
+#' @param   gridSize Controls the precision of the hatched pattern.  
 #' Larger values correspond to greater precision.  
 #' Default follows a exponential decay function based on point size.
-#' @param sparsePoints Logical Vector denoting points annotated as sparse.  
+#' @param   sparsePoints Logical Vector denoting points annotated as sparse.  
 #' If NULL, default sparsity detector will be used to annotate sparse points.
-#' @param patternList Aesthetics to be passed for each pattern 
+#' @param   patternList Aesthetics to be passed for each pattern 
 #' (must be a list where each element has a named pattern)
-#' @param colorPalette Colors to be used for each group.  
+#' @param   colorPalette Colors to be used for each group.  
 #' Default is color-blind friendly.
-#' @return ggplot2 object of scatterplot with hatched patterns for each group.
+#' @return  ggplot2 object of scatterplot with hatched patterns for each group.
 #' @export
 #' @importFrom grDevices dev.size
 #' @importFrom stats median

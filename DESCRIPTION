@@ -1,6 +1,6 @@
 Package: scatterHatch
 Title: Creates hatched patterns for scatterplots
-Version: 0.99.1
+Version: 0.99.2
 Authors@R:
     person(given = "Tejas",
            family = "Guha",
@@ -35,6 +35,6 @@ Imports:
   stats,
   grDevices
 Depends:
-    R (>= 4.0)
-biocViews: Visualization, SingleCell, CellBiology, Software
+    R (>= 4.1)
+biocViews: Visualization, SingleCell, CellBiology, Software, Spatial
 URL: https://github.com/FertigLab/scatterHatch
