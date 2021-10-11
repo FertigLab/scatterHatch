@@ -175,9 +175,15 @@ addSegments <- function(plt, xGroup, yGroup, xRange, yRange, gridSize,
                 yRange[1], yRange[2]), a)
         rotatedxRange <- range(rotatedCoordsRange$x)
         rotatedyRange <- range(rotatedCoordsRange$y)
+<<<<<<< HEAD
         
         rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, gridSize=groupGridSize)
         
+=======
+        rotatedgridOutput <- countGridPoints(rotatedCoords$x, rotatedCoords$y, gridSize=gridSize/patternAes$density)
+        ## setting group specific gridSize
+        groupGridSize <- gridSize/patternAes$density
+>>>>>>> 3b65e9942dc3a4bf77ecfa94544a1cdbab5df50b
         ## getting individual line segments
         groupLineCoords <- drawHorizontal(rotatedgridOutput, gridSize=groupGridSize, 
             pointSize, rotatedxRange, 
