@@ -6,7 +6,7 @@
 \format{
 A data frame with 158159 rows and 3 variables:
   \describe{
-    \item{Frame}{10x frame from t-CyCIF imaging.  Used to identify tissue type of cell.}
+    \item{frame}{10x frame from t-CyCIF imaging.  Used to identify tissue type of cell.}
     \item{Xt}{Cartesian x-coordinate of cell across entire tissue sample (across all frames).}
     \item{Yt}{Cartesian y-coordinate of cell across entire tissue sample (across all frames)}
   } 
