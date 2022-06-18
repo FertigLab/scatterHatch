@@ -173,6 +173,7 @@ addSegments <- function(plt, xGroup, yGroup, xRange, yRange, gridSize,
         rotatedCoordsRange <- rotateCoords(c(xRange[1], xRange[1], xRange[2], 
             xRange[2]), c(yRange[1], yRange[2],
                 yRange[1], yRange[2]), a)
+
         rotatedxRange <- range(rotatedCoordsRange$x)
         rotatedyRange <- range(rotatedCoordsRange$y)
         
@@ -180,8 +181,8 @@ addSegments <- function(plt, xGroup, yGroup, xRange, yRange, gridSize,
         
         ## getting individual line segments
         groupLineCoords <- drawHorizontal(rotatedgridOutput, gridSize=groupGridSize, 
-            pointSize, rotatedxRange, 
-            rotatedyRange, sparsePoints)
+            pointSize, xRange, 
+            yRange, sparsePoints) # use xRange/yRange instead when passing it in!
         ## adjusting lines based on sizes of a point
         adjX <- convertSizeToCartesian(pointSize, xRange, 'x')
         adjY <- convertSizeToCartesian(pointSize, yRange, 'y')
