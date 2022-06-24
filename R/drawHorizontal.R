@@ -54,7 +54,7 @@ drawHorizontal <- function(gridOutput, gridSize=NULL, pointSize,
     
     ## dealing with small cluster points
     if (plotSmallClusters){
-        gridSize = gridSize/5
+        gridSize <- gridSize/5
         smallClusterToGrid <- countGridPoints(smallClusterToGrid$x, 
             smallClusterToGrid$y, gridSize)[[4]]
         ## creating a unique identifier for each grid
