@@ -55,6 +55,7 @@ regularPatternDraw <- function(freqMat, pointsToGrid, yBins){
             ## starting a line segment
             if (prevCol == 0 & freqMat[rowNum, colNum]!=0){ 
                 gridPoints <- rowPoints[rowPoints$xIntervals == colNum, ]
+                gridPoints <- gridPoints[abs(gridPoints$y-yLevels)<(diff(yBins)[1]/8),] # 
                 xStart <- c(xStart, min(gridPoints$x))
                 yStart <- c(yStart, yLevels)
                 lineDraw <- TRUE
@@ -66,6 +67,7 @@ regularPatternDraw <- function(freqMat, pointsToGrid, yBins){
                     gridPoints <- rowPoints[rowPoints$xIntervals == colNum-1, ]
                 else
                     gridPoints <- rowPoints[rowPoints$xIntervals == colNum, ]
+                gridPoints <- gridPoints[abs(gridPoints$y-yLevels)<(diff(yBins)[1]/8),] # 
                 xEnd <- c(xEnd, max(gridPoints$x))
                 yEnd <- c(yEnd, yLevels)
                 lineDraw <- FALSE
